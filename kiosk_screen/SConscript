@@ -1,0 +1,7 @@
+Import('*')
+
+NAME = 'kiosk_screen'
+INC =  [ '#/vm/inc' ]
+SRC = Glob('*.c')
+
+buildSharedLibrary(NAME, SRC, CPPPATH=INC)
