@@ -68,7 +68,7 @@ extern int screen_close();
  *  		(positive, if successful / negative, if unsuccessful)
  */
 
-extern void error_handler(unsigned short error_code);
+extern void screen_renderer_error_handler(unsigned short error_code);
 /*
  *  Error hander function for debugging
  *  Parameters: unsigned short error code constant
