@@ -92,10 +92,13 @@ int screen_init(int width, int height, const char* img_path) {
 		}
 	}
 
-	if (success)
+	if (success) {
+		printf("Good!");
 		return 1;
-	else
+	} else {
+		printf("Bad");
 		return -1;
+	}
 }
 
 bool SDL_init() {

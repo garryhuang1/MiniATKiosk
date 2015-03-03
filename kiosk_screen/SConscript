@@ -2,6 +2,12 @@ Import('*')
 
 NAME = 'kiosk_screen'
 INC =  [ '#/vm/inc' ]
-SRC = Glob('*.c')
+SRC = Glob('kiosk_screen.c')
+
+buildSharedLibrary(NAME, SRC, CPPPATH=INC)
+
+NAME = 'sdl_screen_renderer'
+INC =  [ '#/vm/inc' ]
+SRC = Glob('sdl_screen_renderer.c')
 
 buildSharedLibrary(NAME, SRC, CPPPATH=INC)

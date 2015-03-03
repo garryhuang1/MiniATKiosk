@@ -14,7 +14,11 @@ typedef struct p_kiosk_screen p_kiosk_screen;
  * @return
  *  The kiosk screen instance
  */
-extern p_kiosk_screen* p_kiosk_screen_new(m_uword screen_address);
+extern p_kiosk_screen* p_kiosk_screen_new(m_uword screen_command_address, 	
+									m_uword screen_char_address, 
+									m_uword screen_x_address, 
+									m_uword screen_y_address, 
+									m_uword screen_color_address;);
 
 /**
  * Free an instance of a kiosk screen
