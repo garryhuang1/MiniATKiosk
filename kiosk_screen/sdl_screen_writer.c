@@ -15,6 +15,10 @@ int screen_writer_push(uint32_t data);
 char screen_writer_keypad_parser(uint32_t mask);
 int screen_writer_pop();
 void screen_writer_error_handler(unsigned short error_code);
+/*
+ * TODO: create buffer_clear function
+ */
+
 
 /*
  *  Error code value constants
@@ -22,10 +26,13 @@ void screen_writer_error_handler(unsigned short error_code);
 const unsigned short MISSING_COLUMN_ERROR = 0;
 const unsigned short MISSING_ROW_ERROR = 1;
 const unsigned short KEYPAD_PARSER_NULL_ERROR = 2;
+const unsigned short BUFFER_FULL_ERROR = 3;
+const unsigned short POPPING_EMPTY_BUFFER_ERROR = 4;
 
 /*
  *  Global Variables
  */
+int buffer_pos = 0;
 char buffer[51];
 char* tail;
 char* head;
@@ -52,9 +59,15 @@ int screen_writer_push(uint32_t data) {
 	}
 
 	if (success > 0) {
-		/*
-		 *   TODO: Insert char "input" into buffer
-		 */
+	    
+		if (buffer_pos >= sizeof(buffer) {
+			success = -1;
+			screen_writer_error_handler(BUFFER_FULL_ERROR);
+		}
+	  
+		else {
+			buffer[buffer_pos] = input, buffer_pos++;
+		}
 	}
 	return success;
 }
@@ -127,9 +140,17 @@ char screen_writer_keypad_parser(uint32_t mask) {
 
 int screen_writer_pop() {
 	int success = 1;
-/*
- *   TODO: Write function to pop one character off of queue buffer
- */
+	buffer_pos--;
+	
+	if (buffer_pos < 0) {
+		buffer_pos++; 
+		success = -1;
+		screen_writer_error_handler(POPPING_EMPTY_BUFFER_ERROR);  
+	}  
+	else {
+		buffer[buffer_pos] = NULL; // not sure if NULL works; if not use ""   
+	}
+	
 	return success;
 }
 
@@ -143,6 +164,12 @@ void screen_writer_error_handler(unsigned short error_code) {
 			break;
 		case 2:
 			fputs("Error! Keypad value parser returned NULL!\n", stderr);
+			break;
+		case 3: 
+			fputs("Error! Character buffer full!\n", stderr);
+			break;
+		case 4: 
+			fputs("Error! Cannot pop an empty buffer!\n" stderr);
 			break;
 		default:
 			fputs("Error! Error Handler initiated without valid error code!\n", stderr);
