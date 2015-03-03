@@ -24,7 +24,7 @@ bool SDL_window_surface_init();
 bool SDL_load_screen_surface(const char* img_path);
 bool SDL_apply_screen_surface(int x, int y, SDL_Surface* src, SDL_Surface* dest);
 int screen_close();
-void error_handler(unsigned short error_code);
+void screen_renderer_error_handler(unsigned short error_code);
 
 /*
  *  Error Code Constants
@@ -54,41 +54,41 @@ int screen_init(int width, int height, const char* img_path) {
 	success = SDL_init();
 
 	if (!success) {
-		error_handler(SDL_INIT_ERROR);
+		screen_renderer_error_handler(SDL_INIT_ERROR);
 	}
 
 	if (success) {
 		if (!SDL_window_init(width, height)) {
 			success = false;
-			error_handler(SDL_WINDOW_ERROR);
+			screen_renderer_error_handler(SDL_WINDOW_ERROR);
 		}
 	}
 
 	if (success) {
 		if (!SDL_window_surface_init(window_surface)) {
 			success = false;
-			error_handler(SDL_WINDOW_SURFACE_ERROR);
+			screen_renderer_error_handler(SDL_WINDOW_SURFACE_ERROR);
 		}
 	}
 
 	if (success) {
 		if (!SDL_load_screen_surface(img_path)) {
 			success = false;
-			error_handler(SDL_IMG_LOAD_ERROR);
+			screen_renderer_error_handler(SDL_IMG_LOAD_ERROR);
 		}
 	}
 
 	if (success) {
 		if (!SDL_apply_screen_surface(0,0,screen_surface, window_surface)) {
 			success = false;
-			error_handler(SDL_SCREEN_BLIT_ERROR);
+			screen_renderer_error_handler(SDL_SCREEN_BLIT_ERROR);
 		}
 	}
 
 	if (success) {
 		if (SDL_UpdateWindowSurface(window) < 0) {
 			success = false;
-			error_handler(SDL_WINDOW_SURFACE_UPDATE_ERROR);
+			screen_renderer_error_handler(SDL_WINDOW_SURFACE_UPDATE_ERROR);
 		}
 	}
 
@@ -128,12 +128,12 @@ bool SDL_load_screen_surface(const char* img_path) {
 	screen_surface = IMG_Load(img_path);
 
 	if (screen_surface == NULL) {
-		error_handler(SDL_IMG_PATH_ERROR);
+		screen_renderer_error_handler(SDL_IMG_PATH_ERROR);
 	}
 	else {
 		screen_surface = SDL_ConvertSurface(screen_surface, window_surface->format, NULL);
 		if (screen_surface == NULL) {
-			error_handler(SDL_IMG_OPTI_ERROR);
+			screen_renderer_error_handler(SDL_IMG_OPTI_ERROR);
 		}
 	}
 
@@ -161,14 +161,14 @@ int screen_close() {
 	screen_surface = NULL;
 	if (screen_surface != NULL) {
 		success = -1;
-		error_handler(SDL_SCREEN_SURFACE_FREE_ERROR);
+		screen_renderer_error_handler(SDL_SCREEN_SURFACE_FREE_ERROR);
 	}
 
 	SDL_DestroyWindow(window);
 	window = NULL;
 	if (window != NULL) {
 		success = -1;
-		error_handler(SDL_WINDOW_FREE_ERROR);
+		screen_renderer_error_handler(SDL_WINDOW_FREE_ERROR);
 	}
 
 	if (success > 0) {
@@ -178,40 +178,40 @@ int screen_close() {
 	return success;
 }
 
-void error_handler(unsigned short error_code) {
+void screen_renderer_error_handler(unsigned short error_code) {
 	switch (error_code) {
 		case 0:
-			fputs("Error initializing SDL!", stderr);
+			fputs("Error initializing SDL!\n", stderr);
 			break;
 		case 1:
-			fputs("Error creating SDL window!", stderr);
+			fputs("Error creating SDL window!\n", stderr);
 			break;
 		case 2:
-			fputs("Error initialing SDL window surface!", stderr);
+			fputs("Error initialing SDL window surface!\n", stderr);
 			break;
 		case 3:
-			fputs("Error loading image from path!", stderr);
+			fputs("Error loading image from path!\n", stderr);
 			break;
 		case 4:
-			fputs("Error optimizing loaded image for screen surface!", stderr);
+			fputs("Error optimizing loaded image for screen surface!\n", stderr);
 			break;
 		case 5:
-			fputs("Error loading image for screen surface!", stderr);
+			fputs("Error loading image for screen surface!\n", stderr);
 			break;
 		case 6:
-			fputs("Error blitting screen surface to window surface!", stderr);
+			fputs("Error blitting screen surface to window surface!\n", stderr);
 			break;
 		case 7:
-			fputs("Error updating window surface with blitted screen surface!", stderr);
+			fputs("Error updating window surface with blitted screen surface!\n", stderr);
 			break;
 		case 8:
-			fputs("Error freeing screen surface!", stderr);
+			fputs("Error freeing screen surface!\n", stderr);
 			break;
 		case 9:
-			fputs("Error destroying window!", stderr);
+			fputs("Error destroying window!\n", stderr);
 			break;
 		default:
-			fputs("Unknown error code argument in error handler!", stderr);
+			fputs("Unknown error code argument in error handler!\n", stderr);
 			break;
 	}
 }
