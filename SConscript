@@ -2,8 +2,11 @@ Import('*')
 
 INC = [ '#/vm/inc', '#/peripherals/simple_term',]
 
-LIBS = [ 'libminiat', 'libkiosk_screen', 'libsdl_screen_renderer', "SDL2", "libSDL2_image", 'libsimple_term']
+LIBS = [ 'libminiat', 'libkiosk_screen', 'libkeypad_read', 'libsdl_screen_renderer', 'libkiosk_keypad', 'libkeypad_render', "SDL2", "libSDL2_image", 'libsimple_term']
 
-buildProgram("test_screen", "test_screen.c", CPPPATH=INC, LIBS=LIBS)
+buildProgram("test", "test.c", CPPPATH=INC, LIBS=LIBS)
 buildMash('nothing.asm')
+
+
+
 

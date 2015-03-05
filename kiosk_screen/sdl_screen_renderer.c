@@ -93,7 +93,7 @@ int screen_init(int width, int height, const char* img_path) {
 	}
 
 	if (success) {
-		printf("Good!");
+		//printf("Good!");
 		return 1;
 	} else {
 		printf("Bad");

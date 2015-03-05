@@ -49,7 +49,7 @@ p_kiosk_screen* p_kiosk_screen_new(	m_uword screen_command_address,
 			s->y_pos = 0;
 			s->color = 0;
 			
-			screen_init(610, 400, "/home/jacob/Downloads/screen.png");
+			screen_init(610, 400, "/home/quw/miniat_t/peripherals/kiosk/kiosk_screen/image/screen.png");
 			
 		}
 		

@@ -1,0 +1,19 @@
+Import('*')
+
+NAME = 'kiosk_keypad'
+INC =  [ '#/vm/inc' ]
+SRC = Glob('kiosk_keypad.c')
+
+buildSharedLibrary(NAME, SRC, CPPPATH=INC)
+
+NAME = 'keypad_render'
+INC =  [ '#/vm/inc' ]
+SRC = Glob('keypad_render2.c')
+
+buildSharedLibrary(NAME, SRC, CPPPATH=INC)
+
+NAME = 'keypad_read'
+INC =  [ '#/vm/inc' ]
+SRC = Glob('keypad_read.c')
+
+buildSharedLibrary(NAME, SRC, CPPPATH=INC)
