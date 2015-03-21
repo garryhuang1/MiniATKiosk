@@ -17,7 +17,7 @@ typedef struct{
 	SDL_Renderer *renderer;
 	int cursor_x;
 	int cursor_y;
-	int color;
+	SDL_Color color;
 }p_sdl_data;
 
 p_sdl_data * p_sdl_new(void);
@@ -28,7 +28,7 @@ uint32_t p_sdl_get_mouse_click(p_sdl_data *kiosk, SDL_Event *e);
 //int p_sdl_render_char(p_sdl_data *kiosk, char c);
 int p_sdl_set_cursor_x(p_sdl_data *kiosk, int x);
 int p_sdl_set_cursor_y(p_sdl_data *kiosk, int y);
-//int p_sdl_set_color(p_sdl_data *kiosk, int color);
+int p_sdl_set_color(p_sdl_data *kiosk, int color);
 //
 //int p_sdl_draw_line(p_sdl_data *kiosk, int start_x, int start_y, int end_x, int end_y, int stroke_width);
 //int p_sdl_draw_rectangle(p_sdl_data *kiosk, int x, int y, int height, int width, int dofill);
@@ -189,6 +189,84 @@ int p_sdl_set_cursor_y(p_sdl_data *kiosk, int y){
 	}
 }
 
+int p_sdl_set_color(p_sdl_data *kiosk, int color){
+	switch(color){
+		case 0:
+			printf("changing color to black\n");
+			kiosk->color.r = 0;
+			kiosk->color.g = 0;
+			kiosk->color.b = 0;
+			break;
+		case 1:
+			printf("changing color to blue\n");
+			kiosk->color.r = 0;
+			kiosk->color.g = 0;
+			kiosk->color.b = 255;
+			break;
+		case 2:
+			printf("changing color to green\n");
+			kiosk->color.r = 0;
+			kiosk->color.g = 255;
+			kiosk->color.b = 0;
+			break;
+		case 3:
+			printf("changing color to red\n");
+			kiosk->color.r = 255;
+			kiosk->color.g = 0;
+			kiosk->color.b = 0;
+			break;
+		case 4:
+			printf("changing color to cyan\n");
+			kiosk->color.r = 0;
+			kiosk->color.g = 255;
+			kiosk->color.b = 255;
+			break;
+		case 5:
+			printf("changing color to magenta\n");
+			kiosk->color.r = 255;
+			kiosk->color.g = 0;
+			kiosk->color.b = 255;
+			break;
+		case 6:
+			printf("changing color to yellow\n");
+			kiosk->color.r = 255;
+			kiosk->color.g = 255;
+			kiosk->color.b = 0;
+			break;
+		case 7:
+			printf("changing color to deep sky blue\n");
+			kiosk->color.r = 0;
+			kiosk->color.g = 191;
+			kiosk->color.b = 255;
+		case 8:
+			printf("changing color to deep pink\n");
+			kiosk->color.r = 255;
+			kiosk->color.g = 20;
+			kiosk->color.b = 147;
+			break;
+		case 9:
+			printf("changing color to medium spring green\n");
+			kiosk->color.r = 0;
+			kiosk->color.g = 250;
+			kiosk->color.b = 154;
+			break;
+		case 10:
+			printf("changing color to purple\n");
+			kiosk->color.r = 128;
+			kiosk->color.g = 0;
+			kiosk->color.b = 128;
+			break;
+		default:
+			printf("ERROR INPUT, changing color black\n");
+			kiosk->color.r = 0;
+			kiosk->color.g = 0;
+			kiosk->color.b = 0;
+			break;
+			return 0;
+		}
+		return 1;
+}
+
 /*test function*/
 int main(int argc, char const *argv[])
 {
@@ -197,18 +275,28 @@ int main(int argc, char const *argv[])
 	uint32_t data;
 	bool quit;
 	SDL_Event e;
+	int color = 0;
 
+	//create new instance of kiosk
 	kiosk = p_sdl_new();
-	//SDL_Delay(10000);
-	//data = p_sdl_get_mouse_click(kiosk);
-		test = p_sdl_set_cursor_x(kiosk, 37);
+
+	//test function set cursor x
+	test = p_sdl_set_cursor_x(kiosk, 37);
 	printf("test is %d\n", test);
 
+	//test function set cursor y
 	test = p_sdl_set_cursor_y(kiosk, 999);
 	printf("test is %d\n", test);
 
 	printf("x is %d and y is %d\n",kiosk->cursor_x, kiosk->cursor_y );
 
+	//test the color function
+	printf("enter a number from 0-10 to change color\n");
+	scanf("%d", &color);
+	test = p_sdl_set_color(kiosk, color);
+	printf("test is %d\n",test);	
+
+	//test the get mouse click function
 	while(!quit)
 	{
 		while( SDL_PollEvent( &e ) != 0 )
@@ -227,6 +315,7 @@ int main(int argc, char const *argv[])
 	}
 
 
+	//test the sdl close function
 	test = p_sdl_close(kiosk);
 
 	printf("test is  %d\n", test);
