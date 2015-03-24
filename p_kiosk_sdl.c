@@ -74,10 +74,10 @@ p_sdl_data * p_sdl_new(void){
 	/*render both screen and keypad to the window */
 	if(success){
 		/*keypad */
-		kiosk->keypad_surface = IMG_Load("/home/quw/miniat_t/peripherals/kiosk/kiosk_keypad/image/keypad.png");
+		kiosk->keypad_surface = IMG_Load("src/images/keypad.png");
 
 		if(kiosk->keypad_surface ==NULL){
-		printf("Unable to load image %s! SDL_Image Error: %s\n", "/home/quw/miniat _k/peripherals/kiosk/image/keypad.png", IMG_GetError());	
+		printf("Unable to load image %s! SDL_Image Error: %s\n", "src/images/keypad.png", IMG_GetError());	
 		}
 		else{
 			kiosk->keypad_surface = SDL_ConvertSurface(kiosk->keypad_surface, kiosk->window_surface->format, NULL);
@@ -90,15 +90,15 @@ p_sdl_data * p_sdl_new(void){
 		}
 
 		/*screen */
-		kiosk->screen_surface = IMG_Load("/home/quw/miniat_t/peripherals/kiosk/kiosk_screen/image/screen.png");
+		kiosk->screen_surface = IMG_Load("src/images/screen.png");
 
 		if(kiosk->screen_surface ==NULL){
-		printf("Unable to load image %s! SDL_Image Error: %s\n", "/home/quw/miniat_t/peripherals/kiosk/kiosk_screen/image/screen.png", IMG_GetError());	
+		printf("Unable to load image %s! SDL_Image Error: %s\n", "src/images/screen.png", IMG_GetError());	
 		}
 		else{
 			kiosk->screen_surface = SDL_ConvertSurface(kiosk->screen_surface, kiosk->window_surface->format, NULL);
 			if(kiosk->screen_surface ==NULL){
-			printf("Unable to optimize image %s! SDL Error: %s\n", "/home/quw/miniat_t/peripherals/kiosk/kiosk_screen/image/screen.png", SDL_GetError());	
+			printf("Unable to optimize image %s! SDL Error: %s\n", "src/images/screen.png", SDL_GetError());	
 			}
 		}
 		if(kiosk->screen_surface ==NULL){
