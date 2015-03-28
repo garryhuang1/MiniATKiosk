@@ -77,7 +77,7 @@ extern int p_sdl_clear_screen(p_sdl_data * kiosk);
  * 	0 if no error
  */
 
-extern int p_sdl_render_string(p_sdl_data * kiosk, char[] string);
+extern int p_sdl_render_string(p_sdl_data * kiosk, char string[]);
 /**
  * Renders the entire string beginning at the 
  * current cursor x and y locations. If the 
@@ -190,3 +190,5 @@ extern int p_sdl_draw_circle(p_sdl_data * kiosk, int x, int y, int radius, int d
  * @return int
  * 	0 if no error, 1 if error
  */
+
+#endif
