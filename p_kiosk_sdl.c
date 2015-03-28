@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -16,8 +17,15 @@ typedef struct{
 	SDL_Renderer *renderer;
 	SDL_Texture *screen_texture;
 	SDL_Texture *keypad_texture;
+	SDL_Texture *text_texture;		// Added var
+	SDL_Rect *text_space;			// Added var
+	TTF_Font *text_font;
 	int cursor_x;
 	int cursor_y;
+	int font_size;
+	int text_cursor_x;
+	int text_cursor_y;
+	int text_line_size;
 	SDL_Color color;
 }p_sdl_data;
 
@@ -30,8 +38,8 @@ p_sdl_data * p_sdl_new(void);
 //int p_sdl_close(p_sdl_data *kiosk);
 uint32_t p_sdl_get_mouse_click(p_sdl_data *kiosk, SDL_Event *e);
 //int p_sdl_clear_screen(p_sdl_data *kiosk);
-//int p_sdl_render_string(p_sdl_data *kiosk, char[] string);
-//int p_sdl_render_char(p_sdl_data *kiosk, char c);
+int p_sdl_render_string(p_sdl_data *kiosk, char string[]);
+int p_sdl_render_char(p_sdl_data *kiosk, char c);
 int p_sdl_set_cursor_x(p_sdl_data *kiosk, int x);
 int p_sdl_set_cursor_y(p_sdl_data *kiosk, int y);
 int p_sdl_set_color(p_sdl_data *kiosk, int color);
@@ -51,6 +59,9 @@ p_sdl_data * p_sdl_new(void){
 	/*set window size*/
 	kiosk->window_width = 910;
 	kiosk->window_height = 400;
+
+	/*set default font size*/
+	kiosk->font_size = 12;
 
 	bool success =true;
 
@@ -127,6 +138,36 @@ p_sdl_data * p_sdl_new(void){
 		SDL_RenderPresent(kiosk->renderer);
 	}
 
+	/* initialize SDL_ttf subsystems for kiosk use */
+	if (TTF_Init() == -1) {
+		printf("Error initializing SDL_ttf subsystem! SDL_ttf Error: %s\n", TTF_GetError());
+	}
+	else {
+		kiosk->text_font = NULL;
+		kiosk->text_cursor_x = 325;	// Magic Numbers!
+		kiosk->text_cursor_y = 25;	// Magic Numbers!
+		kiosk->text_line_size = 0;
+		printf("Set font size in init to: %d\n", kiosk->font_size);	// Debugging
+		kiosk->text_font = TTF_OpenFont("src/fonts/pt_sans_regular.ttf", kiosk->font_size);
+		if (kiosk->text_font == NULL) {
+			printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
+		}
+	}
+
+	/* Default color settings to black*/
+	if (kiosk->color.r == NULL || kiosk->color.g == NULL || kiosk->color.b == NULL) {
+		printf("While initializing p_kiosk_data, color was not set!\n");	// Debugging
+		kiosk->color.r = 0;
+		kiosk->color.g = 0;
+		kiosk->color.b = 0;
+	}
+	
+	/* Initialize text space variable */
+	kiosk->text_space->x = 25;
+	kiosk->text_space->y = 25;
+	kiosk->text_space->w = 0;
+	kiosk->text_space->h = 0;
+
 	return kiosk;	
 }
 
@@ -176,6 +217,113 @@ uint32_t p_sdl_get_mouse_click(p_sdl_data *kiosk, SDL_Event *e){
 			return -1;
 		}
 	}
+}
+
+/*  function p_sdl_render_string
+ *  Render a string to the screen
+ *  Returns 0 if success, 1 if error
+ */
+int p_sdl_render_string(p_sdl_data *kiosk, char string[]) {
+	int success = 0;
+	int str_len = 0;
+	
+	while (string[str_len] != '\0') {
+		str_len++;
+	}
+	str_len--;
+
+	/* Check if string will bypass screen boundry */
+	/* If so, reset x-axis and increment y-axis by font size */
+	if ( (kiosk->text_line_size + str_len * kiosk->font_size) > (610 - 50)) {
+		kiosk->text_cursor_x = 325;	// Magic numbers galore!
+		kiosk->text_line_size = 0;
+		if ( (kiosk->text_cursor_y + kiosk->font_size) > (400 - 25)) {
+			success = 1;
+			printf("Text cannot render! Screen is full.\n");
+		}
+		kiosk->text_cursor_y = kiosk->text_cursor_y + kiosk->font_size;
+	}
+	else {
+		kiosk->text_line_size += str_len * kiosk->font_size;
+		kiosk->text_cursor_x += str_len * kiosk->font_size;
+	}
+	
+	SDL_Texture *texture = NULL;
+	if (success == 0) {
+		texture = TTF_RenderText_Solid(kiosk->text_font, (const char *)string, kiosk->color);
+		if (texture == NULL) {
+			printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
+			success = 1;
+		}
+		if (success == 0) {	
+			texture = SDL_CreateTextureFromSurface(kiosk->renderer, texture);
+		}
+	}
+
+	/*render string to screen*/
+	if (success == 0) {
+		SDL_Rect render_area;
+		render_area.x = kiosk->text_cursor_x;
+		render_area.y = kiosk->text_cursor_y;
+		render_area.w = str_len * kiosk->font_size;
+		render_area.h = kiosk->font_size;
+
+		SDL_RenderCopyEx(kiosk->renderer, texture, NULL, &render_area, 0.0, NULL, SDL_FLIP_NONE);
+		SDL_RenderPresent(kiosk->renderer); 
+	}
+
+	return success;
+}
+
+/*  function p_sdl_render_char
+ *  Render a character to the screen
+ *  Returns 0 if success, 1 if error
+ */
+int p_sdl_render_char(p_sdl_data *kiosk, char c) {
+	int success = 0;
+	const char * character = &c;
+	SDL_Texture *texture = NULL;
+	SDL_Rect render_area;
+
+	/* Check if char will intersect boundry */
+	printf("Before checking future x and y positions in render char, x and y are: %d, %d\n", kiosk->text_cursor_x, kiosk->text_cursor_y);// debugging
+	printf("Before render char, text_line_size is: %d\n", kiosk->text_line_size);// debugging
+	if ( (kiosk->text_line_size + kiosk->font_size) > (610 - 50) ) {
+		kiosk->text_cursor_x = 325;
+		if ( (kiosk->text_cursor_y + kiosk->font_size) > (400 - 25)) {
+                        success = 1;
+                        printf("Text cannot render! Screen is full.\n");
+                }
+                kiosk->text_cursor_y = kiosk->text_cursor_y + kiosk->font_size;
+	}
+	else {
+		kiosk->text_line_size += kiosk->font_size;
+                kiosk->text_cursor_x += kiosk->font_size;
+	}
+
+	if (success == 0) {
+		texture = TTF_RenderText_Solid(kiosk->text_font, character, kiosk->color);
+		if (texture == NULL) {
+			 printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
+                        success = 1;
+		}
+		if (success == 0) {
+			texture = SDL_CreateTextureFromSurface(kiosk->renderer, texture);
+		}
+	}
+	
+	if (success == 0) {
+		render_area.x = kiosk->text_cursor_x;
+		render_area.y = kiosk->text_cursor_y;
+		render_area.w = kiosk->font_size;
+		render_area.h = kiosk->font_size;
+
+		SDL_RenderCopyEx(kiosk->renderer, texture, NULL, &render_area, 0.0, NULL, SDL_FLIP_NONE);
+
+		SDL_RenderPresent(kiosk->renderer);
+	}
+
+	return success;
 }
 
 /*function p_sdl_set_cursor_x
@@ -385,6 +533,8 @@ int main(int argc, char const *argv[])
 	p_sdl_data *kiosk;
 	int test;
 	uint32_t data;
+	char test_string[12] = "Hello World";
+	char test_char = '!';
 	bool quit;
 	SDL_Event e;
 	int color = 0;
@@ -422,7 +572,15 @@ int main(int argc, char const *argv[])
 
 	//test to draw a pixel
 	test = p_sdl_draw_pixel(kiosk, 700, 300);
-	printf("test for draw pixel function is %d\n", test);
+	printf("test for draw pixel function is %d\n", test);	
+
+	//test to render string
+	//test = p_sdl_render_string(kiosk, test_string);
+	printf("test for render string is %d\n", test);
+
+	//test to render character
+	test = p_sdl_render_char(kiosk, test_char);
+	printf("test for render char is %d\n", test);
 
 	//test the get mouse click function
 	while(!quit)
