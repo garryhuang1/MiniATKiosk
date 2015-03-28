@@ -14,7 +14,7 @@ const int SCREEN_WIDTH = 910;
  * Global constant variable for screen width.
  */
 
-const int SCRREN_HEIGHT = 400;
+const int SCREEN_HEIGHT = 400;
 /**
  * Global constant variable for screen height.
  */
@@ -55,7 +55,7 @@ extern int p_sdl_close(p_sdl_data * kiosk);
  * 	The status of the function executed	
  */
 
-extern int p_sdl_get_mouse_click(p_sdl_data * kiosk);
+extern uint32_t p_sdl_get_mouse_click(p_sdl_data * kiosk, SDL_Event *e);
 /**
  * Gets last selected value where the mouse was
  * clicked.
@@ -92,7 +92,7 @@ extern int p_sdl_render_string(p_sdl_data * kiosk, char string[]);
  *      0 if no error
  */ 
 
-extern int p_sdl_render_char(p_sdl_data * kiosk, char character);
+extern int p_sdl_render_char(p_sdl_data * kiosk, char c);
 /**
  * Renders a single character at the current cursor 
  * position. If the cursor is off of the screen, the 
@@ -106,7 +106,7 @@ extern int p_sdl_render_char(p_sdl_data * kiosk, char character);
  *      0 if no error
  */
 
-extern int p_sdl_set_cursor_x(p_sdl_data * kiosk, int x);
+extern int p_sdl_set_mouse_cursor_x(p_sdl_data * kiosk, int x);
 /**
  * Sets the cursor's x location
  * 
@@ -117,7 +117,7 @@ extern int p_sdl_set_cursor_x(p_sdl_data * kiosk, int x);
  * 	0 if no error occurred, 1 if error
  */
 
-extern int p_sdl_sel_cursor_y(p_sdl_data * kiosk, int y);
+extern int p_sdl_set_mouse_cursor_y(p_sdl_data * kiosk, int y);
 /**
  * Sets the cursor's y location
  * 
@@ -139,7 +139,7 @@ extern int p_sdl_set_color(p_sdl_data * kiosk, int color);
  * 	0 if no error occurred, 1 if error
  */
 
-extern int p_sdl_draw_line(p_sdl_data * kiosk, int start_x, int start_y, int end_x, int end_y);
+extern int p_sdl_draw_line(p_sdl_data * kiosk, int start_x, int start_y, int end_x, int end_y, int color);
 /**
  * Draws a line from the start x and y positions 
  * to the end x and y positions with a line 
@@ -152,7 +152,7 @@ extern int p_sdl_draw_line(p_sdl_data * kiosk, int start_x, int start_y, int end
  * 	0 if no error, 1 if error
  */ 
 
-extern int p_sdl_draw_rectangle(p_sdl_data * kiosk, int x, int y, int height, int width, int dofill);
+extern int p_sdl_draw_rectangle(p_sdl_data * kiosk, int x, int y, int height, int width, int dofill, int color);
 /**
  * Sets the current color for text rendering and  
  * drawing. Draws a rectangle.
@@ -165,7 +165,7 @@ extern int p_sdl_draw_rectangle(p_sdl_data * kiosk, int x, int y, int height, in
  * 	0 if no error, 1 if error
  */
 
-extern int p_sdl_draw_pixel(p_sdl_data * kiosk, int x, int y);
+extern int p_sdl_draw_pixel(p_sdl_data * kiosk, int x, int y, int color);
 /**
  * Draws a pixel in the defined x and y 
  * location.
@@ -177,7 +177,7 @@ extern int p_sdl_draw_pixel(p_sdl_data * kiosk, int x, int y);
  * 	0 if no error, 1 if error
  */
 
-extern int p_sdl_draw_circle(p_sdl_data * kiosk, int x, int y, int radius, int dofill);
+extern int p_sdl_draw_circle(p_sdl_data * kiosk, int x, int y, int radius, int dofill, int color);
 /**
  * Draws a circle with the defined x and y 
  * location at its center with a defined 

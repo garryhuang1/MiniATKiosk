@@ -8,9 +8,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-typedef struct{
-	int window_width;
-	int window_height;
+#include "p_kiosk_sdl.h"
+
+struct p_sdl_data {
 	SDL_Window *window;
 	SDL_Surface *screen_surface;
 	SDL_Surface *keypad_surface;
@@ -20,14 +20,14 @@ typedef struct{
 	SDL_Rect text_space;
 	TTF_Font *text_font;
 	SDL_Texture *pixel_texture;
-	int cursor_x;
-	int cursor_y;
+	int mouse_cursor_x;
+	int mouse_cursor_y;
 	int font_size;
 	int text_cursor_x;
 	int text_cursor_y;
 	int text_line_size;
 	SDL_Color color;
-}p_sdl_data;
+};
 
 const int S_MIN_X = 324;
 const int S_MAX_X = 886;
@@ -40,8 +40,8 @@ uint32_t p_sdl_get_mouse_click(p_sdl_data *kiosk, SDL_Event *e);
 int p_sdl_clear_screen(p_sdl_data *kiosk);
 int p_sdl_render_string(p_sdl_data *kiosk, char string[]);
 int p_sdl_render_char(p_sdl_data *kiosk, char c);
-int p_sdl_set_cursor_x(p_sdl_data *kiosk, int x);
-int p_sdl_set_cursor_y(p_sdl_data *kiosk, int y);
+int p_sdl_set_mouse_cursor_x(p_sdl_data *kiosk, int x);
+int p_sdl_set_mouse_cursor_y(p_sdl_data *kiosk, int y);
 int p_sdl_set_color(p_sdl_data *kiosk, int color);
 int p_sdl_draw_line(p_sdl_data *kiosk, int start_x, int start_y, int end_x, int end_y, int color);
 int p_sdl_draw_rectangle(p_sdl_data *kiosk, int x, int y, int height, int width, int dofill, int color);
@@ -205,11 +205,11 @@ uint32_t p_sdl_get_mouse_click(p_sdl_data *kiosk, SDL_Event *e){
 	int c, r;
 
 	if(e->type == SDL_MOUSEBUTTONDOWN){
-		SDL_GetMouseState(&kiosk->cursor_x, &kiosk->cursor_y);
+		SDL_GetMouseState(&kiosk->mouse_cursor_x, &kiosk->mouse_cursor_y);
 
-		if(kiosk->cursor_x <=300 && kiosk->cursor_y<=400){
-		c = (kiosk->cursor_x/100+1);
-		r = (kiosk->cursor_y/100+4);
+		if(kiosk->mouse_cursor_x <=300 && kiosk->mouse_cursor_y<=400){
+		c = (kiosk->mouse_cursor_x/100+1);
+		r = (kiosk->mouse_cursor_y/100+4);
 		data = ((~((~data)<<c)) ^(~((~data)<<c-1))) | ((~((~data)<<r)) ^(~((~data)<<r-1)));
 		return data;
 		}
@@ -331,11 +331,11 @@ int p_sdl_render_char(p_sdl_data *kiosk, char c) {
 	return success;
 }
 
-/*function p_sdl_set_cursor_x
+/*function p_sdl_set_mouse_cursor_x
 use to set the sdl cursor x value to user define value*/
-int p_sdl_set_cursor_x(p_sdl_data *kiosk, int x){
-	kiosk->cursor_x = x;
-	if(kiosk->cursor_x ==x){
+int p_sdl_set_mouse_cursor_x(p_sdl_data *kiosk, int x){
+	kiosk->mouse_cursor_x = x;
+	if(kiosk->mouse_cursor_x ==x){
 		return 0;
 	}
 	else{
@@ -343,11 +343,11 @@ int p_sdl_set_cursor_x(p_sdl_data *kiosk, int x){
 	}
 }
 
-/*function p_sdl_set_cursor_y
+/*function p_sdl_set_mouse_cursor_y
 use to set the sdl cursor y value to user define value*/
-int p_sdl_set_cursor_y(p_sdl_data *kiosk, int y){
-	kiosk->cursor_y = y;
-	if(kiosk->cursor_y ==y){
+int p_sdl_set_mouse_cursor_y(p_sdl_data *kiosk, int y){
+	kiosk->mouse_cursor_y = y;
+	if(kiosk->mouse_cursor_y ==y){
 		return 0;
 	}
 	else{
