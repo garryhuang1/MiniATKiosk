@@ -139,7 +139,7 @@ extern int p_sdl_set_color(p_sdl_data * kiosk, int color);
  * 	0 if no error occurred, 1 if error
  */
 
-extern int p_sdl_draw_line(p_sdl_data * kiosk, int start_x, int start_y, int end_x, int end_y, int stroke_width);
+extern int p_sdl_draw_line(p_sdl_data * kiosk, int start_x, int start_y, int end_x, int end_y);
 /**
  * Draws a line from the start x and y positions 
  * to the end x and y positions with a line 

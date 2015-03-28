@@ -1,0 +1,7 @@
+Import('*')
+
+INC = [ '#/vm/inc', '#/system/kiosk']
+
+LIBS = [ 'libminiat', 'libkiosk_sdl', "SDL2", "libSDL2_image"]
+
+buildProgram("sdl_test", "sdl_tests.c", CPPPATH=INC, LIBS=LIBS)
