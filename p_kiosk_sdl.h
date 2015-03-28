@@ -139,7 +139,7 @@ extern int p_sdl_set_color(p_sdl_data * kiosk, int color);
  * 	0 if no error occurred, 1 if error
  */
 
-extern int p_sdl_draw_line(p_sdl_data * kiosk, int start_x, int start_y, int end_x, int end_y, int color);
+extern int p_sdl_draw_line(p_sdl_data * kiosk, int start_x, int start_y, int end_x, int end_y);
 /**
  * Draws a line from the start x and y positions 
  * to the end x and y positions with a line 
@@ -152,7 +152,7 @@ extern int p_sdl_draw_line(p_sdl_data * kiosk, int start_x, int start_y, int end
  * 	0 if no error, 1 if error
  */ 
 
-extern int p_sdl_draw_rectangle(p_sdl_data * kiosk, int x, int y, int height, int width, int dofill, int color);
+extern int p_sdl_draw_rectangle(p_sdl_data * kiosk, int x, int y, int height, int width, int dofill);
 /**
  * Sets the current color for text rendering and  
  * drawing. Draws a rectangle.
@@ -165,7 +165,7 @@ extern int p_sdl_draw_rectangle(p_sdl_data * kiosk, int x, int y, int height, in
  * 	0 if no error, 1 if error
  */
 
-extern int p_sdl_draw_pixel(p_sdl_data * kiosk, int x, int y, int color);
+extern int p_sdl_draw_pixel(p_sdl_data * kiosk, int x, int y);
 /**
  * Draws a pixel in the defined x and y 
  * location.
@@ -177,7 +177,7 @@ extern int p_sdl_draw_pixel(p_sdl_data * kiosk, int x, int y, int color);
  * 	0 if no error, 1 if error
  */
 
-extern int p_sdl_draw_circle(p_sdl_data * kiosk, int x, int y, int radius, int dofill, int color);
+extern int p_sdl_draw_circle(p_sdl_data * kiosk, int x, int y, int radius, int dofill);
 /**
  * Draws a circle with the defined x and y 
  * location at its center with a defined 
