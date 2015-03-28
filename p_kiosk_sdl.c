@@ -636,6 +636,7 @@ int main(int argc, char const *argv[])
 	//test tp draw a filled circle
 	test = p_sdl_draw_circle(kiosk, 600, 200, 100, 1, 1);
 	printf("test for draw filled circle is %d\n", test);
+	
 	// Test to render string(s)
 	i = 0;
 	for (i; i < 5; i++) {
@@ -644,6 +645,13 @@ int main(int argc, char const *argv[])
 		trash = p_sdl_render_char(kiosk, whitespace);
 	}
 		printf("test for render string is %d\n", test);
+	
+	//test to render character(s)
+	i = 0;
+	for (i; i < 70; i++) {
+		test = p_sdl_render_char(kiosk, test_char);
+	}
+	printf("test for render char is %d\n", test);
 
 	//test to draw a outlined circle
 	test = p_sdl_draw_circle(kiosk, 500, 150, 100, 0, 3);
@@ -652,15 +660,10 @@ int main(int argc, char const *argv[])
 
 	printf("enter 1 if you want to clear the screen\n");
 	scanf("%d",&temp);
-	if(temp ==1){
+	if(temp ==1) {
 		test = p_sdl_clear_screen(kiosk);
 		printf("test for clear screen function is %d\n", test);
-	//test to render character(s)
-	i = 0;
-	for (i; i < 70; i++) {
-		test = p_sdl_render_char(kiosk, test_char);
 	}
-	printf("test for render char is %d\n", test);
 
 	//test the get mouse click function
 	while(!quit)
