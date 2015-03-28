@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL2_gfxPrimitives.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -19,6 +20,7 @@ typedef struct{
 	SDL_Texture *keypad_texture;
 	SDL_Rect text_space;
 	TTF_Font *text_font;
+	SDL_Texture *pixel_texture;
 	int cursor_x;
 	int cursor_y;
 	int font_size;
@@ -34,18 +36,18 @@ const int S_MIN_Y = 24;
 const int S_MAX_Y = 376;
 
 p_sdl_data * p_sdl_new(void);
-//int p_sdl_close(p_sdl_data *kiosk);
+int p_sdl_close(p_sdl_data *kiosk);
 uint32_t p_sdl_get_mouse_click(p_sdl_data *kiosk, SDL_Event *e);
-//int p_sdl_clear_screen(p_sdl_data *kiosk);
+int p_sdl_clear_screen(p_sdl_data *kiosk);
 int p_sdl_render_string(p_sdl_data *kiosk, char string[]);
 int p_sdl_render_char(p_sdl_data *kiosk, char c);
 int p_sdl_set_cursor_x(p_sdl_data *kiosk, int x);
 int p_sdl_set_cursor_y(p_sdl_data *kiosk, int y);
 int p_sdl_set_color(p_sdl_data *kiosk, int color);
-int p_sdl_draw_line(p_sdl_data *kiosk, int start_x, int start_y, int end_x, int end_y, float stroke_width);
-int p_sdl_draw_rectangle(p_sdl_data *kiosk, int x, int y, int height, int width, int dofill);
-int p_sdl_draw_pixel(p_sdl_data *kiosk, int x, int y);
-//int p_sdl_draw_circle(p_sdl_data *kiosk, int x, int y,int radius, int dofill);
+int p_sdl_draw_line(p_sdl_data *kiosk, int start_x, int start_y, int end_x, int end_y, int color);
+int p_sdl_draw_rectangle(p_sdl_data *kiosk, int x, int y, int height, int width, int dofill, int color);
+int p_sdl_draw_pixel(p_sdl_data *kiosk, int x, int y, int color);
+int p_sdl_draw_circle(p_sdl_data *kiosk, int x, int y,int radius, int dofill, int color);
 
 /*function p_sdl_new
 use to create all the necessary SDL items*/
@@ -111,7 +113,7 @@ p_sdl_data * p_sdl_new(void){
 		/*screen */
 		kiosk->screen_surface = IMG_Load("src/images/screen.png");
 		if(kiosk->screen_surface ==NULL){
-			printf("Unable to load image %s! SDL_Image Error: %s\n", "src/images/keypad.png", IMG_GetError());
+			printf("Unable to load image %s! SDL_Image Error: %s\n", "src/images/screen.png", IMG_GetError());
 		}
 		else{
 			kiosk->screen_texture = SDL_CreateTextureFromSurface(kiosk->renderer, kiosk->screen_surface);
@@ -359,76 +361,65 @@ use to set the sdl renderer color, default color is black*/
 int p_sdl_set_color(p_sdl_data *kiosk, int color){
 	switch(color){
 		case 0:
-			printf("changing color to black\n");
 			kiosk->color.r = 0;
 			kiosk->color.g = 0;
 			kiosk->color.b = 0;
 			kiosk->color.a = 255;
 			break;
 		case 1:
-			printf("changing color to blue\n");
 			kiosk->color.r = 0;
 			kiosk->color.g = 0;
 			kiosk->color.b = 255;
 			kiosk->color.a = 255;
 			break;
 		case 2:
-			printf("changing color to green\n");
 			kiosk->color.r = 0;
 			kiosk->color.g = 255;
 			kiosk->color.b = 0;
 			kiosk->color.a = 255;
 			break;
 		case 3:
-			printf("changing color to red\n");
 			kiosk->color.r = 255;
 			kiosk->color.g = 0;
 			kiosk->color.b = 0;
 			kiosk->color.a = 255;
 			break;
 		case 4:
-			printf("changing color to cyan\n");
 			kiosk->color.r = 0;
 			kiosk->color.g = 255;
 			kiosk->color.b = 255;
 			kiosk->color.a = 255;
 			break;
 		case 5:
-			printf("changing color to magenta\n");
 			kiosk->color.r = 255;
 			kiosk->color.g = 0;
 			kiosk->color.b = 255;
 			kiosk->color.a = 255;
 			break;
 		case 6:
-			printf("changing color to yellow\n");
 			kiosk->color.r = 255;
 			kiosk->color.g = 255;
 			kiosk->color.b = 0;
 			kiosk->color.a = 255;
 			break;
 		case 7:
-			printf("changing color to deep sky blue\n");
 			kiosk->color.r = 0;
 			kiosk->color.g = 191;
 			kiosk->color.b = 255;
 			kiosk->color.a = 255;
 		case 8:
-			printf("changing color to deep pink\n");
 			kiosk->color.r = 255;
 			kiosk->color.g = 20;
 			kiosk->color.b = 147;
 			kiosk->color.a = 255;
 			break;
 		case 9:
-			printf("changing color to medium spring green\n");
 			kiosk->color.r = 0;
 			kiosk->color.g = 250;
 			kiosk->color.b = 154;
 			kiosk->color.a = 255;
 			break;
 		case 10:
-			printf("changing color to purple\n");
 			kiosk->color.r = 128;
 			kiosk->color.g = 0;
 			kiosk->color.b = 128;
@@ -443,12 +434,27 @@ int p_sdl_set_color(p_sdl_data *kiosk, int color){
 			break;
 			return 0;
 		}
+		SDL_SetRenderDrawColor(kiosk->renderer, kiosk->color.r, kiosk->color.g, kiosk->color.b, kiosk->color.a);
+		
 		return 1;
+}
+
+/*function p_sdl_clear_screen
+use to clear the screen*/
+int p_sdl_clear_screen(p_sdl_data *kiosk){
+		SDL_Rect DestR;
+		DestR.x = 300;
+		DestR.y = 0;
+		DestR.w = 610;
+		DestR.h = 400;
+	if(SDL_RenderCopy(kiosk->renderer, kiosk->screen_texture, NULL, &DestR) ==0){
+		SDL_RenderPresent(kiosk->renderer);
+	}
 }
 
 /* function p_sdl_draw_line
 use to draw line on the sdl screen*/
-int p_sdl_draw_line(p_sdl_data *kiosk, int start_x, int start_y, int end_x, int end_y, float stroke_width){
+int p_sdl_draw_line(p_sdl_data *kiosk, int start_x, int start_y, int end_x, int end_y, int color){
 	if((start_x<S_MIN_X) || (start_x>S_MAX_X) || (start_y <S_MIN_Y) || (start_y > S_MAX_Y)){
 		printf("Invalid area to start with !\n");
 		return 1;	
@@ -458,9 +464,7 @@ int p_sdl_draw_line(p_sdl_data *kiosk, int start_x, int start_y, int end_x, int 
 		return 1;
 	}
 	else{
-		SDL_SetRenderDrawColor(kiosk->renderer, kiosk->color.r, kiosk->color.g, kiosk->color.b, kiosk->color.a);
-		//SDL_RenderSetScale(kiosk->renderer, 1.0, stroke_width);
-
+		p_sdl_set_color(kiosk,color);
 		if(SDL_RenderDrawLine(kiosk->renderer, start_x, start_y, end_x, end_y) !=0){
 			printf("fail to draw the line! SDL Error: %s\n", SDL_GetError());
 			return 1;
@@ -475,7 +479,7 @@ int p_sdl_draw_line(p_sdl_data *kiosk, int start_x, int start_y, int end_x, int 
 
 /* function p_sdl_draw rectangle
 use to draw rectangle on the sdl screen*/
-int p_sdl_draw_rectangle(p_sdl_data *kiosk, int x, int y, int height, int width, int dofill){
+int p_sdl_draw_rectangle(p_sdl_data *kiosk, int x, int y, int height, int width, int dofill, int color){
 	if((x <S_MIN_X) || (x > S_MAX_X) || (y<S_MIN_Y) ||(y>S_MAX_Y)){
 		printf("Invalid area to start with!\n");
 		return 1;
@@ -487,7 +491,7 @@ int p_sdl_draw_rectangle(p_sdl_data *kiosk, int x, int y, int height, int width,
 	else{
 		if(dofill ==1){
 			SDL_Rect fillRect = {x, y, width, height};
-			SDL_SetRenderDrawColor(kiosk->renderer, kiosk->color.r, kiosk->color.g, kiosk->color.b, kiosk->color.a);
+			p_sdl_set_color(kiosk,color);
 			if(SDL_RenderFillRect(kiosk->renderer, &fillRect) !=0){
 				printf("fail to draw a rectangle! SDL Error:%s\n", SDL_GetError());
 				return 1;
@@ -499,7 +503,7 @@ int p_sdl_draw_rectangle(p_sdl_data *kiosk, int x, int y, int height, int width,
 		}
 		else if(dofill ==0){
 			SDL_Rect outlineRect = {x, y, width, height};
-			SDL_SetRenderDrawColor(kiosk->renderer, kiosk->color.r, kiosk->color.g, kiosk->color.b, kiosk->color.a);
+			p_sdl_set_color(kiosk,color);
 			if(SDL_RenderDrawRect(kiosk->renderer, &outlineRect) !=0){
 				printf("fail to draw a rectangle! SDL Error: %s\n", SDL_GetError());
 				return 1;
@@ -509,19 +513,23 @@ int p_sdl_draw_rectangle(p_sdl_data *kiosk, int x, int y, int height, int width,
 				return 0;
 			}
 		}
+		else{
+			printf("Error input!\n");
+			return 1;
+		}
 	}
 }
 
-int p_sdl_draw_pixel(p_sdl_data *kiosk, int x, int y){
-	if((x<S_MIN_X) || (x>S_MAX_X) || (y<S_MIN_Y) || (y<S_MAX_Y)){
-		printf("Invalid area to start with!\n");
+/*function p_sdl_draw_pixel
+use to plot a pixel at user defined position*/
+int p_sdl_draw_pixel(p_sdl_data *kiosk, int x, int y, int color){
+	if((x<S_MIN_X) || (x>S_MAX_X) || (y<S_MIN_Y) || (y>S_MAX_Y)){
+		printf("Invalid area to start with! x is: %d and y is: %d\n", x, y);
 		return 1;
 	}
 	else{
-		SDL_SetRenderDrawColor(kiosk->renderer, kiosk->color.r, kiosk->color.g, kiosk->color.b, kiosk->color.a);
-		//SDL_RenderSetScale(kiosk->renderer, 1.0, stroke_width);
-
-		if(SDL_RenderDrawLine(kiosk->renderer, x, y, x+1, y) !=0){
+		p_sdl_set_color(kiosk,color);
+		if(SDL_RenderDrawPoint(kiosk->renderer, x, y) !=0){
 			printf("fail to draw the line! SDL Error: %s\n", SDL_GetError());
 			return 1;
 		}
@@ -531,6 +539,49 @@ int p_sdl_draw_pixel(p_sdl_data *kiosk, int x, int y){
 		}
 	}
 }
+
+/*function p_sdl_draw_circle
+use to draw a circle on the screen*/
+int p_sdl_draw_circle(p_sdl_data *kiosk, int x, int y,int radius, int dofill, int color){
+	if((x<S_MIN_X) || (x>S_MAX_X) || (y<S_MIN_Y) || (y>S_MAX_Y)){
+		printf("Invalid area to start with! x is: %d and y is: %d\n", x, y);
+		return 1;
+	}
+	else if((x+radius > S_MAX_X) || (x-radius < S_MIN_X) || (y+radius > S_MAX_Y) || (y-radius < S_MIN_Y)){
+		printf("Error, Unable to draw rectangle outside the screen!\n");
+		return 1;
+	}
+	else{
+		if(dofill == 1){
+			p_sdl_set_color(kiosk, color);
+
+			if(filledCircleColor(kiosk->renderer, x, y, radius, ((kiosk->color.a<<24) | (kiosk->color.b<<16) | (kiosk->color.g <<8) | (kiosk->color.r))) !=0){
+				printf("fail to draw the circle!\n");
+				return 1;
+			}
+			else{
+				SDL_RenderPresent(kiosk->renderer);
+				return 0;
+			}
+		}
+		else if (dofill == 0){
+			p_sdl_set_color(kiosk, color);
+			if(circleRGBA(kiosk->renderer, x, y, radius, kiosk->color.r, kiosk->color.g, kiosk->color.b, kiosk->color.a) != 0){
+				printf("fail to draw the circle!\n");
+				return 1;
+			}
+			else{
+				SDL_RenderPresent(kiosk->renderer);
+				return 0;
+			}
+		}
+		else{
+			printf("Error input!\n");
+			return 1;
+		}
+	}
+}
+
 /*test function*/
 int main(int argc, char const *argv[])
 {
@@ -545,6 +596,7 @@ int main(int argc, char const *argv[])
 	int color = 0;
 	int i = 0;
 	int trash;
+	int temp;
 
 	//create new instance of kiosk
 	kiosk = p_sdl_new();
@@ -566,21 +618,24 @@ int main(int argc, char const *argv[])
 	printf("test for color function is %d\n",test);	
 
 	//test draw line function
-	test = p_sdl_draw_line(kiosk, 330, 100, 500, 100, 3.0);
+	test = p_sdl_draw_line(kiosk, 330, 100, 500, 100, 0);
 	printf("test for draw function is %d\n", test);
 
 	//test to draw a outlined rect
-	test = p_sdl_draw_rectangle(kiosk, 700, 100, 50, 200, 0);
+	test = p_sdl_draw_rectangle(kiosk, 600, 100, 50, 200, 0, 1);
 	printf("test for outlined rect is %d\n", test);
 
 	//test to draw a fill rect
-	test = p_sdl_draw_rectangle(kiosk, 330, 50, 250, 200, 1);
+	test = p_sdl_draw_rectangle(kiosk, 500, 50, 250, 200, 1, 2);
 	printf("test for fill rect is %d\n", test);
 
 	//test to draw a pixel
-	test = p_sdl_draw_pixel(kiosk, 700, 300);
-	printf("test for draw pixel function is %d\n", test);	
+	test = p_sdl_draw_pixel(kiosk, 700, 350, 3);
+	printf("test for draw pixel function is %d\n", test);
 
+	//test tp draw a filled circle
+	test = p_sdl_draw_circle(kiosk, 600, 200, 100, 1, 1);
+	printf("test for draw filled circle is %d\n", test);
 	// Test to render string(s)
 	i = 0;
 	for (i; i < 5; i++) {
@@ -590,6 +645,16 @@ int main(int argc, char const *argv[])
 	}
 		printf("test for render string is %d\n", test);
 
+	//test to draw a outlined circle
+	test = p_sdl_draw_circle(kiosk, 500, 150, 100, 0, 3);
+	printf("test for draw outlined circle is %d\n", test);
+
+
+	printf("enter 1 if you want to clear the screen\n");
+	scanf("%d",&temp);
+	if(temp ==1){
+		test = p_sdl_clear_screen(kiosk);
+		printf("test for clear screen function is %d\n", test);
 	//test to render character(s)
 	i = 0;
 	for (i; i < 70; i++) {
