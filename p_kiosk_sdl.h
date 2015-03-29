@@ -106,9 +106,9 @@ extern int p_sdl_render_char(p_sdl_data * kiosk, char c);
  *      0 if no error
  */
 
-extern int p_sdl_set_mouse_cursor_x(p_sdl_data * kiosk, int x);
+extern int p_sdl_set_text_cursor_x(p_sdl_data * kiosk, int x);
 /**
- * Sets the cursor's x location
+ * Sets the text cursor's x location
  * 
  * @param p_sdl_data * kiosk, int x
  * 	The SDL data struct and x value to set 
@@ -117,9 +117,9 @@ extern int p_sdl_set_mouse_cursor_x(p_sdl_data * kiosk, int x);
  * 	0 if no error occurred, 1 if error
  */
 
-extern int p_sdl_set_mouse_cursor_y(p_sdl_data * kiosk, int y);
+extern int p_sdl_set_text_cursor_y(p_sdl_data * kiosk, int y);
 /**
- * Sets the cursor's y location
+ * Sets the text cursor's y location
  * 
  * @param p_sdl_data * kiosk, int y
  * 	The SDL data struct and y value to set 
