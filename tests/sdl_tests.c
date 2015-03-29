@@ -49,28 +49,28 @@ int main ()
 	test_wait();
 
 	// Test 2.1
-	test_number = 2;
+	//test_number = 2;
 
-	int result_test_2 = -999;
+	//int result_test_2 = -999;
 
-	while (result_test_2 != -1)
-		{
-			result_test_2 = p_sdl_get_mouse_click(test_data);
-		}
+	//while (result_test_2 != -1)
+		//{
+			//result_test_2 = p_sdl_get_mouse_click(test_data);
+		//}
 
-	test_wait();
+	//test_wait();
 
-	// Test 2.2
-	result_test_2 = -999;
+	//// Test 2.2
+	//result_test_2 = -999;
 
-	// convert here
+	//// convert here
 
-	while (result_test_2 != 1)
-		{
-			result_test_2 = p_sdl_get_mouse_click(test_data);
-		}
+	//while (result_test_2 != 1)
+		//{
+			//result_test_2 = p_sdl_get_mouse_click(test_data);
+		//}
 
-	test_wait();
+	//test_wait();
 	/* 
 	 * Test 3
 	 */
@@ -86,15 +86,15 @@ int main ()
 	 */
 	test_number = 4;
 
-	int result_test_4_x = p_sdl_set_cursor_x(test_data, SCREEN_WIDTH / 2);
+	int result_test_4_x = p_sdl_set_text_cursor_x(test_data, SCREEN_WIDTH / 2);
 
 	assert_int(test_number, result_test_4_x, 0);
-	assert_int(test_number, p_sdl_get_cursor_x(test_data), SCREEN_WIDTH / 2);
+	assert_int(test_number, p_sdl_get_text_cursor_x(test_data), SCREEN_WIDTH / 2);
 
-	int result_test_4_y = p_sdl_set_cursor_y(test_data, SCREEN_HEIGHT / 2);
+	int result_test_4_y = p_sdl_set_text_cursor_y(test_data, SCREEN_HEIGHT / 2);
 
 	assert_int(test_number, result_test_4_y, 0);
-	assert_int(test_number, p_sdl_get_cursor_y(test_data), SCREEN_HEIGHT / 2);
+	assert_int(test_number, p_sdl_get_text_cursor_y(test_data), SCREEN_HEIGHT / 2);
 
 	int result_test_4_p = p_sdl_render_string(test_data, "Center");
 
@@ -116,16 +116,16 @@ int main ()
 	 */
 	test_number = 6;
 
-	int result_test_6_x = p_sdl_set_cursor_x(test_data, 0);
+	int result_test_6_x = p_sdl_set_text_cursor_x(test_data, 0);
 	assert_int(test_number, result_test_6_x, 0);
 
-	int result_test_6_y = p_sdl_set_cursor_y(test_data, 0);
+	int result_test_6_y = p_sdl_set_text_cursor_y(test_data, 0);
 	assert_int(test_number, result_test_6_y, 0);
 
 	int result_test_6_char = p_sdl_render_char(test_data, 'a');
 
 	assert_int(test_number, result_test_6_char, 0);
-	assert_int(test_number, p_sdl_get_cursor_x(test_data), 0 + CURSOR_MOVE);
+	assert_int(test_number, p_sdl_get_text_cursor_x(test_data), 0 + CURSOR_MOVE);
 
 	test_wait();
 	/* 
@@ -136,10 +136,10 @@ int main ()
 	int result_test_7_clear = p_sdl_clear_screen(test_data);
 	assert_int(test_number, result_test_7_clear, 0);
 
-	int result_test_7_x = p_sdl_set_cursor_x(test_data, 0);
+	int result_test_7_x = p_sdl_set_text_cursor_x(test_data, 0);
 	assert_int(test_number, result_test_7_x, 0);
 
-	int result_test_7_y = p_sdl_set_cursor_y(test_data, 0);
+	int result_test_7_y = p_sdl_set_text_cursor_y(test_data, 0);
 	assert_int(test_number, result_test_7_y, 0);
 
 	int result_test_7_color = p_sdl_set_color(test_data, 3);
@@ -157,25 +157,25 @@ int main ()
 	int result_test_8_clear = p_sdl_clear_screen(test_data);
 	assert_int(test_number, result_test_8_clear, 0);
 
-	int result_test_8_init = p_sdl_set_cursor_x(test_data, 5);
+	int result_test_8_init = p_sdl_set_text_cursor_x(test_data, 5);
 	assert_int(test_number, result_test_8_init, 0);
 
 	// Set invalid values
-	int result_test_8_x = p_sdl_set_cursor_x(test_data, 1000);
+	int result_test_8_x = p_sdl_set_text_cursor_x(test_data, 1000);
 	assert_int(test_number, result_test_8_x, 1);
 
-	int result_test_8_y = p_sdl_set_cursor_y(test_data, 1000);
+	int result_test_8_y = p_sdl_set_text_cursor_y(test_data, 1000);
 	assert_int(test_number, result_test_8_y, 1);
 
-	assert_int(test_number, p_sdl_get_cursor_x(test_data), 5);
+	assert_int(test_number, p_sdl_get_text_cursor_x(test_data), 5);
 
-	result_test_8_x = p_sdl_set_cursor_x(test_data, -3);
+	result_test_8_x = p_sdl_set_text_cursor_x(test_data, -3);
 	assert_int(test_number, result_test_8_x, 1);
 
-	result_test_8_y = p_sdl_set_cursor_y(test_data, -1);
+	result_test_8_y = p_sdl_set_text_cursor_y(test_data, -1);
 	assert_int(test_number, result_test_8_y, 1);
 
-	assert_int(test_number, p_sdl_get_cursor_x(test_data), 5);
+	assert_int(test_number, p_sdl_get_text_cursor_x(test_data), 5);
 
 	test_wait();
 	/* 
@@ -183,14 +183,14 @@ int main ()
 	 */
 	test_number = 9;
 
-	test_data->cursor_x = 599;
-	test_data->cursor_y = 409;
+	//test_data->cursor_x = 599;
+	//test_data->cursor_y = 409;
 
 	int result_test_9_print = p_sdl_render_string(test_data, "Hello World!");
 	assert_int(test_number, result_test_9_print, 1);
 
-	test_data->cursor_x = 0;
-	test_data->cursor_y = 0;
+	//test_data->cursor_x = 0;
+	//test_data->cursor_y = 0;
 
 	test_wait();
 	/* 
@@ -213,7 +213,7 @@ int main ()
 	 */
 	test_number = 11;
 
-	test_data->color = 99;
+	//test_data->color = 99;
 
 	int result_test_11_print = p_sdl_render_string(test_data, "Hello World!");
 	assert_int(test_number, result_test_11_print, 1);
