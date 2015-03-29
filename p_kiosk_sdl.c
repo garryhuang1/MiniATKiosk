@@ -40,8 +40,8 @@ uint32_t p_sdl_get_mouse_click(p_sdl_data *kiosk, SDL_Event *e);
 int p_sdl_clear_screen(p_sdl_data *kiosk);
 int p_sdl_render_string(p_sdl_data *kiosk, char string[]);
 int p_sdl_render_char(p_sdl_data *kiosk, char c);
-int p_sdl_set_mouse_cursor_x(p_sdl_data *kiosk, int x);
-int p_sdl_set_mouse_cursor_y(p_sdl_data *kiosk, int y);
+int p_sdl_set_text_cursor_x(p_sdl_data *kiosk, int x);
+int p_sdl_set_text_cursor_y(p_sdl_data *kiosk, int y);
 int p_sdl_set_color(p_sdl_data *kiosk);
 int p_sdl_draw_line(p_sdl_data *kiosk, int start_x, int start_y, int end_x, int end_y);
 int p_sdl_draw_rectangle(p_sdl_data *kiosk, int x, int y, int height, int width, int dofill);
@@ -331,9 +331,9 @@ int p_sdl_render_char(p_sdl_data *kiosk, char c) {
 	return success;
 }
 
-/*function p_sdl_set_mouse_cursor_x
+/*function p_sdl_set_text_cursor_x
 use to set the sdl cursor x value to user define value*/
-int p_sdl_set_mouse_cursor_x(p_sdl_data *kiosk, int x){
+int p_sdl_set_text_cursor_x(p_sdl_data *kiosk, int x){
 	kiosk->mouse_cursor_x = x;
 	if(kiosk->mouse_cursor_x ==x){
 		return 0;
@@ -343,9 +343,9 @@ int p_sdl_set_mouse_cursor_x(p_sdl_data *kiosk, int x){
 	}
 }
 
-/*function p_sdl_set_mouse_cursor_y
+/*function p_sdl_set_text_cursor_y
 use to set the sdl cursor y value to user define value*/
-int p_sdl_set_mouse_cursor_y(p_sdl_data *kiosk, int y){
+int p_sdl_set_text_cursor_y(p_sdl_data *kiosk, int y){
 	kiosk->mouse_cursor_y = y;
 	if(kiosk->mouse_cursor_y ==y){
 		return 0;
