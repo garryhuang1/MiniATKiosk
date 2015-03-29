@@ -42,7 +42,7 @@ int p_sdl_render_string(p_sdl_data *kiosk, char string[]);
 int p_sdl_render_char(p_sdl_data *kiosk, char c);
 int p_sdl_set_text_cursor_x(p_sdl_data *kiosk, int x);
 int p_sdl_set_text_cursor_y(p_sdl_data *kiosk, int y);
-int p_sdl_set_color(p_sdl_data *kiosk);
+int p_sdl_set_color(p_sdl_data *kiosk, int color);
 int p_sdl_draw_line(p_sdl_data *kiosk, int start_x, int start_y, int end_x, int end_y);
 int p_sdl_draw_rectangle(p_sdl_data *kiosk, int x, int y, int height, int width, int dofill);
 int p_sdl_draw_pixel(p_sdl_data *kiosk, int x, int y);
@@ -55,10 +55,6 @@ p_sdl_data * p_sdl_new(void){
 	p_sdl_data *kiosk;
 	kiosk = malloc(sizeof(p_sdl_data));
 
-	/*set window size*/
-	kiosk->window_width = 910;
-	kiosk->window_height = 400;
-
 	/*set default font size*/
 	kiosk->font_size = 12;
 
@@ -70,7 +66,7 @@ p_sdl_data * p_sdl_new(void){
 		success = false;	
 	}
 	else{
-		kiosk->window = SDL_CreateWindow("Kiosk v0.0.2", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,kiosk->window_width, kiosk->window_height,SDL_WINDOW_SHOWN);
+		kiosk->window = SDL_CreateWindow("Kiosk v0.0.2", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,SCREEN_WIDTH, SCREEN_HEIGHT,SDL_WINDOW_SHOWN);
 		if(kiosk->window ==NULL){
 			printf("Window could not be created! SDL Error: %s\n", SDL_GetError() );
 			success = false;
@@ -156,11 +152,9 @@ p_sdl_data * p_sdl_new(void){
 	}
 
 	/* Default color settings to black*/
-	if (kiosk->color.r == NULL || kiosk->color.g == NULL || kiosk->color.b == NULL) {
-		kiosk->color.r = 0;
-		kiosk->color.g = 0;
-		kiosk->color.b = 0;
-	}
+	kiosk->color.r = 0;
+	kiosk->color.g = 0;
+	kiosk->color.b = 0;
 	
 	/* Initialize text space variable */
 	kiosk->text_space.x = 325;
