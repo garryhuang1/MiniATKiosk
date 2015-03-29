@@ -41,8 +41,11 @@ int p_sdl_clear_screen(p_sdl_data *kiosk);
 int p_sdl_render_string(p_sdl_data *kiosk, char string[]);
 int p_sdl_render_char(p_sdl_data *kiosk, char c);
 int p_sdl_set_text_cursor_x(p_sdl_data *kiosk, int x);
+int p_sdl_get_text_cursor_x(p_sdl_data *kiosk);
 int p_sdl_set_text_cursor_y(p_sdl_data *kiosk, int y);
+int p_sdl_get_text_cursor_x(p_sdl_data *kiosk);
 int p_sdl_set_color(p_sdl_data *kiosk, int color);
+int p_sdl_get_color(p_sdl_data *kiosk);
 int p_sdl_draw_line(p_sdl_data *kiosk, int start_x, int start_y, int end_x, int end_y);
 int p_sdl_draw_rectangle(p_sdl_data *kiosk, int x, int y, int height, int width, int dofill);
 int p_sdl_draw_pixel(p_sdl_data *kiosk, int x, int y);
@@ -328,8 +331,8 @@ int p_sdl_render_char(p_sdl_data *kiosk, char c) {
 /*function p_sdl_set_text_cursor_x
 use to set the sdl cursor x value to user define value*/
 int p_sdl_set_text_cursor_x(p_sdl_data *kiosk, int x){
-	kiosk->mouse_cursor_x = x;
-	if(kiosk->mouse_cursor_x ==x){
+	kiosk->text_cursor_x = x;
+	if(kiosk->text_cursor_x ==x){
 		return 0;
 	}
 	else{
@@ -337,16 +340,30 @@ int p_sdl_set_text_cursor_x(p_sdl_data *kiosk, int x){
 	}
 }
 
+/*  function p_sdl_get_text_cursor_x
+ *  Text cursor x getter function
+ */
+int p_sdl_get_text_cursor_x(p_sdl_data *kiosk) {
+	return kiosk->text_cursor_x;
+}
+
 /*function p_sdl_set_text_cursor_y
 use to set the sdl cursor y value to user define value*/
 int p_sdl_set_text_cursor_y(p_sdl_data *kiosk, int y){
-	kiosk->mouse_cursor_y = y;
-	if(kiosk->mouse_cursor_y ==y){
+	kiosk->text_cursor_y = y;
+	if(kiosk->text_cursor_y ==y){
 		return 0;
 	}
 	else{
 		return 1;
 	}
+}
+
+/*  function p_sdl_get_text_cursor_y
+ *  Text cursor y getter function
+ */
+int p_sdl_get_text_cursor_y(p_sdl_data *kiosk) {
+	return kiosk->text_cursor_y;
 }
 
 /*function p_sdl_set_color
@@ -430,6 +447,52 @@ int p_sdl_set_color(p_sdl_data *kiosk, int color){
 		SDL_SetRenderDrawColor(kiosk->renderer, kiosk->color.r, kiosk->color.g, kiosk->color.b, kiosk->color.a);
 		
 		return 1;
+}
+
+/*  function p_sdl_get_color
+ *  SDL Color getter function
+ */
+int p_sdl_get_color(p_sdl_data *kiosk) {
+	int r = kiosk->color.r;
+	int g = kiosk->color.g;
+	int b = kiosk->color.b;
+
+	if (r == 0 && g == 0 && b == 0) {
+		return 0;
+	}
+	else if (r == 0 && g == 0 && b == 255) {
+		return 1;
+	}
+	else if (r == 0 && g == 255 && b == 0) {
+		return 2;
+	}
+	else if (r == 255 && g == 0 && b == 0) {
+		return 3;
+	}
+	else if (r == 0 && g == 255 && b == 255) {
+		return 4;
+	}
+	else if (r == 255 && g == 0 && b == 255) {
+		return 5;
+	}
+	else if (r == 255 && g == 255 && b == 0) {
+		return 6;
+	}
+	else if (r == 0 && g == 191 && b == 255) {
+		return 7;
+	}
+	else if (r == 255 && g == 20 && b == 147) {
+		return 8;
+	}
+	else if (r == 0 && g == 250 && b == 154) {
+		return 9;
+	}
+	else if (r == 128 && g == 0 && b == 128) {
+		return 10;
+	}
+	else {
+		return -1;
+	}
 }
 
 /*function p_sdl_clear_screen
@@ -566,4 +629,8 @@ int p_sdl_draw_circle(p_sdl_data *kiosk, int x, int y,int radius, int dofill){
 			return 1;
 		}
 	}
+}
+
+int main (void) {
+	return 0;
 }

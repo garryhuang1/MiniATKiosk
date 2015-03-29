@@ -117,6 +117,16 @@ extern int p_sdl_set_text_cursor_x(p_sdl_data * kiosk, int x);
  * 	0 if no error occurred, 1 if error
  */
 
+extern int p_sdl_get_text_cursor_x(p_sdl_data * kiosk);
+/**
+ * Gets the text cursor's x location
+ * 
+ * @param p_sdl_data * kiosk
+ * 	The SDL data struct
+ * @return int
+ * 	x value of text cursor
+ */
+
 extern int p_sdl_set_text_cursor_y(p_sdl_data * kiosk, int y);
 /**
  * Sets the text cursor's y location
@@ -128,6 +138,16 @@ extern int p_sdl_set_text_cursor_y(p_sdl_data * kiosk, int y);
  * 	0 if no error occurred, 1 if error
  */
 
+extern int p_sdl_get_text_cursor_y(p_sdl_data * kiosk);
+/**
+ * Gets the text cursor's y location
+ * 
+ * @param p_sdl_data * kiosk
+ * 	The SDL data struct
+ * @return int
+ * 	y value of text cursor
+ */
+
 extern int p_sdl_set_color(p_sdl_data * kiosk, int color);
 /**
  * Sets the current color for text rendering and 
@@ -137,6 +157,16 @@ extern int p_sdl_set_color(p_sdl_data * kiosk, int color);
  *	The SDL data struct and color code
  * @return int
  * 	0 if no error occurred, 1 if error
+ */
+
+extern int p_sdl_get_color(p_sdl_data * kiosk);
+/**
+ * Gets the current color for text rendering and 
+ * drawing corresponding with color code argument.
+ *
+ * @param p_sdl_data * kiosk
+ * @return int
+ * 	int color code, error if -1 returned
  */
 
 extern int p_sdl_draw_line(p_sdl_data * kiosk, int start_x, int start_y, int end_x, int end_y);
