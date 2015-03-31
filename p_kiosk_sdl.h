@@ -9,14 +9,24 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-const int SCREEN_WIDTH = 910;
+const int WINDOW_WIDTH = 910;
+/**
+ * Global constant variable for window width.
+ */
+
+const int WINDOW_HEIGHT = 400;
+/**
+ * Global constant variable for window height.
+ */
+
+const int SCREEN_WIDTH = 610;
 /**
  * Global constant variable for screen width.
  */
 
 const int SCREEN_HEIGHT = 400;
 /**
- * Global constant variable for screen height.
+ * Global constant variable for screen width.
  */
 
 typedef struct p_sdl_data p_sdl_data;
