@@ -507,6 +507,10 @@ int p_sdl_clear_screen(p_sdl_data *kiosk){
 		DestR.h = 400;
 	if(SDL_RenderCopy(kiosk->renderer, kiosk->screen_texture, NULL, &DestR) ==0){
 		SDL_RenderPresent(kiosk->renderer);
+		return 0;
+	}
+	else{
+		return 1;
 	}
 }
 
