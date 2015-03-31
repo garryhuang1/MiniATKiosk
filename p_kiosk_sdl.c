@@ -96,7 +96,7 @@ p_sdl_data * p_sdl_new(void){
 	/*render both screen and keypad to the window */
 	if(success){
 		/*keypad */
-		kiosk->keypad_surface = IMG_Load("src/images/keypad.png");
+		kiosk->keypad_surface = IMG_Load("/home/quw/miniat_t/peripherals/kiosk/src/images/keypad.png");
 		if(kiosk->keypad_surface ==NULL){
 			printf("Unable to load image %s! SDL_Image Error: %s\n", "src/images/keypad.png", IMG_GetError());
 		}
@@ -109,7 +109,7 @@ p_sdl_data * p_sdl_new(void){
 		}
 
 		/*screen */
-		kiosk->screen_surface = IMG_Load("src/images/screen.png");
+		kiosk->screen_surface = IMG_Load("/home/quw/miniat_t/peripherals/kiosk/src/images/screen.png");
 		if(kiosk->screen_surface ==NULL){
 			printf("Unable to load image %s! SDL_Image Error: %s\n", "src/images/screen.png", IMG_GetError());
 		}
@@ -147,7 +147,7 @@ p_sdl_data * p_sdl_new(void){
 		kiosk->text_line_size = 0;
 
 		/* Open font ttf file and load into font variable */
-		kiosk->text_font = TTF_OpenFont("src/fonts/pt_sans_regular.ttf", kiosk->font_size);
+		kiosk->text_font = TTF_OpenFont("/home/quw/miniat_t/peripherals/kiosk/src/fonts/pt_sans_regular.ttf", kiosk->font_size);
 
 		if (kiosk->text_font == NULL) {
 			printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
@@ -331,12 +331,13 @@ int p_sdl_render_char(p_sdl_data *kiosk, char c) {
 /*function p_sdl_set_text_cursor_x
 use to set the sdl cursor x value to user define value*/
 int p_sdl_set_text_cursor_x(p_sdl_data *kiosk, int x){
+	x = x+324;
 	kiosk->text_cursor_x = x;
-	if(kiosk->text_cursor_x ==x){
-		return 0;
-	}
-	else{
+	if((x > S_MAX_X) || (x < S_MIN_X)){
 		return 1;
+	}
+	else if(kiosk->text_cursor_x ==x){
+		return 0;
 	}
 }
 
@@ -350,12 +351,13 @@ int p_sdl_get_text_cursor_x(p_sdl_data *kiosk) {
 /*function p_sdl_set_text_cursor_y
 use to set the sdl cursor y value to user define value*/
 int p_sdl_set_text_cursor_y(p_sdl_data *kiosk, int y){
+	y = y+24;
 	kiosk->text_cursor_y = y;
-	if(kiosk->text_cursor_y ==y){
-		return 0;
-	}
-	else{
+	if((y > S_MAX_Y) || (y< S_MIN_Y)){
 		return 1;
+	}
+	else if(kiosk->text_cursor_y ==y){
+		return 0;
 	}
 }
 
