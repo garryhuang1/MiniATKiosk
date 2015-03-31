@@ -29,10 +29,10 @@ struct p_sdl_data {
 	SDL_Color color;
 };
 
-const int S_MIN_X = 324;
-const int S_MAX_X = 886;
-const int S_MIN_Y = 24;
-const int S_MAX_Y = 376;
+const int S_MIN_X = 329;
+const int S_MAX_X = 881;
+const int S_MIN_Y = 29;
+const int S_MAX_Y = 371;
 
 p_sdl_data * p_sdl_new(void);
 int p_sdl_close(p_sdl_data *kiosk);
@@ -69,7 +69,7 @@ p_sdl_data * p_sdl_new(void){
 		success = false;	
 	}
 	else{
-		kiosk->window = SDL_CreateWindow("Kiosk v0.0.2", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,SCREEN_WIDTH, SCREEN_HEIGHT,SDL_WINDOW_SHOWN);
+		kiosk->window = SDL_CreateWindow("Kiosk v0.0.2", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,WINDOW_WIDTH, WINDOW_HEIGHT,SDL_WINDOW_SHOWN);
 		if(kiosk->window ==NULL){
 			printf("Window could not be created! SDL Error: %s\n", SDL_GetError() );
 			success = false;
@@ -331,12 +331,12 @@ int p_sdl_render_char(p_sdl_data *kiosk, char c) {
 /*function p_sdl_set_text_cursor_x
 use to set the sdl cursor x value to user define value*/
 int p_sdl_set_text_cursor_x(p_sdl_data *kiosk, int x){
-	x = x+324;
-	kiosk->text_cursor_x = x;
+	x = x + S_MIN_X;
 	if((x > S_MAX_X) || (x < S_MIN_X)){
 		return 1;
 	}
-	else if(kiosk->text_cursor_x ==x){
+	else {
+		kiosk->text_cursor_x = x;
 		return 0;
 	}
 }
@@ -351,12 +351,12 @@ int p_sdl_get_text_cursor_x(p_sdl_data *kiosk) {
 /*function p_sdl_set_text_cursor_y
 use to set the sdl cursor y value to user define value*/
 int p_sdl_set_text_cursor_y(p_sdl_data *kiosk, int y){
-	y = y+24;
-	kiosk->text_cursor_y = y;
+	y = y + S_MIN_Y;
 	if((y > S_MAX_Y) || (y< S_MIN_Y)){
 		return 1;
 	}
-	else if(kiosk->text_cursor_y ==y){
+	else {
+		kiosk->text_cursor_y = y;
 		return 0;
 	}
 }
