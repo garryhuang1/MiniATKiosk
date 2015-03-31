@@ -1,7 +1,26 @@
 Import('*')
+import os
 
-NAME = 'kiosk_sdl'
-INC =  [ '#/vm/inc', '#/system/kiosk' ]
-SRC = Glob('p_kiosk_sdl.c')
+SDL2_CFLAGS = str.split(os.popen('sdl2-config --cflags').read())
+SDL2_LIBS = str.split(os.popen('sdl2-config --libs').read())
 
-buildSharedLibrary(NAME, SRC, CPPPATH=INC)
+INC = [ '#/vm/inc', '#/system/kiosk' ]
+
+LIBS = [ 'libminiat', 'libSDL2_ttf', 'libSDL2_image', 'libSDL2_gfx' ]
+
+KIOSK_CFLAGS = []
+KIOSK_LIBPATH = str.split(env[ 'LIBPATH' ])
+
+for flag in SDL2_CFLAGS:
+	if flag.startswith("-I"):
+		INC.append(flag[2:])
+	else:
+		KIOSK_CFLAGS.append(flag)
+
+for flag in SDL2_LIBS:
+	if flag.startswith("-L"):
+		KIOSK_LIBPATH.append(flag[2:])
+	else:
+		LIBS.append(flag[2:])
+
+buildProgram("kiosk", "p_kiosk_sdl.c", CPPPATH=INC, LIBS=LIBS, CFLAGS=KIOSK_CFLAGS, LIBPATH=KIOSK_LIBPATH)
