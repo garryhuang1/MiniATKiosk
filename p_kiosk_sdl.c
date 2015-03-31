@@ -96,9 +96,9 @@ p_sdl_data * p_sdl_new(void){
 	/*render both screen and keypad to the window */
 	if(success){
 		/*keypad */
-		kiosk->keypad_surface = IMG_Load("/home/quw/miniat_t/peripherals/kiosk/src/images/keypad.png");
+		kiosk->keypad_surface = IMG_Load("resources/images/keypad.png");
 		if(kiosk->keypad_surface ==NULL){
-			printf("Unable to load image %s! SDL_Image Error: %s\n", "src/images/keypad.png", IMG_GetError());
+			printf("Unable to load image %s! SDL_Image Error: %s\n", "resources/images/keypad.png", IMG_GetError());
 		}
 		else{
 			kiosk->keypad_texture = SDL_CreateTextureFromSurface(kiosk->renderer, kiosk->keypad_surface);
@@ -109,9 +109,9 @@ p_sdl_data * p_sdl_new(void){
 		}
 
 		/*screen */
-		kiosk->screen_surface = IMG_Load("/home/quw/miniat_t/peripherals/kiosk/src/images/screen.png");
+		kiosk->screen_surface = IMG_Load("resources/images/screen.png");
 		if(kiosk->screen_surface ==NULL){
-			printf("Unable to load image %s! SDL_Image Error: %s\n", "src/images/screen.png", IMG_GetError());
+			printf("Unable to load image %s! SDL_Image Error: %s\n", "resources/images/screen.png", IMG_GetError());
 		}
 		else{
 			kiosk->screen_texture = SDL_CreateTextureFromSurface(kiosk->renderer, kiosk->screen_surface);
@@ -147,7 +147,7 @@ p_sdl_data * p_sdl_new(void){
 		kiosk->text_line_size = 0;
 
 		/* Open font ttf file and load into font variable */
-		kiosk->text_font = TTF_OpenFont("/home/quw/miniat_t/peripherals/kiosk/src/fonts/pt_sans_regular.ttf", kiosk->font_size);
+		kiosk->text_font = TTF_OpenFont("resources/fonts/pt_sans_regular.ttf", kiosk->font_size);
 
 		if (kiosk->text_font == NULL) {
 			printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
@@ -345,7 +345,8 @@ int p_sdl_set_text_cursor_x(p_sdl_data *kiosk, int x){
  *  Text cursor x getter function
  */
 int p_sdl_get_text_cursor_x(p_sdl_data *kiosk) {
-	return kiosk->text_cursor_x;
+	int x = kiosk->text_cursor_x - S_MIN_X;
+	return x;
 }
 
 /*function p_sdl_set_text_cursor_y
@@ -365,7 +366,8 @@ int p_sdl_set_text_cursor_y(p_sdl_data *kiosk, int y){
  *  Text cursor y getter function
  */
 int p_sdl_get_text_cursor_y(p_sdl_data *kiosk) {
-	return kiosk->text_cursor_y;
+	int y = kiosk->text_cursor_y - S_MIN_Y;
+	return y;
 }
 
 /*function p_sdl_set_color
