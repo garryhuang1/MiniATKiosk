@@ -151,7 +151,8 @@ int main ()
 	assert_int(test_number, result_test_7_y, 0);
 
 	int result_test_7_color = p_sdl_set_color(test_data, 3);
-	assert_int(test_number, result_test_7_color, 3);
+	assert_int(test_number, result_test_7_color, 1);
+	assert_int(test_number, p_sdl_get_color(test_data), 3);
 
 	int result_test_7_print = p_sdl_render_string(test_data, "Hello World!");
 	assert_int(test_number, result_test_7_print, 0);
