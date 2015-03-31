@@ -23,4 +23,4 @@ for flag in SDL2_LIBS:
 	else:
 		LIBS.append(flag[2:])
 
-buildProgram("kiosk", "p_kiosk_sdl.c", CPPPATH=INC, LIBS=LIBS, CFLAGS=KIOSK_CFLAGS, LIBPATH=KIOSK_LIBPATH)
+buildSharedLibrary("kiosk_sdl", "p_kiosk_sdl.c", CPPPATH=INC, LIBS=LIBS, CFLAGS=KIOSK_CFLAGS, LIBPATH=KIOSK_LIBPATH)

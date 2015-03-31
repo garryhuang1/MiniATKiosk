@@ -8,7 +8,7 @@
 
 void failed(int test_number)
 {
-	printf("Test %d failed", test_number);
+	printf("\nTest %d failed", test_number);
 	getchar();
 	exit(1);
 }
@@ -17,6 +17,7 @@ void assert_int(int test_number, int a, int b)
 {
 	if (a != b)
 		{
+			printf("\n%d != %d", a, b);
 			failed(test_number);
 		}else{
 			printf("\n!- assert_num in Test %d passed", test_number);
@@ -82,7 +83,7 @@ int main ()
 	test_number = 3;
 	
 	
-	p_sdl_set_color(test_data, 3);
+	p_sdl_set_color(test_data, 2);
 	
 	int result_test_3 = p_sdl_render_string(test_data, "Hello World!");
 
@@ -115,7 +116,8 @@ int main ()
 	test_number = 5;
 
 	int result_test_5 = p_sdl_clear_screen(test_data);
-
+	
+	printf("I got value %d", result_test_5);
 	assert_int(test_number, result_test_5, 0);
 
 	test_wait(test_number);
