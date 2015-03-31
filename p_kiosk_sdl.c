@@ -442,11 +442,11 @@ int p_sdl_set_color(p_sdl_data *kiosk, int color){
 			kiosk->color.b = 0;
 			kiosk->color.a = 255;
 			break;
-			return 0;
+			return 1;
 		}
 		SDL_SetRenderDrawColor(kiosk->renderer, kiosk->color.r, kiosk->color.g, kiosk->color.b, kiosk->color.a);
 		
-		return 1;
+		return 0;
 }
 
 /*  function p_sdl_get_color
