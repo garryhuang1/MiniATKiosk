@@ -18,7 +18,11 @@ void assert_int(int test_number, int a, int b)
 	if (a != b)
 		{
 			failed(test_number);
+		}else{
+			printf("\n!- assert_num in Test %d passed", test_number);
 		}
+			
+			
 }
 
 void assert_null(int test_number, void* a)
@@ -29,9 +33,10 @@ void assert_null(int test_number, void* a)
 		}
 }
 
-void test_wait()
+void test_wait(int test_number)
 {
-	printf("Press ENTER to continue");
+	printf("\n> Finished Test %d", test_number);
+	printf("\nPress ENTER to continue");
 	getchar();
 }
 
@@ -46,7 +51,7 @@ int main ()
 
 	assert_null(test_number, test_data);
 
-	test_wait();
+	test_wait(test_number);
 
 	// Test 2.1
 	//test_number = 2;
@@ -58,7 +63,7 @@ int main ()
 			//result_test_2 = p_sdl_get_mouse_click(test_data);
 		//}
 
-	//test_wait();
+	//test_wait(test_number);
 
 	//// Test 2.2
 	//result_test_2 = -999;
@@ -70,28 +75,31 @@ int main ()
 			//result_test_2 = p_sdl_get_mouse_click(test_data);
 		//}
 
-	//test_wait();
+	//test_wait(test_number);
 	/* 
 	 * Test 3
 	 */
 	test_number = 3;
-
+	
+	
+	p_sdl_set_color(test_data, 3);
+	
 	int result_test_3 = p_sdl_render_string(test_data, "Hello World!");
 
 	assert_int(test_number, result_test_3, 0);
 
-	test_wait();
+	test_wait(test_number);
 	/* 
 	 * Test 4
 	 */
 	test_number = 4;
 
-	int result_test_4_x = p_sdl_set_text_cursor_x(test_data, SCREEN_WIDTH / 2);
+	int result_test_4_x = p_sdl_set_text_cursor_x(test_data, SCREEN_WIDTH / 2+ 200 );
 
 	assert_int(test_number, result_test_4_x, 0);
-	assert_int(test_number, p_sdl_get_text_cursor_x(test_data), SCREEN_WIDTH / 2);
+	assert_int(test_number, p_sdl_get_text_cursor_x(test_data), (SCREEN_WIDTH / 2 ) +200 );
 
-	int result_test_4_y = p_sdl_set_text_cursor_y(test_data, SCREEN_HEIGHT / 2);
+	int result_test_4_y = p_sdl_set_text_cursor_y(test_data, SCREEN_HEIGHT / 2 );
 
 	assert_int(test_number, result_test_4_y, 0);
 	assert_int(test_number, p_sdl_get_text_cursor_y(test_data), SCREEN_HEIGHT / 2);
@@ -100,7 +108,7 @@ int main ()
 
 	assert_int(test_number, result_test_4_p, 0);
 
-	test_wait();
+	test_wait(test_number);
 	/* 
 	 * Test 5
 	 */
@@ -110,7 +118,7 @@ int main ()
 
 	assert_int(test_number, result_test_5, 0);
 
-	test_wait();
+	test_wait(test_number);
 	/* 
 	 * Test 6
 	 */
@@ -127,7 +135,7 @@ int main ()
 	assert_int(test_number, result_test_6_char, 0);
 	assert_int(test_number, p_sdl_get_text_cursor_x(test_data), 0 + CURSOR_MOVE);
 
-	test_wait();
+	test_wait(test_number);
 	/* 
 	 * Test 7
 	 */
@@ -148,7 +156,7 @@ int main ()
 	int result_test_7_print = p_sdl_render_string(test_data, "Hello World!");
 	assert_int(test_number, result_test_7_print, 0);
 
-	test_wait();
+	test_wait(test_number);
 	/* 
 	 * Test 8
 	 */
@@ -159,7 +167,7 @@ int main ()
 
 	int result_test_8_init = p_sdl_set_text_cursor_x(test_data, 5);
 	assert_int(test_number, result_test_8_init, 0);
-
+ 
 	// Set invalid values
 	int result_test_8_x = p_sdl_set_text_cursor_x(test_data, 1000);
 	assert_int(test_number, result_test_8_x, 1);
@@ -177,7 +185,7 @@ int main ()
 
 	assert_int(test_number, p_sdl_get_text_cursor_x(test_data), 5);
 
-	test_wait();
+	test_wait(test_number);
 	/* 
 	 * Test 9
 	 */
@@ -192,7 +200,7 @@ int main ()
 	//test_data->cursor_x = 0;
 	//test_data->cursor_y = 0;
 
-	test_wait();
+	test_wait(test_number);
 	/* 
 	 * Test 10
 	 */
@@ -207,7 +215,7 @@ int main ()
 	int result_test_10_print = p_sdl_render_string(test_data, "Hello World!");
 	assert_int(test_number, result_test_10_print, 0);
 
-	test_wait();
+	test_wait(test_number);
 	/* 
 	 * Test 11
 	 */
@@ -220,7 +228,7 @@ int main ()
 
 	assert_int(test_number, p_sdl_get_color(test_data), 0);
 
-	test_wait();
+	test_wait(test_number);
 	/* 
 	 * Test 12
 	 */
@@ -232,7 +240,7 @@ int main ()
 	int result_test_12_pixel = p_sdl_draw_pixel(test_data, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 	assert_int(test_number, result_test_12_pixel, 0);
 
-	test_wait();
+	test_wait(test_number);
 	/* 
 	 * Test 13
 	 */
@@ -244,12 +252,12 @@ int main ()
 	int result_test_13_1_draw = p_sdl_draw_rectangle(test_data, 0, 0, 50, 50, 0);
 	assert_int(test_number, result_test_13_1_draw, 0);
 
-	test_wait();
+	test_wait(test_number);
 
 	int result_test_13_1_draw2 = p_sdl_draw_rectangle(test_data, 0, 0, 50, 50, 1);
 	assert_int(test_number, result_test_13_1_draw2, 0);
 
-	test_wait();
+	test_wait(test_number);
 
 	// Test 13.2
 	int result_test_13_2_clear = p_sdl_clear_screen(test_data);
@@ -258,12 +266,12 @@ int main ()
 	int result_test_13_2_draw = p_sdl_draw_rectangle(test_data, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 50, 50, 0);
 	assert_int(test_number, result_test_13_2_draw, 0);
 
-	test_wait();
+	test_wait(test_number);
 
 	int result_test_13_2_draw2 = p_sdl_draw_rectangle(test_data, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 50, 50, 1);
 	assert_int(test_number, result_test_13_2_draw2, 0);
 
-	test_wait();
+	test_wait(test_number);
 
 	/* 
 	 * Test 14
@@ -276,7 +284,7 @@ int main ()
 	int result_test_14_draw = p_sdl_draw_line(test_data, 50, 50, 100, 100);
 	assert_int(test_number, result_test_14_draw, 0);
 
-	test_wait();
+	test_wait(test_number);
 
 	/* 
 	 * Test 15
@@ -289,12 +297,12 @@ int main ()
 	int result_test_15_draw = p_sdl_draw_circle(test_data, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 5, 0);
 	assert_int(test_number, result_test_15_draw, 0);
 
-	test_wait();
+	test_wait(test_number);
 
 	int result_test_15_draw2 = p_sdl_draw_circle(test_data, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 5, 1);
 	assert_int(test_number, result_test_15_draw2, 0);
 
-	test_wait();
+	test_wait(test_number);
 
 	/* 
 	 * Test 16
@@ -311,7 +319,7 @@ int main ()
 	int result_test_16_pixel = p_sdl_draw_pixel(test_data, 641, 411);
 	assert_int(test_number, result_test_16_pixel, 1);
 
-	test_wait();
+	test_wait(test_number);
 
 
 	/* 
@@ -326,12 +334,12 @@ int main ()
 	int result_test_17_draw = p_sdl_draw_rectangle(test_data, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1000, 1000, 0);
 	assert_int(test_number, result_test_17_draw, 1);
 
-	test_wait();
+	test_wait(test_number);
 
 	int result_test_17_draw2 = p_sdl_draw_rectangle(test_data, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1000, 1000, 1);
 	assert_int(test_number, result_test_17_draw2, 1);
 
-	test_wait();
+	test_wait(test_number);
 
 	/* 
 	 * Test 18
@@ -354,12 +362,12 @@ int main ()
 	int result_test_19_draw = p_sdl_draw_circle(test_data, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 100, 0);
 	assert_int(test_number, result_test_19_draw, 0);
 
-	test_wait();
+	test_wait(test_number);
 
 	int result_test_19_draw2 = p_sdl_draw_circle(test_data, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 100, 1);
 	assert_int(test_number, result_test_19_draw2, 0);
 
-	test_wait();
+	test_wait(test_number);
 
 
 
