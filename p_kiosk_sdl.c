@@ -10,25 +10,6 @@
 
 #include "p_kiosk_sdl.h"
 
-struct p_sdl_data {
-	SDL_Window *window;
-	SDL_Surface *screen_surface;
-	SDL_Surface *keypad_surface;
-	SDL_Renderer *renderer;
-	SDL_Texture *screen_texture;
-	SDL_Texture *keypad_texture;
-	SDL_Rect text_space;
-	TTF_Font *text_font;
-	SDL_Texture *pixel_texture;
-	int mouse_cursor_x;
-	int mouse_cursor_y;
-	int font_size;
-	int text_cursor_x;
-	int text_cursor_y;
-	int text_line_size;
-	SDL_Color color;
-};
-
 const int S_MIN_X = 329;
 const int S_MAX_X = 881;
 const int S_MIN_Y = 29;
