@@ -217,7 +217,7 @@ int main ()
 	test_number = 10;
 
 	int result_test_10 = p_sdl_set_color(test_data, 99);
-	assert_int(test_number, result_test_10, 0);
+	assert_int(test_number, result_test_10, 1);
 
 	assert_int(test_number, p_sdl_get_color(test_data), 0);
 
@@ -229,7 +229,7 @@ int main ()
 	 * Test 11
 	 */
 	test_number = 11;
-
+ 
 	//test_data->color = 99;
 
 	int result_test_11_print = p_sdl_render_string(test_data, "Hello World!");
@@ -368,19 +368,21 @@ int main ()
 
 	test_number = 19;
 
-	int result_test_19_draw = p_sdl_draw_circle(test_data, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 100, 0);
-	assert_int(test_number, result_test_19_draw, 0);
+	int result_test_19_draw = p_sdl_draw_circle(test_data, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 500, 0);
+	assert_int(test_number, result_test_19_draw, 1);
 
 	test_wait(test_number);
 
-	int result_test_19_draw2 = p_sdl_draw_circle(test_data, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 100, 1);
-	assert_int(test_number, result_test_19_draw2, 0);
+	int result_test_19_draw2 = p_sdl_draw_circle(test_data, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 500, 1);
+	assert_int(test_number, result_test_19_draw2, 1);
 
 	test_wait(test_number);
 
 
 
 	// Test 20
+	test_number = 20;
+	
 	int result_test_20 = p_sdl_close(test_data);
 
 	assert_int(test_number, result_test_20, 0);

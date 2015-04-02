@@ -169,12 +169,8 @@ int p_sdl_close(p_sdl_data *kiosk){
 	IMG_Quit();
 	SDL_Quit();
 
-	if(kiosk->window ==NULL){
-		return 1;
-	}
-	else{
-		return 0;
-	}
+	return 0;
+
 }
 
 /*function p_sdl_get_mouse_click
@@ -519,6 +515,10 @@ use to draw line on the sdl screen*/
 int p_sdl_draw_line(p_sdl_data *kiosk, int start_x, int start_y, int end_x, int end_y){
 	start_x = start_x + S_MIN_X;
 	start_y = start_y + S_MIN_Y;
+	
+	end_x = end_x + S_MIN_X;
+	end_y = end_y + S_MIN_Y;
+	
 	if((start_x<S_MIN_X) || (start_x>S_MAX_X) || (start_y <S_MIN_Y) || (start_y > S_MAX_Y)){
 		printf("Invalid area to start with !\n");
 		return 1;	
@@ -607,14 +607,15 @@ int p_sdl_draw_pixel(p_sdl_data *kiosk, int x, int y){
 /*function p_sdl_draw_circle
 use to draw a circle on the screen*/
 int p_sdl_draw_circle(p_sdl_data *kiosk, int x, int y, int radius, int dofill){
+
 	x = x + S_MIN_X;
-	x = y + S_MIN_Y;
+	y = y + S_MIN_Y;
 	if((x<S_MIN_X) || (x>S_MAX_X) || (y<S_MIN_Y) || (y>S_MAX_Y)){
 		printf("Invalid area to start with! x is: %d and y is: %d\n", x, y);
 		return 1;
 	}
 	else if((x+radius > S_MAX_X) || (x-radius < S_MIN_X) || (y+radius > S_MAX_Y) || (y-radius < S_MIN_Y)){
-		printf("Error, Unable to draw rectangle outside the screen!\n");
+		printf("Error, Unable to draw circle outside the screen!\n");
 		return 1;
 	}
 	else{
