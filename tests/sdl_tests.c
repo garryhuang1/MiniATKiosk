@@ -2,8 +2,8 @@
 
 #include "p_kiosk_sdl.h"
 
-#define SCREEN_HEIGHT 410
-#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 400
+#define SCREEN_WIDTH 610
 #define CURSOR_MOVE 12
 
 void failed(int test_number)
@@ -55,7 +55,7 @@ int main ()
 	test_wait(test_number);
 
 	// Test 2.1
-	//test_number = 2;
+	//test_number = 2; 
 
 	//int result_test_2 = -999;
 
@@ -82,9 +82,6 @@ int main ()
 	 */
 	test_number = 3;
 	
-	
-	p_sdl_set_color(test_data, 2);
-	
 	int result_test_3 = p_sdl_render_string(test_data, "Hello World!");
 
 	assert_int(test_number, result_test_3, 0);
@@ -95,10 +92,10 @@ int main ()
 	 */
 	test_number = 4;
 
-	int result_test_4_x = p_sdl_set_text_cursor_x(test_data, SCREEN_WIDTH / 2+ 200 );
+	int result_test_4_x = p_sdl_set_text_cursor_x(test_data, SCREEN_WIDTH / 2);
 
 	assert_int(test_number, result_test_4_x, 0);
-	assert_int(test_number, p_sdl_get_text_cursor_x(test_data), (SCREEN_WIDTH / 2 ) +200 );
+	assert_int(test_number, p_sdl_get_text_cursor_x(test_data), (SCREEN_WIDTH / 2 )  );
 
 	int result_test_4_y = p_sdl_set_text_cursor_y(test_data, SCREEN_HEIGHT / 2 );
 
@@ -117,7 +114,6 @@ int main ()
 
 	int result_test_5 = p_sdl_clear_screen(test_data);
 	
-	printf("I got value %d", result_test_5);
 	assert_int(test_number, result_test_5, 0);
 
 	test_wait(test_number);
@@ -153,7 +149,7 @@ int main ()
 	assert_int(test_number, result_test_7_y, 0);
 
 	int result_test_7_color = p_sdl_set_color(test_data, 3);
-	assert_int(test_number, result_test_7_color, 1);
+	assert_int(test_number, result_test_7_color, 0);
 	assert_int(test_number, p_sdl_get_color(test_data), 3);
 
 	int result_test_7_print = p_sdl_render_string(test_data, "Hello World!");
@@ -194,14 +190,20 @@ int main ()
 	 */
 	test_number = 9;
 
-	//test_data->cursor_x = 599;
-	//test_data->cursor_y = 409;
+	test_data->text_cursor_x = 320;
+	test_data->text_cursor_y = 29;
 
 	int result_test_9_print = p_sdl_render_string(test_data, "Hello World!");
 	assert_int(test_number, result_test_9_print, 1);
+	
+	test_data->text_cursor_x = 885;
+	test_data->text_cursor_y = 29;
 
-	//test_data->cursor_x = 0;
-	//test_data->cursor_y = 0;
+	int result_test_9_print2 = p_sdl_render_string(test_data, "Hello World!");
+	assert_int(test_number, result_test_9_print2, 1);
+
+	test_data->text_cursor_x = 0;
+	test_data->text_cursor_y = 0;
 
 	test_wait(test_number);
 	/* 
@@ -210,10 +212,9 @@ int main ()
 	test_number = 10;
 
 	int result_test_10 = p_sdl_set_color(test_data, 99);
-	assert_int(test_number, result_test_10, 1);
+	assert_int(test_number, result_test_10, 0);
 
-
-	assert_int(test_number, p_sdl_get_color(test_data), 3);
+	assert_int(test_number, p_sdl_get_color(test_data), 0);
 
 	int result_test_10_print = p_sdl_render_string(test_data, "Hello World!");
 	assert_int(test_number, result_test_10_print, 0);

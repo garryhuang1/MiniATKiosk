@@ -77,7 +77,7 @@ p_sdl_data * p_sdl_new(void){
 	/*render both screen and keypad to the window */
 	if(success){
 		/*keypad */
-		kiosk->keypad_surface = IMG_Load("/home/quw/miniat_t/peripherals/kiosk/src/images/keypad.png");
+		kiosk->keypad_surface = IMG_Load("resources/images/keypad.png");
 		if(kiosk->keypad_surface ==NULL){
 			printf("Unable to load image %s! SDL_Image Error: %s\n", "src/images/keypad.png", IMG_GetError());
 		}
@@ -90,7 +90,7 @@ p_sdl_data * p_sdl_new(void){
 		}
 
 		/*screen */
-		kiosk->screen_surface = IMG_Load("/home/quw/miniat_t/peripherals/kiosk/src/images/screen.png");
+		kiosk->screen_surface = IMG_Load("resources/images/screen.png");
 		if(kiosk->screen_surface ==NULL){
 			printf("Unable to load image %s! SDL_Image Error: %s\n", "src/images/screen.png", IMG_GetError());
 		}
@@ -123,12 +123,12 @@ p_sdl_data * p_sdl_new(void){
 	}
 	else {
 		kiosk->text_font = NULL;
-		kiosk->text_cursor_x = 325;	// Magic Numbers!
-		kiosk->text_cursor_y = 25;	// Magic Numbers!
+		kiosk->text_cursor_x = S_MIN_X;	// Magic Numbers!
+		kiosk->text_cursor_y = S_MIN_Y;	// Magic Numbers!
 		kiosk->text_line_size = 0;
 
 		/* Open font ttf file and load into font variable */
-		kiosk->text_font = TTF_OpenFont("/home/quw/miniat_t/peripherals/kiosk/src/fonts/pt_sans_regular.ttf", kiosk->font_size);
+		kiosk->text_font = TTF_OpenFont("resources/fonts/pt_sans_regular.ttf", kiosk->font_size);
 
 		if (kiosk->text_font == NULL) {
 			printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
@@ -141,8 +141,8 @@ p_sdl_data * p_sdl_new(void){
 	kiosk->color.b = 0;
 	
 	/* Initialize text space variable */
-	kiosk->text_space.x = 325;
-	kiosk->text_space.y = 25;
+	kiosk->text_space.x = S_MIN_X;
+	kiosk->text_space.y = S_MIN_Y;
 	kiosk->text_space.w = 0;
 	kiosk->text_space.h = kiosk->font_size;
 
@@ -213,16 +213,18 @@ int p_sdl_render_string(p_sdl_data *kiosk, char string[]) {
 
 	/* Check if text cursor out of bounds */
 	if (kiosk->text_cursor_x < S_MIN_X || kiosk->text_cursor_x > S_MAX_X) {
+		printf("\nOut of bounds, %d", kiosk->text_cursor_x);
 		success = 1;
 	}
 	if (kiosk->text_cursor_y < S_MIN_Y || kiosk->text_cursor_y > S_MAX_Y) {
+		printf("\nOut of bounds, %d", kiosk->text_cursor_y);
 		success = 1;
 	}
 
 	/* Check if string to render will bypass screen boundry */
 	/* If so, reset x-axis and increment y-axis by font size */
-	if ( (kiosk->text_line_size + str_len * kiosk->font_size) > (S_MAX_X - S_MIN_X) && success = 0) {
-		kiosk->text_cursor_x = S_MIN_S;
+	if ( (kiosk->text_line_size + str_len * kiosk->font_size) > (S_MAX_X - S_MIN_X) && success == 0) {
+		kiosk->text_cursor_x = S_MIN_X;
 		kiosk->text_line_size = 0;
 		if ( (kiosk->text_cursor_y + kiosk->font_size) >  S_MAX_Y) {
 			success = 1;
@@ -282,7 +284,7 @@ int p_sdl_render_char(p_sdl_data *kiosk, char c) {
 
 	/* Check if char to render will intersect boundry */
 	/* If so, reset x axis and create newline by incrementing y */
-	if ( (kiosk->text_line_size + kiosk->font_size) > (S_MAX_X - S_MIN_X) && success = 0) {
+	if ( (kiosk->text_line_size + kiosk->font_size) > (S_MAX_X - S_MIN_X) && success == 0) {
 		kiosk->text_cursor_x = S_MIN_X;
 		kiosk->text_line_size = 0;
 		if ( (kiosk->text_cursor_y + kiosk->font_size) > S_MAX_Y) {
@@ -342,7 +344,7 @@ int p_sdl_set_text_cursor_x(p_sdl_data *kiosk, int x){
  *  Text cursor x getter function
  */
 int p_sdl_get_text_cursor_x(p_sdl_data *kiosk) {
-	return kiosk->text_cursor_x;
+	return kiosk->text_cursor_x - S_MIN_X;
 }
 
 /*function p_sdl_set_text_cursor_y
@@ -362,7 +364,7 @@ int p_sdl_set_text_cursor_y(p_sdl_data *kiosk, int y){
  *  Text cursor y getter function
  */
 int p_sdl_get_text_cursor_y(p_sdl_data *kiosk) {
-	return kiosk->text_cursor_y;
+	return kiosk->text_cursor_y - S_MIN_Y;
 }
 
 /*function p_sdl_set_color
