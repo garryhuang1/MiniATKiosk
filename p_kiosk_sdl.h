@@ -29,6 +29,25 @@ const int SCREEN_HEIGHT = 400;
  * Global constant variable for screen width.
  */
 
+struct p_sdl_data {
+	SDL_Window *window;
+	SDL_Surface *screen_surface;
+	SDL_Surface *keypad_surface;
+	SDL_Renderer *renderer;
+	SDL_Texture *screen_texture;
+	SDL_Texture *keypad_texture;
+	SDL_Rect text_space;
+	TTF_Font *text_font;
+	SDL_Texture *pixel_texture;
+	int mouse_cursor_x;
+	int mouse_cursor_y;
+	int font_size;
+	int text_cursor_x;
+	int text_cursor_y;
+	int text_line_size;
+	SDL_Color color;
+};
+
 typedef struct p_sdl_data p_sdl_data;
 /**
  * Creates an instance of a Kiosk SDL data structure 

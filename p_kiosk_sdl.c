@@ -10,25 +10,6 @@
 
 #include "p_kiosk_sdl.h"
 
-struct p_sdl_data {
-	SDL_Window *window;
-	SDL_Surface *screen_surface;
-	SDL_Surface *keypad_surface;
-	SDL_Renderer *renderer;
-	SDL_Texture *screen_texture;
-	SDL_Texture *keypad_texture;
-	SDL_Rect text_space;
-	TTF_Font *text_font;
-	SDL_Texture *pixel_texture;
-	int mouse_cursor_x;
-	int mouse_cursor_y;
-	int font_size;
-	int text_cursor_x;
-	int text_cursor_y;
-	int text_line_size;
-	SDL_Color color;
-};
-
 const int S_MIN_X = 329;
 const int S_MAX_X = 881;
 const int S_MIN_Y = 29;
@@ -533,6 +514,8 @@ int p_sdl_clear_screen(p_sdl_data *kiosk){
 /* function p_sdl_draw_line
 use to draw line on the sdl screen*/
 int p_sdl_draw_line(p_sdl_data *kiosk, int start_x, int start_y, int end_x, int end_y){
+	start_x = start_x + S_MIN_X;
+	start_y = start_y + S_MIN_Y;
 	if((start_x<S_MIN_X) || (start_x>S_MAX_X) || (start_y <S_MIN_Y) || (start_y > S_MAX_Y)){
 		printf("Invalid area to start with !\n");
 		return 1;	
@@ -557,6 +540,8 @@ int p_sdl_draw_line(p_sdl_data *kiosk, int start_x, int start_y, int end_x, int 
 /* function p_sdl_draw rectangle
 use to draw rectangle on the sdl screen*/
 int p_sdl_draw_rectangle(p_sdl_data *kiosk, int x, int y, int height, int width, int dofill){
+	x = x + S_MIN_X;
+	y = y + S_MIN_Y;
 	if((x <S_MIN_X) || (x > S_MAX_X) || (y<S_MIN_Y) ||(y>S_MAX_Y)){
 		printf("Invalid area to start with!\n");
 		return 1;
@@ -598,6 +583,8 @@ int p_sdl_draw_rectangle(p_sdl_data *kiosk, int x, int y, int height, int width,
 /*function p_sdl_draw_pixel
 use to plot a pixel at user defined position*/
 int p_sdl_draw_pixel(p_sdl_data *kiosk, int x, int y){
+	x = x + S_MIN_X;
+	y = y + S_MIN_Y;
 	if((x<S_MIN_X) || (x>S_MAX_X) || (y<S_MIN_Y) || (y>S_MAX_Y)){
 		printf("Invalid area to start with! x is: %d and y is: %d\n", x, y);
 		return 1;
@@ -616,7 +603,9 @@ int p_sdl_draw_pixel(p_sdl_data *kiosk, int x, int y){
 
 /*function p_sdl_draw_circle
 use to draw a circle on the screen*/
-int p_sdl_draw_circle(p_sdl_data *kiosk, int x, int y,int radius, int dofill){
+int p_sdl_draw_circle(p_sdl_data *kiosk, int x, int y, int radius, int dofill){
+	x = x + S_MIN_X;
+	x = y + S_MIN_Y;
 	if((x<S_MIN_X) || (x>S_MAX_X) || (y<S_MIN_Y) || (y>S_MAX_Y)){
 		printf("Invalid area to start with! x is: %d and y is: %d\n", x, y);
 		return 1;
