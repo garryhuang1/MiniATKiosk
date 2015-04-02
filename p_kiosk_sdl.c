@@ -652,7 +652,7 @@ int p_sdl_reset(p_sdl_data *kiosk) {
 	int imgFlags = IMG_INIT_PNG;
 	
 	/* Reset renderer */
-	kiosk->renderer = NULL;
+	SDL_DestroyRenderer(kiosk->renderer);
 	kiosk->renderer = SDL_CreateRenderer(kiosk->window, -1, SDL_RENDERER_ACCELERATED);
 	if (kiosk->renderer == NULL) {
 		printf("Renderer could not be reset! SDL Error: %s\n", SDL_GetError());
@@ -711,7 +711,7 @@ int p_sdl_reset(p_sdl_data *kiosk) {
 	/* Set default font and text variables */
 	if (success == 0) {
 		kiosk->font_size = 12;
-		kiosk->text_font = NULL;
+		TTF_CloseFont(kiosk->text_font);
 		kiosk->text_font = TTF_OpenFont("resources/fonts/pt_sans_regular.ttf", kiosk->font_size);
 		kiosk->text_cursor_x = S_MIN_X;
 		kiosk->text_cursor_y = S_MIN_Y;
