@@ -443,8 +443,8 @@ int p_sdl_set_color(p_sdl_data *kiosk, int color){
 			kiosk->color.g = 0;
 			kiosk->color.b = 0;
 			kiosk->color.a = 255;
-			break;
 			return 1;
+			break;
 		}
 		SDL_SetRenderDrawColor(kiosk->renderer, kiosk->color.r, kiosk->color.g, kiosk->color.b, kiosk->color.a);
 		
@@ -665,7 +665,7 @@ int p_sdl_reset(p_sdl_data *kiosk) {
 			success = 1;
 		}
 	}
-
+ 
 	/* Render both screen and keypad */
 	if (success == 0) {
 		kiosk->keypad_surface = NULL;
