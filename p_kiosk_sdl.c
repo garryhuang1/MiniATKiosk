@@ -31,6 +31,7 @@ int p_sdl_draw_line(p_sdl_data *kiosk, int start_x, int start_y, int end_x, int 
 int p_sdl_draw_rectangle(p_sdl_data *kiosk, int x, int y, int height, int width, int dofill);
 int p_sdl_draw_pixel(p_sdl_data *kiosk, int x, int y);
 int p_sdl_draw_circle(p_sdl_data *kiosk, int x, int y,int radius, int dofill);
+int p_sdl_reset(p_sdl_data *kiosk);
 
 /*function p_sdl_new
 use to create all the necessary SDL items*/
@@ -642,6 +643,97 @@ int p_sdl_draw_circle(p_sdl_data *kiosk, int x, int y, int radius, int dofill){
 			return 1;
 		}
 	}
+}
+
+/*function p_sdl_reset_values
+Use to reset the values of p_sdl_data to default values set in init*/
+int p_sdl_reset(p_sdl_data *kiosk) {
+	int success = 0;
+	int imgFlags = IMG_INIT_PNG;
+	
+	/* Reset renderer */
+	kiosk->renderer = NULL;
+	kiosk->renderer = SDL_CreateRenderer(kiosk->window, -1, SDL_RENDERER_ACCELERATED);
+	if (kiosk->renderer == NULL) {
+		printf("Renderer could not be reset! SDL Error: %s\n", SDL_GetError());
+		success = 1;
+	}
+	else {
+		SDL_SetRenderDrawColor(kiosk->renderer, 0x00, 0xFF, 0xFF, 0xFF);
+		if (!(IMG_Init(imgFlags)& imgFlags)){
+			printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+			success = 1;
+		}
+	}
+
+	/* Render both screen and keypad */
+	if (success == 0) {
+		kiosk->keypad_surface = NULL;
+		kiosk->screen_surface = NULL;
+		kiosk->keypad_surface = IMG_Load("resources/images/keypad.png");
+		if (kiosk->keypad_surface ==NULL) {
+			printf("Unable to load image %s! SDL_Image Error: %s\n", "resources/images/keypad.png", IMG_GetError());
+		}
+		else {
+			kiosk->keypad_texture = SDL_CreateTextureFromSurface(kiosk->renderer, kiosk->keypad_surface);
+			if (kiosk->keypad_texture == NULL) {
+				printf("Unable to create texture for screen! SDL Error: %s\n", SDL_GetError());
+				success = 1;
+			}
+		}
+
+		kiosk->screen_surface = IMG_Load("resources/images/screen.png");
+		if(kiosk->screen_surface ==NULL){
+			printf("Unable to load image %s! SDL_Image Error: %s\n", "src/images/screen.png", IMG_GetError());
+		}
+		else {
+			kiosk->screen_texture = SDL_CreateTextureFromSurface(kiosk->renderer, kiosk->screen_surface);
+			if (kiosk->screen_texture ==NULL) {
+				printf("Unable to create texture for screen! SDL Error: %s\n", SDL_GetError());
+				success = 1;
+			}
+		}
+
+		SDL_FreeSurface(kiosk->keypad_surface);
+		SDL_FreeSurface(kiosk->screen_surface);
+		SDL_Rect DestR;
+		DestR.x = 0;
+		DestR.y = 0;
+		DestR.w = 300;
+		DestR.h = 400;
+		SDL_RenderCopy(kiosk->renderer, kiosk->keypad_texture, NULL, &DestR);
+		DestR.x = 300;
+		DestR.w = 610;
+		SDL_RenderCopy(kiosk->renderer, kiosk->screen_texture, NULL, &DestR);
+		SDL_RenderPresent(kiosk->renderer);
+	}
+
+	/* Set default font and text variables */
+	if (success == 0) {
+		kiosk->font_size = 12;
+		kiosk->text_font = NULL;
+		kiosk->text_font = TTF_OpenFont("resources/fonts/pt_sans_regular.ttf", kiosk->font_size);
+		kiosk->text_cursor_x = S_MIN_X;
+		kiosk->text_cursor_y = S_MIN_Y;
+		kiosk->text_line_size = 0;
+
+		if (kiosk->text_font == NULL) {
+			printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
+			success = 1;
+		}
+
+		/* Default color setting */
+		kiosk->color.r = 0;
+		kiosk->color.g = 0;
+		kiosk->color.b = 0;
+
+		/* Default text space */
+		kiosk->text_space.x = S_MIN_X;
+		kiosk->text_space.y = S_MIN_Y;
+		kiosk->text_space.w = 0;
+		kiosk->text_space.h = kiosk->font_size;
+	}
+	return success;
 }
 
 int main (void) {

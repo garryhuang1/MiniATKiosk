@@ -250,4 +250,14 @@ extern int p_sdl_draw_circle(p_sdl_data * kiosk, int x, int y, int radius, int d
  * 	0 if no error, 1 if error
  */
 
+extern int p_sdl_reset(p_sdl_data * kiosk);
+/**
+ *  Resets the p_sdl_data values to default values set in init function
+ *  
+ * @param p_sdl_data * kiosk
+ * 	The SDL data struct
+ * 	@return int
+ * 	0 if no error, 1 if error
+ */
+
 #endif
