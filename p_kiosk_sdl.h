@@ -37,6 +37,8 @@ struct p_sdl_data {
 	SDL_Texture *screen_texture;
 	SDL_Texture *keypad_texture;
 	SDL_Rect text_space;
+	SDL_Rect keypad_dest;
+	SDL_Rect screen_dest;
 	TTF_Font *text_font;
 	SDL_Texture *pixel_texture;
 	int mouse_cursor_x;

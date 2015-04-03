@@ -41,7 +41,7 @@ p_sdl_data * p_sdl_new(void){
 	kiosk = malloc(sizeof(p_sdl_data));
 
 	/*set default font size*/
-	kiosk->font_size = 12;
+	kiosk->font_size = 18;
 
 	bool success =true;
 
@@ -51,7 +51,7 @@ p_sdl_data * p_sdl_new(void){
 		success = false;	
 	}
 	else{
-		kiosk->window = SDL_CreateWindow("Kiosk v0.0.2", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,WINDOW_WIDTH, WINDOW_HEIGHT,SDL_WINDOW_SHOWN);
+		kiosk->window = SDL_CreateWindow("Kiosk v2.9.9", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,WINDOW_WIDTH, WINDOW_HEIGHT,SDL_WINDOW_SHOWN);
 		if(kiosk->window ==NULL){
 			printf("Window could not be created! SDL Error: %s\n", SDL_GetError() );
 			success = false;
@@ -106,15 +106,16 @@ p_sdl_data * p_sdl_new(void){
 		/*display both keypad and screen*/
 		SDL_FreeSurface(kiosk->keypad_surface);
 		SDL_FreeSurface(kiosk->screen_surface);
-		SDL_Rect DestR;
-		DestR.x = 0;
-		DestR.y = 0;
-		DestR.w = 300;
-		DestR.h = 400;
-		SDL_RenderCopy(kiosk->renderer, kiosk->keypad_texture, NULL, &DestR);
-		DestR.x = 300;
-		DestR.w = 610;
-		SDL_RenderCopy(kiosk->renderer, kiosk->screen_texture, NULL, &DestR);
+		kiosk->keypad_dest.x = 0;
+		kiosk->keypad_dest.y = 0;
+		kiosk->keypad_dest.w = 300;
+		kiosk->keypad_dest.h = 400;
+		SDL_RenderCopy(kiosk->renderer, kiosk->keypad_texture, NULL, &kiosk->keypad_dest);
+		kiosk->screen_dest.x = 300;
+		kiosk->screen_dest.y = 0;
+		kiosk->screen_dest.w = 610;
+		kiosk->screen_dest.h = 400;
+		SDL_RenderCopy(kiosk->renderer, kiosk->screen_texture, NULL, &kiosk->screen_dest);
 		SDL_RenderPresent(kiosk->renderer);
 	}
 
@@ -210,11 +211,11 @@ int p_sdl_render_string(p_sdl_data *kiosk, char string[]) {
 
 	/* Check if text cursor out of bounds */
 	if (kiosk->text_cursor_x < S_MIN_X || kiosk->text_cursor_x > S_MAX_X) {
-		printf("\nOut of bounds, %d", kiosk->text_cursor_x);
+		printf("\nText cursor x value out of bounds, %d", kiosk->text_cursor_x);
 		success = 1;
 	}
 	if (kiosk->text_cursor_y < S_MIN_Y || kiosk->text_cursor_y > S_MAX_Y) {
-		printf("\nOut of bounds, %d", kiosk->text_cursor_y);
+		printf("\nText cursor y value out of bounds, %d", kiosk->text_cursor_y);
 		success = 1;
 	}
 
@@ -273,9 +274,11 @@ int p_sdl_render_char(p_sdl_data *kiosk, char c) {
 
 	/* Check if text cursor out of bounds */
 	if (kiosk->text_cursor_x < S_MIN_X || kiosk->text_cursor_x > S_MAX_X) {
+		printf("\nText cursor x value out of bounds, %d", kiosk->text_cursor_x);
 		success = 1;
 	}
 	if (kiosk->text_cursor_y < S_MIN_Y || kiosk->text_cursor_y > S_MAX_Y) {
+		printf("\nText cursor y value out of bounds, %d", kiosk->text_cursor_x);
 		success = 1;
 	}
 
@@ -496,12 +499,7 @@ int p_sdl_get_color(p_sdl_data *kiosk) {
 /*function p_sdl_clear_screen
 use to clear the screen*/
 int p_sdl_clear_screen(p_sdl_data *kiosk){
-		SDL_Rect DestR;
-		DestR.x = 300;
-		DestR.y = 0;
-		DestR.w = 610;
-		DestR.h = 400;
-	if(SDL_RenderCopy(kiosk->renderer, kiosk->screen_texture, NULL, &DestR) ==0){
+	if(SDL_RenderCopy(kiosk->renderer, kiosk->screen_texture, NULL, &kiosk->screen_dest) == 0){
 		SDL_RenderPresent(kiosk->renderer);
 		return 0;
 	}
@@ -554,7 +552,7 @@ int p_sdl_draw_rectangle(p_sdl_data *kiosk, int x, int y, int height, int width,
 		return 1;
 	}
 	else{
-		if(dofill ==1){
+		if(dofill == 1){
 			SDL_Rect fillRect = {x, y, width, height};
 			if(SDL_RenderFillRect(kiosk->renderer, &fillRect) !=0){
 				printf("fail to draw a rectangle! SDL Error:%s\n", SDL_GetError());
@@ -565,7 +563,7 @@ int p_sdl_draw_rectangle(p_sdl_data *kiosk, int x, int y, int height, int width,
 				return 0;
 			}
 		}
-		else if(dofill ==0){
+		else if(dofill == 0){
 			SDL_Rect outlineRect = {x, y, width, height};
 			if(SDL_RenderDrawRect(kiosk->renderer, &outlineRect) !=0){
 				printf("fail to draw a rectangle! SDL Error: %s\n", SDL_GetError());
@@ -577,7 +575,7 @@ int p_sdl_draw_rectangle(p_sdl_data *kiosk, int x, int y, int height, int width,
 			}
 		}
 		else{
-			printf("Error input!\n");
+			printf("Error! Invalid dofill argument value!");
 			return 1;
 		}
 	}
@@ -594,7 +592,7 @@ int p_sdl_draw_pixel(p_sdl_data *kiosk, int x, int y){
 	}
 	else{
 		if(SDL_RenderDrawPoint(kiosk->renderer, x, y) !=0){
-			printf("fail to draw the line! SDL Error: %s\n", SDL_GetError());
+			printf("fail to draw the pixel! SDL Error: %s\n", SDL_GetError());
 			return 1;
 		}
 		else{
@@ -640,7 +638,7 @@ int p_sdl_draw_circle(p_sdl_data *kiosk, int x, int y, int radius, int dofill){
 			}
 		}
 		else{
-			printf("Error input!\n");
+			printf("Error! Invalid dofill argument value!");
 			return 1;
 		}
 	}
@@ -697,15 +695,8 @@ int p_sdl_reset(p_sdl_data *kiosk) {
 
 		SDL_FreeSurface(kiosk->keypad_surface);
 		SDL_FreeSurface(kiosk->screen_surface);
-		SDL_Rect DestR;
-		DestR.x = 0;
-		DestR.y = 0;
-		DestR.w = 300;
-		DestR.h = 400;
-		SDL_RenderCopy(kiosk->renderer, kiosk->keypad_texture, NULL, &DestR);
-		DestR.x = 300;
-		DestR.w = 610;
-		SDL_RenderCopy(kiosk->renderer, kiosk->screen_texture, NULL, &DestR);
+		SDL_RenderCopy(kiosk->renderer, kiosk->keypad_texture, NULL, &kiosk->keypad_dest);
+		SDL_RenderCopy(kiosk->renderer, kiosk->screen_texture, NULL, &kiosk->screen_dest);
 		SDL_RenderPresent(kiosk->renderer);
 	}
 
@@ -735,8 +726,4 @@ int p_sdl_reset(p_sdl_data *kiosk) {
 		kiosk->text_space.h = kiosk->font_size;
 	}
 	return success;
-}
-
-int main (void) {
-	return 0;
 }
