@@ -1,0 +1,8 @@
+Import('*')
+
+INC = [ '#/vm/inc', '#/peripherals/kiosk']
+
+LIBS = [ 'libminiat', 'libkiosk', 'SDL2', 'libkiosk_sdl']
+
+buildProgram("kiosk_console", "kiosk_test.c", CPPPATH=INC, LIBS=LIBS)
+buildMash('kiosk.asm')
