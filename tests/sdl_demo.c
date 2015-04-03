@@ -1,3 +1,11 @@
+/*
+ * File: sdl_demo.c
+ * 
+ * This is a stripped down version of the test
+ * program for demo purposes.
+ * 
+ * WARNING: Repeating Yourself Here!
+ */
 #include <stdio.h>
 
 #include "p_kiosk_sdl.h"
@@ -6,9 +14,6 @@
 #define SCREEN_WIDTH 610
 #define CURSOR_MOVE 12
 
-/*
- * There functions are for asserting test results and managing errors
- */
 void failed(int test_number)
 {
 	printf("\nTest %d failed", test_number);
@@ -57,29 +62,6 @@ int main ()
 
 	test_wait(test_number);
 
-	// Test 2.1
-	//test_number = 2; 
-
-	//int result_test_2 = -999;
-
-	//while (result_test_2 != -1)
-		//{
-			//result_test_2 = p_sdl_get_mouse_click(test_data);
-		//}
-
-	//test_wait(test_number);
-
-	//// Test 2.2
-	//result_test_2 = -999;
-
-	//// convert here
-
-	//while (result_test_2 != 1)
-		//{
-			//result_test_2 = p_sdl_get_mouse_click(test_data);
-		//}
-
-	//test_wait(test_number);
 	/* 
 	 * Test 3
 	 */
@@ -160,88 +142,6 @@ int main ()
 
 	test_wait(test_number);
 	/* 
-	 * Test 8
-	 */
-	test_number = 8;
-
-	int result_test_8_clear = p_sdl_clear_screen(test_data);
-	assert_int(test_number, result_test_8_clear, 0);
-
-	int result_test_8_init = p_sdl_set_text_cursor_x(test_data, 5);
-	assert_int(test_number, result_test_8_init, 0);
- 
-	// Set invalid values
-	int result_test_8_x = p_sdl_set_text_cursor_x(test_data, 1000);
-	assert_int(test_number, result_test_8_x, 1);
-
-	int result_test_8_y = p_sdl_set_text_cursor_y(test_data, 1000);
-	assert_int(test_number, result_test_8_y, 1);
-
-	assert_int(test_number, p_sdl_get_text_cursor_x(test_data), 5);
-
-	result_test_8_x = p_sdl_set_text_cursor_x(test_data, -3);
-	assert_int(test_number, result_test_8_x, 1);
-
-	result_test_8_y = p_sdl_set_text_cursor_y(test_data, -1);
-	assert_int(test_number, result_test_8_y, 1);
-
-	assert_int(test_number, p_sdl_get_text_cursor_x(test_data), 5);
-
-	test_wait(test_number);
-	/* 
-	 * Test 9
-	 */
-	test_number = 9;
-
-	test_data->text_cursor_x = 320;
-	test_data->text_cursor_y = 29;
-
-	int result_test_9_print = p_sdl_render_string(test_data, "Hello World!");
-	assert_int(test_number, result_test_9_print, 1);
-	
-	test_data->text_cursor_x = 885;
-	test_data->text_cursor_y = 29;
-
-	int result_test_9_print2 = p_sdl_render_string(test_data, "Hello World!");
-	assert_int(test_number, result_test_9_print2, 1);
-
-	int result_test_9_print3 = p_sdl_reset(test_data); 
-	
-	assert_int(test_number, result_test_9_print3, 0);
-	
-	assert_int(test_number, p_sdl_get_color(test_data), 0);
-	assert_int(test_number, p_sdl_get_text_cursor_x(test_data), 0 );
-	assert_int(test_number, p_sdl_get_text_cursor_y(test_data), 0 );
-
-	test_wait(test_number);
-	/* 
-	 * Test 10
-	 */
-	test_number = 10;
-
-	int result_test_10 = p_sdl_set_color(test_data, 99);
-	assert_int(test_number, result_test_10, 1);
-
-	assert_int(test_number, p_sdl_get_color(test_data), 0);
-
-	int result_test_10_print = p_sdl_render_string(test_data, "Hello World!");
-	assert_int(test_number, result_test_10_print, 0);
-
-	test_wait(test_number);
-	/* 
-	 * Test 11
-	 */
-	test_number = 11;
- 
-	//test_data->color = 99;
-
-	int result_test_11_print = p_sdl_render_string(test_data, "Hello World!");
-	//assert_int(test_number, result_test_11_print, 0);
-
-	//assert_int(test_number, p_sdl_get_color(test_data), 0);
-
-	test_wait(test_number);
-	/* 
 	 * Test 12
 	 */
 	test_number = 12;
@@ -315,72 +215,6 @@ int main ()
 	assert_int(test_number, result_test_15_draw2, 0);
 
 	test_wait(test_number);
-
-	/* 
-	 * Test 16
-	 */
-	test_number = 16;
-
-	int result_test_16_clear = p_sdl_clear_screen(test_data);
-	assert_int(test_number, result_test_16_clear, 0);
-
-	// Set color to blue
-	int result_test_16_color = p_sdl_set_color(test_data, 1);
-	assert_int(test_number, result_test_16_color, 0);
-
-	int result_test_16_pixel = p_sdl_draw_pixel(test_data, 641, 411);
-	assert_int(test_number, result_test_16_pixel, 1);
-
-	test_wait(test_number);
-
-
-	/* 
-	 * Test 17
-	 */
-	test_number = 17;
-	 
-	int result_test_17_clear = p_sdl_clear_screen(test_data);
-	assert_int(test_number, result_test_17_clear, 0);
-
-	int result_test_17_draw = p_sdl_draw_rectangle(test_data, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1000, 1000, 0);
-	assert_int(test_number, result_test_17_draw, 1);
-
-	test_wait(test_number);
-
-	int result_test_17_draw2 = p_sdl_draw_rectangle(test_data, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1000, 1000, 1);
-	assert_int(test_number, result_test_17_draw2, 1);
-
-	test_wait(test_number);
-
-	/* 
-	 * Test 18
-	 */
-
-	test_number = 18;
-
-	int result_test_18_clear = p_sdl_clear_screen(test_data);
-	assert_int(test_number, result_test_18_clear, 0);
-
-	int result_test_18_draw = p_sdl_draw_line(test_data, -1, 50, 700, 100);
-	assert_int(test_number, result_test_18_draw, 1);
-
-	/* 
-	 * Test 19
-	 */
-
-	test_number = 19;
-
-	int result_test_19_draw = p_sdl_draw_circle(test_data, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 500, 0);
-	assert_int(test_number, result_test_19_draw, 1);
-
-	test_wait(test_number);
-
-	int result_test_19_draw2 = p_sdl_draw_circle(test_data, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 500, 1);
-	assert_int(test_number, result_test_19_draw2, 1);
-
-	test_wait(test_number);
-
-
 
 	// Test 20
 	test_number = 20;
