@@ -64,7 +64,7 @@ p_sdl_data * p_sdl_new(void){
 				success = false;
 			}
 			else{
-				SDL_SetRenderDrawColor(kiosk->renderer, 0x00, 0xFF, 0xFF, 0xFF);
+				SDL_SetRenderDrawColor(kiosk->renderer, 0x00, 0x00, 0x00, 0xFF);
 
 				int imgFlags = IMG_INIT_PNG;
 				if(!(IMG_Init(imgFlags)& imgFlags)){
