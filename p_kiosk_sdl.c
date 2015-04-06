@@ -201,13 +201,14 @@ uint32_t p_sdl_get_mouse_click(p_sdl_data *kiosk, SDL_Event *e){
  */
 int p_sdl_render_string(p_sdl_data *kiosk, char string[]) {
 	int success = 0;
-	int str_len = 0;
+	size_t str_len;
 	SDL_Texture *texture = NULL;
 
-	while (string[str_len] != '\0') {
-		str_len++;
+	str_len = strlen(string)-1;
+	printf("length is %d", str_len);
+	if(string[str_len] == '\n'){
+		string[str_len] = '\0';
 	}
-	str_len--;
 
 	/* Check if text cursor out of bounds */
 	if (kiosk->text_cursor_x < S_MIN_X || kiosk->text_cursor_x > S_MAX_X) {
