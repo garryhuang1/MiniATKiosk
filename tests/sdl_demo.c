@@ -36,8 +36,8 @@ int main ()
 			printf("	3. To draw a rectangle on the screen\n");
 			printf("	4. To draw a pixel on the screen\n");
 			printf("	5. To draw a circle on the screen\n");
-			printf("	6. To render character on the screen\n");
-			printf("	7. To render string on the screen\n");
+			printf("	6. To render a character on the screen\n");
+			printf("	7. To render a string on the screen\n");
 			printf("	8. To get data from the keypad\n");
 			printf("	9. To clear the screen\n");
 			printf("	0. To exit demo\n");
@@ -49,11 +49,11 @@ int main ()
 						int color;
 						char check;
 						printf("-----------------Color function------------\n");
-						printf("Miniat_kiosk allows user to change the color for the render\n");
+						printf("Miniat_kiosk allows users to change the color for the render\n");
 						printf("Enter from 0 to 10 to change color\n");
 						scanf("%d", &color);
 						if(p_sdl_set_color(kiosk_demo, color) == 0){
-							printf("You have successfully change the color of the renderer\n");
+							printf("You have successfully changed the color of the renderer\n");
 							printf("The renderer will now use this color to render stuff\n");
 						}
 						SDL_PollEvent(&e);
@@ -77,14 +77,14 @@ int main ()
 						int start_y, end_y;
 						char check;
 						printf("---------------draw line function---------------\n");
-						printf("Miniat_kiosk allows user to draw lines on the screen\n");
-						printf("Please enter starting x, startying y, end x and end y with space between them\n");
+						printf("Miniat_kiosk allows users to draw lines on the screen\n");
+						printf("Please enter starting x, starting y, end x and end y with space between them\n");
 						scanf("%d %d %d %d", &start_x, &start_y, &end_x, &end_y);
 						if(p_sdl_draw_line(kiosk_demo, start_x, start_y, end_x, end_y) == 0){
 							printf("You have successfully draw a line at point (%d, %d)\n", start_x, start_y);
 						}
 						SDL_PollEvent(&e);						
-						printf("Would you like see another demo? y/n\n");
+						printf("Would you like too see another demo? y/n\n");
 						scanf(" %c", &check);
 						if(check == 'n'){
 							goto EXIT_STATE;
@@ -103,7 +103,7 @@ int main ()
 						int x, y, w, h, dofill;
 						char check;
 						printf("---------------draw rectangle function---------------\n");
-						printf("Miniat_kiosk allows user to draw rectangle on the screen with the option to fill it or not\n");
+						printf("Miniat_kiosk allows users to draw a rectangle on the screen with the option to fill it or not\n");
 						printf("Please enter x, y, width, and height with space between them\n");
 						scanf("%d %d %d %d", &x, &y, &w, &h);
 						printf("Please enter 1 if you wish to fill the rectangle and 0 if not\n");
@@ -113,7 +113,7 @@ int main ()
 						}
 						
 						SDL_PollEvent(&e);	
-						printf("Would you like see another demo? y/n\n");
+						printf("Would you like to see another demo? y/n\n");
 						scanf(" %c", &check);
 						if(check == 'n'){
 							goto EXIT_STATE;
@@ -132,14 +132,14 @@ int main ()
 						int x, y;
 						char check;
 						printf("---------------draw pixel function---------------\n");
-						printf("Miniat_kiosk allows user to draw pixel on the screen\n");
+						printf("Miniat_kiosk allows users to draw pixel on the screen\n");
 						printf("Please enter x, and y with space between them\n");
 						scanf("%d %d", &x, &y);
 						if(p_sdl_draw_pixel(kiosk_demo, x, y) == 0){
 							printf("You have successfully draw a pixel at point (%d, %d)\n", x, y);
 						}
 						SDL_PollEvent(&e);	
-						printf("Would you like see another demo? y/n\n");
+						printf("Would you like to see another demo? y/n\n");
 						scanf(" %c", &check);
 						if(check == 'n'){
 							goto EXIT_STATE;
@@ -158,7 +158,7 @@ int main ()
 						int x, y, r, dofill;
 						char check;
 						printf("---------------draw circle function---------------\n");
-						printf("Miniat_kiosk allows user to draw circle on the screen with the option to fill it or not\n");
+						printf("Miniat_kiosk allows users to draw circle on the screen with the option to fill it or not\n");
 						printf("Please enter x, y, and radius with space between them\n");
 						scanf("%d %d %d", &x, &y, &r);
 						printf("Please enter 1 if you wish to fill the rectangle and 0 if not\n");
@@ -168,7 +168,7 @@ int main ()
 						}
 						
 						SDL_PollEvent(&e);	
-						printf("Would you like see another demo? y/n\n");
+						printf("Would you like to see another demo? y/n\n");
 						scanf(" %c", &check);
 						if(check == 'n'){
 							goto EXIT_STATE;
@@ -188,7 +188,7 @@ int main ()
 						int x, y, i;
 						char check;
 						printf("---------------render character function---------------\n");
-						printf("Miniat_kiosk allows user to render character on the screen with user define cursor postion\n");
+						printf("Miniat_kiosk allows users to render character on the screen with user define cursor postion\n");
 						printf("Please enter 1 if you wish to define where to render the character, or 0 to default\n");
 						scanf("%d", &i);
 						if(i == 1){
@@ -204,11 +204,11 @@ int main ()
 						
 						scanf(" %c", &c);
 						if(p_sdl_render_char(kiosk_demo, c) == 0){
-							printf("You have successfully render %c on the screen\n", c);
+							printf("You have successfully rendered %c on the screen\n", c);
 						}
 						
 						SDL_PollEvent(&e);	
-						printf("Would you like see another demo? y/n\n");
+						printf("Would you like to see another demo? y/n\n");
 						scanf(" %c", &check);
 						if(check == 'n'){
 							goto EXIT_STATE;
@@ -228,11 +228,11 @@ int main ()
 						int x, y, i;
 						char check, temp;
 						printf("---------------render string function---------------\n");
-						printf("Miniat_kiosk allows user to render string on the screen with user define cursor postion\n");
+						printf("Miniat_kiosk allows users to render string on the screen with user define cursor postion\n");
 						printf("Please enter 1 if you wish to define where to render the character, or 0 to default\n");
 						scanf("%d", &i);
 						if(i == 1){
-							printf("Please enter x and y with space between them\n");
+							printf("Please enter x and y with a space between them\n");
 							scanf("%d %d", &x, &y);
 							if((p_sdl_set_text_cursor_x(kiosk_demo, x)==0) &&(p_sdl_set_text_cursor_y(kiosk_demo, y) == 0)){
 								printf("You have successfully change the text cursor to (%d, %d)\n",kiosk_demo->text_cursor_x, kiosk_demo->text_cursor_y );
@@ -243,11 +243,11 @@ int main ()
 						printf("Please enter a line of string to render\n");
 						fgets(s, 100, stdin);
 						if(p_sdl_render_string(kiosk_demo, s) == 0){
-							printf("You have successfully render %s on the screen\n", s);
+							printf("You have successfully rendered %s on the screen\n", s);
 						}
 						
 						SDL_PollEvent(&e);	
-						printf("Would you like see another demo? y/n\n");
+						printf("Would you like to see another demo? y/n\n");
 						scanf(" %c", &check);
 						if(check == 'n'){
 							goto EXIT_STATE;
@@ -268,9 +268,9 @@ int main ()
 						char check;
 						int temp = 1;
 						printf("---------------get mouse data function---------------\n");
-						printf("Miniat_kiosk allows user to print out the value from the keypad to screen\n");
+						printf("Miniat_kiosk allows users to print out the value from the keypad to screen\n");
 
-						printf("Please use mouse to click the button in the keypad area or click close to exit this demo\n");
+						printf("Please use the mouse to click the button in the keypad area or click close to exit this demo\n");
 						while (temp == 1){
 							while(SDL_PollEvent(&e) != 0){
 								if(e.type == SDL_QUIT){
@@ -321,7 +321,7 @@ int main ()
 							}
 						}
 						SDL_PollEvent(&e);	
-						printf("Would you like see another demo? y/n\n");
+						printf("Would you like to see another demo? y/n\n");
 						scanf(" %c", &check);
 						if(check == 'n'){
 							goto EXIT_STATE;
@@ -340,14 +340,14 @@ int main ()
 						int i;
 						char check;
 						printf("---------------clear screen function---------------\n");
-						printf("Miniat_kiosk allows user to clear the scrren\n");
+						printf("Miniat_kiosk allows users to clear the scrren\n");
 						printf("Please enter 1 if you wish to clear the screen\n");
 						scanf("%d", &i);
 						if(i == 1){
 							p_sdl_clear_screen(kiosk_demo);
 						}
 						SDL_PollEvent(&e);	
-						printf("Would you like see another demo? y/n\n");
+						printf("Would you like to see another demo? y/n\n");
 						scanf(" %c", &check);
 						if(check == 'n'){
 							goto EXIT_STATE;
@@ -365,7 +365,7 @@ int main ()
 					case 0:{
 						EXIT_STATE:
 						printf("---------------Exit demo---------------\n");
-						printf("Thank you for using Miniat_kiosk!\n");
+						printf("Thank you for using the Miniat_kiosk!\n");
 						p_sdl_close(kiosk_demo);
 						status =1;
 						break;
