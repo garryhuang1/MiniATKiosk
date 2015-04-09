@@ -4,7 +4,7 @@
 
 #define SCREEN_HEIGHT 400
 #define SCREEN_WIDTH 610
-#define CURSOR_MOVE 12
+#define CURSOR_MOVE 18
 
 /*
  * There functions are for asserting test results and managing errors
@@ -95,7 +95,7 @@ int main ()
 	 */
 	test_number = 4;
 
-	int result_test_4_x = p_sdl_set_text_cursor_x(test_data, SCREEN_WIDTH / 2);
+	int result_test_4_x = p_sdl_set_text_cursor_x(test_data, );
 
 	assert_int(test_number, result_test_4_x, 0);
 	assert_int(test_number, p_sdl_get_text_cursor_x(test_data), (SCREEN_WIDTH / 2 )  );
