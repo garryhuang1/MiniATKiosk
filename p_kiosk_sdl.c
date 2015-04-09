@@ -17,7 +17,7 @@ const int S_MAX_Y = 371;
 
 p_sdl_data * p_sdl_new(void);
 int p_sdl_close(p_sdl_data *kiosk);
-uint32_t p_sdl_get_mouse_click(p_sdl_data *kiosk, SDL_Event *e);
+uint32_t p_sdl_get_mouse_click(p_sdl_data *kiosk);
 int p_sdl_clear_screen(p_sdl_data *kiosk);
 int p_sdl_render_string(p_sdl_data *kiosk, char string[]);
 int p_sdl_render_char(p_sdl_data *kiosk, char c);
@@ -32,6 +32,7 @@ int p_sdl_draw_rectangle(p_sdl_data *kiosk, int x, int y, int height, int width,
 int p_sdl_draw_pixel(p_sdl_data *kiosk, int x, int y);
 int p_sdl_draw_circle(p_sdl_data *kiosk, int x, int y,int radius, int dofill);
 int p_sdl_reset(p_sdl_data *kiosk);
+int p_sdl_get_event(p_sdl_data *kiosk);
 
 /*function p_sdl_new
 use to create all the necessary SDL items*/
@@ -174,13 +175,24 @@ int p_sdl_close(p_sdl_data *kiosk){
 
 }
 
+/*function p_sdl_get_event
+use to stroe the latest event into the sdl struct*/
+int p_sdl_get_event(p_sdl_data *kiosk){
+	if(SDL_PollEvent(&kiosk->mouse_event) != 0){
+		return 0;
+	}
+	else if (SDL_PollEvent(&kiosk->mouse_event) == 0){
+		return 1;
+	}
+}
+
 /*function p_sdl_get_mouse_click
 use to return the last selected value as 32 bits binary, return -1 if nothing is available*/
-uint32_t p_sdl_get_mouse_click(p_sdl_data *kiosk, SDL_Event *e){
+uint32_t p_sdl_get_mouse_click(p_sdl_data *kiosk){
 	uint32_t data = 0x00000000;
 	int c, r;
 
-	if(e->type == SDL_MOUSEBUTTONDOWN){
+	if(kiosk->mouse_event.type == SDL_MOUSEBUTTONDOWN){
 		SDL_GetMouseState(&kiosk->mouse_cursor_x, &kiosk->mouse_cursor_y);
 
 		if(kiosk->mouse_cursor_x <=300 && kiosk->mouse_cursor_y<=400){
