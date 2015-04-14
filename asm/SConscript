@@ -1,0 +1,3 @@
+Import('*')
+
+buildMash('test_screen.asm') 

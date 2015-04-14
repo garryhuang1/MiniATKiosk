@@ -24,3 +24,4 @@ for flag in SDL2_LIBS:
 		LIBS.append(flag[2:])
 
 buildSharedLibrary("kiosk_sdl", "p_kiosk_sdl.c", CPPPATH=INC, LIBS=LIBS, CFLAGS=KIOSK_CFLAGS, LIBPATH=KIOSK_LIBPATH)
+buildSharedLibrary("kiosk_screen", "p_kiosk_screen.c", CPPPATH=INC, LIBS=LIBS, CFLAGS=KIOSK_CFLAGS, LIBPATH=KIOSK_LIBPATH)
