@@ -48,6 +48,7 @@ struct p_sdl_data {
 	int text_cursor_y;
 	int text_line_size;
 	SDL_Color color;
+	SDL_Event mouse_event;
 };
 
 typedef struct p_sdl_data p_sdl_data;
@@ -86,7 +87,16 @@ extern int p_sdl_close(p_sdl_data * kiosk);
  * 	The status of the function executed	
  */
 
-extern uint32_t p_sdl_get_mouse_click(p_sdl_data * kiosk, SDL_Event *e);
+extern int p_sdl_get_event(p_sdl_data *kiosk);
+/**
+ * Set up the event handler for SDL.
+ * @param p_sdl_data *kiosk
+ *  The SDL data struct
+ * @return int
+ *  The status of the function executed
+ */
+
+extern uint32_t p_sdl_get_mouse_click(p_sdl_data * kiosk);
 /**
  * Gets last selected value where the mouse was
  * clicked.

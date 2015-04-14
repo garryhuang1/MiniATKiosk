@@ -42,7 +42,7 @@ int main ()
 			printf("	9. To clear the screen\n");
 			printf("	0. To exit demo\n");
 			scanf("%d", &demo);
-			SDL_PollEvent(&e);
+			p_sdl_get_event(kiosk_demo);
 
 				switch(demo){
 					case 1:{
@@ -56,7 +56,7 @@ int main ()
 							printf("You have successfully changed the color of the renderer\n");
 							printf("The renderer will now use this color to render stuff\n");
 						}
-						SDL_PollEvent(&e);
+						p_sdl_get_event(kiosk_demo);
 						printf("Would you like see another demo? y/n\n");
 						scanf(" %c", &check);
 						if(check == 'n'){
@@ -83,7 +83,7 @@ int main ()
 						if(p_sdl_draw_line(kiosk_demo, start_x, start_y, end_x, end_y) == 0){
 							printf("You have successfully draw a line at point (%d, %d)\n", start_x, start_y);
 						}
-						SDL_PollEvent(&e);						
+						p_sdl_get_event(kiosk_demo);						
 						printf("Would you like too see another demo? y/n\n");
 						scanf(" %c", &check);
 						if(check == 'n'){
@@ -112,7 +112,7 @@ int main ()
 							printf("You have successfully draw a rectangle at point (%d, %d)\n", x, y);
 						}
 						
-						SDL_PollEvent(&e);	
+						p_sdl_get_event(kiosk_demo);	
 						printf("Would you like to see another demo? y/n\n");
 						scanf(" %c", &check);
 						if(check == 'n'){
@@ -138,7 +138,7 @@ int main ()
 						if(p_sdl_draw_pixel(kiosk_demo, x, y) == 0){
 							printf("You have successfully draw a pixel at point (%d, %d)\n", x, y);
 						}
-						SDL_PollEvent(&e);	
+						p_sdl_get_event(kiosk_demo);	
 						printf("Would you like to see another demo? y/n\n");
 						scanf(" %c", &check);
 						if(check == 'n'){
@@ -167,7 +167,7 @@ int main ()
 							printf("You have successfully draw a circle at point (%d, %d)\n", x, y);
 						}
 						
-						SDL_PollEvent(&e);	
+						p_sdl_get_event(kiosk_demo);	
 						printf("Would you like to see another demo? y/n\n");
 						scanf(" %c", &check);
 						if(check == 'n'){
@@ -207,7 +207,7 @@ int main ()
 							printf("You have successfully rendered %c on the screen\n", c);
 						}
 						
-						SDL_PollEvent(&e);	
+						p_sdl_get_event(kiosk_demo);	
 						printf("Would you like to see another demo? y/n\n");
 						scanf(" %c", &check);
 						if(check == 'n'){
@@ -246,7 +246,7 @@ int main ()
 							printf("You have successfully rendered %s on the screen\n", s);
 						}
 						
-						SDL_PollEvent(&e);	
+						p_sdl_get_event(kiosk_demo);	
 						printf("Would you like to see another demo? y/n\n");
 						scanf(" %c", &check);
 						if(check == 'n'){
@@ -272,12 +272,12 @@ int main ()
 
 						printf("Please use the mouse to click the button in the keypad area or click close to exit this demo\n");
 						while (temp == 1){
-							while(SDL_PollEvent(&e) != 0){
-								if(e.type == SDL_QUIT){
+							while(p_sdl_get_event(kiosk_demo) != 1){
+								if(kiosk_demo->mouse_event.type == SDL_QUIT){
 									temp = 0;
 								}
-								else if(e.type == SDL_MOUSEBUTTONDOWN){
-									data = p_sdl_get_mouse_click(kiosk_demo, &e);
+								else if(kiosk_demo->mouse_event.type == SDL_MOUSEBUTTONDOWN){
+									data = p_sdl_get_mouse_click(kiosk_demo);
 									if (data != -1){
 										if(data & (unsigned int)1){
 											if(data &(unsigned int)8)
@@ -320,7 +320,7 @@ int main ()
 								}	
 							}
 						}
-						SDL_PollEvent(&e);	
+						p_sdl_get_event(kiosk_demo);	
 						printf("Would you like to see another demo? y/n\n");
 						scanf(" %c", &check);
 						if(check == 'n'){
@@ -346,7 +346,7 @@ int main ()
 						if(i == 1){
 							p_sdl_clear_screen(kiosk_demo);
 						}
-						SDL_PollEvent(&e);	
+						p_sdl_get_event(kiosk_demo);	
 						printf("Would you like to see another demo? y/n\n");
 						scanf(" %c", &check);
 						if(check == 'n'){
