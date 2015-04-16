@@ -80,6 +80,8 @@ void p_kiosk_screen_clock(p_kiosk_screen *s) {
 						{
 							case COMMAND_DRAW_STRING:
 								result = p_sdl_render_string(s->sdl_struct, s->string_buffer);
+								s->string_buffer[0] = '\0';
+								s->string_buffer_location = 0;
 								break;
 							case COMMAND_DRAW_SHAPE:
 								if (s->drawmode == DRAWMODE_PIXEL) {
@@ -143,6 +145,7 @@ void p_kiosk_screen_clock(p_kiosk_screen *s) {
 			
 	
 	} else if (s->screen_bus->address == add_char_address) {
+		
 		/* Is write request */
 		if (s->screen_bus->rW == M_HIGH) {
 			
@@ -181,10 +184,124 @@ void p_kiosk_screen_clock(p_kiosk_screen *s) {
 		
 	} else if (s->screen_bus->address == print_char_address) {
 		
+		/* Is write request */
+		if (s->screen_bus->rW == M_HIGH) {
+			
+			if (s->screen_bus->req && !s->screen_bus->ack)
+				{
+					int result = p_sdl_render_char(s->sdl_struct, s->screen_bus->data);
+					s->screen_bus->ack = M_HIGH;
+				
+				// Then, we are not a request
+				}else if (s->screen_bus->ack == M_HIGH){
+					// Ensure ACK is low (is unset)
+					s->screen_bus->ack = M_LOW;
+				} 
+
+		/* Is read request */	
+		}else if (s->screen_bus->rW == M_LOW){ 
+			if (s->screen_bus->req && !s->screen_bus->ack)
+				{
+					
+				
+				// Then, we are not a request
+				}else if (s->screen_bus->ack == M_HIGH){
+					// Ensure ACK is low (is unset)
+					s->screen_bus->ack = M_LOW;
+				} 
+		}
+		
+		
 	} else if (s->screen_bus->address == x_loc_address) {
-		
+
+		/* Is write request */
+		if (s->screen_bus->rW == M_HIGH) {
+			
+			if (s->screen_bus->req && !s->screen_bus->ack)
+				{
+
+					int result = p_sdl_set_text_cursor_x(s->sdl_struct, s->screen_bus->data); 
+					s->screen_bus->ack = M_HIGH;
+					
+				// Then, we are not a request
+				}else if (s->screen_bus->ack == M_HIGH){
+					// Ensure ACK is low (is unset)
+					s->screen_bus->ack = M_LOW;
+				} 
+
+		/* Is read request */	
+		}else if (s->screen_bus->rW == M_LOW){ 
+			if (s->screen_bus->req && !s->screen_bus->ack)
+				{
+					s->screen_bus->data = p_sdl_get_text_cursor_x(s->sdl_struct);
+					s->screen_bus->ack = M_HIGH;
+				
+				// Then, we are not a request
+				}else if (s->screen_bus->ack == M_HIGH){
+					// Ensure ACK is low (is unset)
+					s->screen_bus->ack = M_LOW;
+				} 
+		}
 	} else if (s->screen_bus->address == y_loc_address) {
-		
+
+		/* Is write request */
+		if (s->screen_bus->rW == M_HIGH) {
+			
+			if (s->screen_bus->req && !s->screen_bus->ack)
+				{
+
+					int result = p_sdl_set_text_cursor_y(s->sdl_struct, s->screen_bus->data); 
+					s->screen_bus->ack = M_HIGH;
+					
+				// Then, we are not a request
+				}else if (s->screen_bus->ack == M_HIGH){
+					// Ensure ACK is low (is unset)
+					s->screen_bus->ack = M_LOW;
+				} 
+
+		/* Is read request */	
+		}else if (s->screen_bus->rW == M_LOW){ 
+			if (s->screen_bus->req && !s->screen_bus->ack)
+				{
+					s->screen_bus->data = p_sdl_get_text_cursor_y(s->sdl_struct);
+					s->screen_bus->ack = M_HIGH;
+				
+				// Then, we are not a request
+				}else if (s->screen_bus->ack == M_HIGH){
+					// Ensure ACK is low (is unset)
+					s->screen_bus->ack = M_LOW;
+				} 
+		}
+	} else if (s->screen_bus->address == color_address) {
+
+		/* Is write request */
+		if (s->screen_bus->rW == M_HIGH) {
+			
+			if (s->screen_bus->req && !s->screen_bus->ack)
+				{
+
+					int result = p_sdl_set_color(s->sdl_struct, s->screen_bus->data); 
+					s->screen_bus->ack = M_HIGH;
+					
+				// Then, we are not a request
+				}else if (s->screen_bus->ack == M_HIGH){
+					// Ensure ACK is low (is unset)
+					s->screen_bus->ack = M_LOW;
+				} 
+
+		/* Is read request */	
+		}else if (s->screen_bus->rW == M_LOW){ 
+			if (s->screen_bus->req && !s->screen_bus->ack)
+				{
+					s->screen_bus->data = p_sdl_get_color(s->sdl_struct);
+					s->screen_bus->ack = M_HIGH;
+				
+				// Then, we are not a request
+				}else if (s->screen_bus->ack == M_HIGH){
+					// Ensure ACK is low (is unset)
+					s->screen_bus->ack = M_LOW;
+				} 
+		}
 	}
 }
 

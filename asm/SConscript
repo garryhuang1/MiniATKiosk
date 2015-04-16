@@ -1,3 +1,7 @@
 Import('*')
 
 buildMash('test_screen.asm') 
+buildMash('test_screen_char.asm') 
+buildMash('test_screen_move.asm') 
+buildMash('test_screen_color.asm') 
+

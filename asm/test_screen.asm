@@ -1,14 +1,17 @@
 .constant	CMD		0x4000
 .constant	ADDBUF	0x4001
+.constant	COLOR	0x4005
 
 .constant	CHAR	65
 
 .address 0x2000
  
 !main
-	MOVI r45, 25
+	MOVI r45, 35
 	MOVI r46, CHAR
 	MOVI r44, 0
+	MOVI r20, 1
+	STOR r20, [COLOR]
 !loop
 	STOR r46, [ADDBUF]
 	ADD r44, r44, (1)
@@ -17,6 +20,9 @@
 
 !done
 	MOVI r46, 0
+	STOR r46, [CMD]
+
+	MOVI r46, 1
 	STOR r46, [CMD]
 
 !inf
