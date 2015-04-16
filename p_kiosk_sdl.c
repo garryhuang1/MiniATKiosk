@@ -81,7 +81,7 @@ p_sdl_data * p_sdl_new(void){
 		/*keypad */
 		kiosk->keypad_surface = IMG_Load("resources/images/keypad.png");
 		if(kiosk->keypad_surface ==NULL){
-			printf("Unable to load image %s! SDL_Image Error: %s\n", "src/images/keypad.png", IMG_GetError());
+			printf("Unable to load image %s! SDL_Image Error: %s\n", "resources/images/keypad.png", IMG_GetError());
 		}
 		else{
 			kiosk->keypad_texture = SDL_CreateTextureFromSurface(kiosk->renderer, kiosk->keypad_surface);
@@ -94,7 +94,7 @@ p_sdl_data * p_sdl_new(void){
 		/*screen */
 		kiosk->screen_surface = IMG_Load("resources/images/screen.png");
 		if(kiosk->screen_surface ==NULL){
-			printf("Unable to load image %s! SDL_Image Error: %s\n", "src/images/screen.png", IMG_GetError());
+			printf("Unable to load image %s! SDL_Image Error: %s\n", "resources/images/screen.png", IMG_GetError());
 		}
 		else{
 			kiosk->screen_texture = SDL_CreateTextureFromSurface(kiosk->renderer, kiosk->screen_surface);
@@ -696,7 +696,7 @@ int p_sdl_reset(p_sdl_data *kiosk) {
 
 		kiosk->screen_surface = IMG_Load("resources/images/screen.png");
 		if(kiosk->screen_surface ==NULL){
-			printf("Unable to load image %s! SDL_Image Error: %s\n", "src/images/screen.png", IMG_GetError());
+			printf("Unable to load image %s! SDL_Image Error: %s\n", "resources/images/screen.png", IMG_GetError());
 		}
 		else {
 			kiosk->screen_texture = SDL_CreateTextureFromSurface(kiosk->renderer, kiosk->screen_surface);
