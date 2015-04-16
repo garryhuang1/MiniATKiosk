@@ -1,6 +1,6 @@
-.constant	CMD		0x4000
-.constant	ADDBUF	0x4001
-.constant	COLOR	0x4005
+.constant	CMD		0x4012
+.constant	ADDBUF	0x4013
+.constant	COLOR	0x4017
 
 .constant	CHAR	65
 

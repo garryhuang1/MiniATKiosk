@@ -1,7 +1,7 @@
-.constant	CMD		0x4000
-.constant	ADDCHAR	0x4002
-.constant	MOVEX	0x4003
-.constant	MOVEY	0x4004
+.constant	CMD		0x4012
+.constant	ADDCHAR	0x4014
+.constant	MOVEX	0x4015
+.constant	MOVEY	0x4016
 
 .constant	CHAR	65
 
@@ -27,5 +27,5 @@
 !done
 	
 
-!inf
+!inf 
 	BRA	[!inf]

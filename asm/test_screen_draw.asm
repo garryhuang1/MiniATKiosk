@@ -1,10 +1,10 @@
-.constant	CMD			0x4000
-.constant	DRAWMODE	0x4006
-.constant	DRAW1		0x4007
-.constant	DRAW2		0x4008
-.constant	DRAW3		0x4009
-.constant	DRAW4		0x400A
-.constant	DRAW5		0x400B
+.constant	CMD			0x4012
+.constant	DRAWMODE	0x4018
+.constant	DRAW1		0x4019
+.constant	DRAW2		0x401A
+.constant	DRAW3		0x401B
+.constant	DRAW4		0x401C
+.constant	DRAW5		0x401D
 
 .constant	CHAR	65
 

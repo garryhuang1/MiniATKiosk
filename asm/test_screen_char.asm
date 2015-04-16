@@ -1,5 +1,5 @@
-.constant	CMD		0x4000
-.constant	ADDCHAR	0x4002
+.constant	CMD		0x4012
+.constant	ADDCHAR	0x4014
 
 .constant	CHAR	65
 

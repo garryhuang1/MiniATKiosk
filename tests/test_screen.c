@@ -5,9 +5,9 @@
 #include "miniat/miniat.h"
 #include "p_kiosk_screen.h"
 
-#define M_SCREEN_COMMAND   0x4000
-#define M_SCREEN_ADD_BUFFER 0x4001
-#define M_SCREEN_DRAW_5 0x400B
+#define M_SCREEN_COMMAND   0x4012
+#define M_SCREEN_ADD_BUFFER 0x4013
+#define M_SCREEN_DRAW_5 0x401D
 miniat *m = NULL;
 p_kiosk_screen *s = NULL;
 
