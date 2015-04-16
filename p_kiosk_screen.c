@@ -302,7 +302,192 @@ void p_kiosk_screen_clock(p_kiosk_screen *s) {
 					s->screen_bus->ack = M_LOW;
 				} 
 		}
+	} else if (s->screen_bus->address == draw_mode_address) {
+
+		/* Is write request */
+		if (s->screen_bus->rW == M_HIGH) {
+			
+			if (s->screen_bus->req && !s->screen_bus->ack)
+				{
+					
+					s->drawmode = s->screen_bus->data;
+					s->screen_bus->ack = M_HIGH;
+					
+				// Then, we are not a request
+				}else if (s->screen_bus->ack == M_HIGH){
+					// Ensure ACK is low (is unset)
+					s->screen_bus->ack = M_LOW;
+				} 
+
+		/* Is read request */	
+		}else if (s->screen_bus->rW == M_LOW){ 
+			if (s->screen_bus->req && !s->screen_bus->ack)
+				{
+					s->screen_bus->data = s->drawmode;
+					s->screen_bus->ack = M_HIGH;
+				
+				// Then, we are not a request
+				}else if (s->screen_bus->ack == M_HIGH){
+					// Ensure ACK is low (is unset)
+					s->screen_bus->ack = M_LOW;
+				} 
+		}
+	} else if (s->screen_bus->address == draw_1_address) {
+
+		/* Is write request */
+		if (s->screen_bus->rW == M_HIGH) {
+			
+			if (s->screen_bus->req && !s->screen_bus->ack)
+				{
+					
+					s->draw_buffer[0] = s->screen_bus->data;
+					s->screen_bus->ack = M_HIGH;
+					
+				// Then, we are not a request
+				}else if (s->screen_bus->ack == M_HIGH){
+					// Ensure ACK is low (is unset)
+					s->screen_bus->ack = M_LOW;
+				} 
+
+		/* Is read request */	
+		}else if (s->screen_bus->rW == M_LOW){ 
+			if (s->screen_bus->req && !s->screen_bus->ack)
+				{
+					s->screen_bus->data = s->draw_buffer[0];
+					s->screen_bus->ack = M_HIGH;
+				
+				// Then, we are not a request
+				}else if (s->screen_bus->ack == M_HIGH){
+					// Ensure ACK is low (is unset)
+					s->screen_bus->ack = M_LOW;
+				} 
+		}
+	
+	} else if (s->screen_bus->address == draw_2_address) {
+
+			/* Is write request */
+			if (s->screen_bus->rW == M_HIGH) {
+				
+				if (s->screen_bus->req && !s->screen_bus->ack)
+					{
+						
+						s->draw_buffer[1] = s->screen_bus->data;
+						s->screen_bus->ack = M_HIGH;
+						
+					// Then, we are not a request
+					}else if (s->screen_bus->ack == M_HIGH){
+						// Ensure ACK is low (is unset)
+						s->screen_bus->ack = M_LOW;
+					} 
+
+			/* Is read request */	
+			}else if (s->screen_bus->rW == M_LOW){ 
+				if (s->screen_bus->req && !s->screen_bus->ack)
+					{
+						s->screen_bus->data = s->draw_buffer[1];
+						s->screen_bus->ack = M_HIGH;
+					
+					// Then, we are not a request
+					}else if (s->screen_bus->ack == M_HIGH){
+						// Ensure ACK is low (is unset)
+						s->screen_bus->ack = M_LOW;
+					} 
+			}
+		
+	} else if (s->screen_bus->address == draw_3_address) {
+
+			/* Is write request */
+			if (s->screen_bus->rW == M_HIGH) {
+				
+				if (s->screen_bus->req && !s->screen_bus->ack)
+					{
+						
+						s->draw_buffer[2] = s->screen_bus->data;
+						s->screen_bus->ack = M_HIGH;
+						
+					// Then, we are not a request
+					}else if (s->screen_bus->ack == M_HIGH){
+						// Ensure ACK is low (is unset)
+						s->screen_bus->ack = M_LOW;
+					} 
+
+			/* Is read request */	
+			}else if (s->screen_bus->rW == M_LOW){ 
+				if (s->screen_bus->req && !s->screen_bus->ack)
+					{
+						s->screen_bus->data = s->draw_buffer[2];
+						s->screen_bus->ack = M_HIGH;
+					
+					// Then, we are not a request
+					}else if (s->screen_bus->ack == M_HIGH){
+						// Ensure ACK is low (is unset)
+						s->screen_bus->ack = M_LOW;
+					} 
+			}
+		
+	} else if (s->screen_bus->address == draw_4_address) {
+
+			/* Is write request */
+			if (s->screen_bus->rW == M_HIGH) {
+				
+				if (s->screen_bus->req && !s->screen_bus->ack)
+					{
+						
+						s->draw_buffer[3] = s->screen_bus->data;
+						s->screen_bus->ack = M_HIGH;
+						
+					// Then, we are not a request
+					}else if (s->screen_bus->ack == M_HIGH){
+						// Ensure ACK is low (is unset)
+						s->screen_bus->ack = M_LOW;
+					} 
+
+			/* Is read request */	
+			}else if (s->screen_bus->rW == M_LOW){ 
+				if (s->screen_bus->req && !s->screen_bus->ack)
+					{
+						s->screen_bus->data = s->draw_buffer[3];
+						s->screen_bus->ack = M_HIGH;
+					
+					// Then, we are not a request
+					}else if (s->screen_bus->ack == M_HIGH){
+						// Ensure ACK is low (is unset)
+						s->screen_bus->ack = M_LOW;
+					} 
+			}
+		
+	} else if (s->screen_bus->address == draw_5_address) {
+
+			/* Is write request */
+			if (s->screen_bus->rW == M_HIGH) {
+				
+				if (s->screen_bus->req && !s->screen_bus->ack)
+					{
+						
+						s->draw_buffer[4] = s->screen_bus->data;
+						s->screen_bus->ack = M_HIGH;
+						
+					// Then, we are not a request
+					}else if (s->screen_bus->ack == M_HIGH){
+						// Ensure ACK is low (is unset)
+						s->screen_bus->ack = M_LOW;
+					} 
+
+			/* Is read request */	
+			}else if (s->screen_bus->rW == M_LOW){ 
+				if (s->screen_bus->req && !s->screen_bus->ack)
+					{
+						s->screen_bus->data = s->draw_buffer[4];
+						s->screen_bus->ack = M_HIGH;
+					
+					// Then, we are not a request
+					}else if (s->screen_bus->ack == M_HIGH){
+						// Ensure ACK is low (is unset)
+						s->screen_bus->ack = M_LOW;
+					} 
+			}
 	}
+
 }
 
 m_bus p_kiosk_screen_get_bus(p_kiosk_screen *s){
