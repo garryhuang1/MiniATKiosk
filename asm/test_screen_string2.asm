@@ -14,7 +14,7 @@
 BRA [!main]
 
 !string1
-	"Hello World Bitches"	
+	"Hello World"	
 
  
 !main
