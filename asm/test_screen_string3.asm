@@ -22,7 +22,7 @@
 BRA [!main]
 
 !string1
-	"Hello Bitches"
+	"Hello"
 
 !string2
 	"Welcome to Kiosk!"
