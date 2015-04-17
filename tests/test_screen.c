@@ -63,7 +63,7 @@ static void miniat_start(int argc, char *argv[]) {
 			
 		} else { 
 			/* Error if we got here log it, and keep going! The ugly cast keeps the compiler happy*/
-			fprintf(stderr, "Could not find peripheral mapped to address: %lu\n",
+			fprintf(stderr, "Could not find peripheral mapped to address: %x\n",
 													(long unsigned int)peripheral_bus_state.address);
 			continue;
 		}
