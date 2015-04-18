@@ -291,7 +291,7 @@ int p_sdl_render_char(p_sdl_data *kiosk, char c) {
 		success = 1;
 	}
 	if (kiosk->text_cursor_y < S_MIN_Y || kiosk->text_cursor_y > S_MAX_Y) {
-		printf("\nText cursor y value out of bounds, %d", kiosk->text_cursor_x);
+		printf("\nText cursor y value out of bounds, %d", kiosk->text_cursor_y);
 		success = 1;
 	}
 
