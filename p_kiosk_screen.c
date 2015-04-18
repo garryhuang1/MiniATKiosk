@@ -65,6 +65,7 @@ void p_kiosk_screen_clock(p_kiosk_screen *s) {
 	m_uword draw_3_address = s->screen_start_address + 9;
 	m_uword draw_4_address = s->screen_start_address + 10;
 	m_uword draw_5_address = s->screen_start_address + 11;
+	m_uword wait_address = s->screen_start_address + 12;
 	
 	// If bus address is command bus
 	if (s->screen_bus->address == command_address) {
@@ -486,7 +487,37 @@ void p_kiosk_screen_clock(p_kiosk_screen *s) {
 						s->screen_bus->ack = M_LOW;
 					} 
 			}
-	}
+	} 	else if (s->screen_bus->address == wait_address) {
+		
+		/* Is write request */
+		if (s->screen_bus->rW == M_HIGH) {
+			
+			if (s->screen_bus->req && !s->screen_bus->ack)
+				{
+					int time = s->screen_bus->data;
+					sleep(time); 
+					s->screen_bus->ack = M_HIGH;
+				
+				// Then, we are not a request
+				}else if (s->screen_bus->ack == M_HIGH){
+					// Ensure ACK is low (is unset)
+					s->screen_bus->ack = M_LOW;
+				} 
+
+		/* Is read request */	
+		}else if (s->screen_bus->rW == M_LOW){ 
+			if (s->screen_bus->req && !s->screen_bus->ack)
+				{
+					
+				
+				// Then, we are not a request
+				}else if (s->screen_bus->ack == M_HIGH){
+					// Ensure ACK is low (is unset)
+					s->screen_bus->ack = M_LOW;
+				} 
+		}
+
+}
 
 }
 
