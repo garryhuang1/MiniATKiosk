@@ -2,8 +2,9 @@ Import('*')
 
 INC = [ '#/vm/inc', '#/system/kiosk']
 
-LIBS = [ 'libminiat', 'libkiosk_sdl', "SDL2", "libSDL2_image", "libSDL2_ttf", "libSDL2_gfx", "libkiosk_screen"]
+LIBS = [ 'libminiat', 'libkiosk_sdl', "SDL2", "libSDL2_image", "libSDL2_ttf", "libSDL2_gfx", "libkiosk_screen", 'libkiosk_keypad']
  
 buildProgram("sdl_test", "sdl_tests.c", CPPPATH=INC, LIBS=LIBS)
 buildProgram("sdl_demo", "sdl_demo.c", CPPPATH=INC, LIBS=LIBS)
 buildProgram("test_screen", "test_screen.c", CPPPATH=INC, LIBS=LIBS)
+buildProgram("test_both", "test_both.c", CPPPATH=INC, LIBS=LIBS)

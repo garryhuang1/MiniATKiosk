@@ -10,7 +10,7 @@ struct p_kiosk_keypad {
 	p_sdl_data* sdl_struct;
 	// m_gpio_id keypad_port;		// Not Being Used
 	m_uword keypad_start_address;
-	m_bus *bus
+	m_bus *bus;
 	int connected;
 };
 

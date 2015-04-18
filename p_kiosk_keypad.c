@@ -7,7 +7,7 @@
 
 
 p_kiosk_keypad* p_kiosk_keypad_new(p_sdl_data* init_struct, m_uword keypad_start_address) {
-	p_kiosk_keypad *k = malloc(sizeof(p_kisok_keypad));
+	p_kiosk_keypad *k = malloc(sizeof(p_kiosk_keypad));
 
 	if (k) {
 		k->bus = (m_bus *)malloc(sizeof(m_bus));
