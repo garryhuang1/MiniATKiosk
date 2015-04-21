@@ -73,6 +73,7 @@ static void miniat_start(int argc, char *argv[]) {
 		
 		peripheral_bus_state = p_kiosk_keypad_get_bus(k);
 		if (peripheral_bus_state.address == M_KEYPAD) {
+			printf("data is %d", peripheral_bus_state->data);
 			miniat_pins_bus_set(m, peripheral_bus_state);
 			continue;
 		} 
