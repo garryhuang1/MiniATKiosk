@@ -4,13 +4,16 @@
 
 #include "miniat/miniat.h"
 #include "p_kiosk_screen.h"
+#include "p_kiosk_keypad.h"
 
 #define M_SCREEN_COMMAND   0x4012
 #define M_SCREEN_ADD_BUFFER 0x4013
 #define M_SCREEN_DRAW_5 0x401D
-#define M_SCREEN_WAIT	0x401E
+#define M_KEYPAD 0x4000
 miniat *m = NULL;
+
 p_kiosk_screen *s = NULL;
+p_kiosk_keypad *k = NULL;
 
 static void cleanup();
 
@@ -43,9 +46,9 @@ static void miniat_start(int argc, char *argv[]) {
 
 	p_sdl_data* sdl_data = p_sdl_new();
 	s = p_kiosk_screen_new(sdl_data, M_SCREEN_COMMAND);
+	k = p_kiosk_keypad_new(sdl_data, M_KEYPAD);
 
-	/* Just do it for ever, the miniat handles the ctr^c keyboard interrupt, so you can always
-	   stop it by pressing ctr^c on the command line */
+
 	while(1) {
 
 		/* Give the miniat a clock cycle */
@@ -55,13 +58,27 @@ static void miniat_start(int argc, char *argv[]) {
 
 		p_kiosk_screen_set_bus(s, bus_state);
 		
+		p_kiosk_keypad_set_bus(k, bus_state);
+		
+		
 		p_kiosk_screen_clock(s);
+		
+		p_kiosk_keypad_clock(k);
 
 		peripheral_bus_state = p_kiosk_screen_get_bus(s);
-		if(peripheral_bus_state.address >= M_SCREEN_COMMAND && peripheral_bus_state.address <= M_SCREEN_WAIT) {
+		if(peripheral_bus_state.address >= M_SCREEN_COMMAND && peripheral_bus_state.address <= M_SCREEN_DRAW_5) {
 			miniat_pins_bus_set(m, peripheral_bus_state);
-		} else if (peripheral_bus_state.address == 0) {
-			
+			continue;
+		}
+		
+		peripheral_bus_state = p_kiosk_keypad_get_bus(k);
+		if (peripheral_bus_state.address == M_KEYPAD) {
+			miniat_pins_bus_set(m, peripheral_bus_state);
+			continue;
+		} 
+		
+		if (peripheral_bus_state.address == 0) {
+			continue;
 		} else { 
 			/* Error if we got here log it, and keep going! The ugly cast keeps the compiler happy*/
 			fprintf(stderr, "Could not find peripheral mapped to address: %x\n",
