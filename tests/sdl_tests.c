@@ -58,28 +58,31 @@ int main ()
 	test_wait(test_number);
 
 	// Test 2.1
-	//test_number = 2; 
+	test_number = 2; 
 
-	//int result_test_2 = -999;
+	int result_test_2 = 0;
 
-	//while (result_test_2 != -1)
-		//{
-			//result_test_2 = p_sdl_get_mouse_click(test_data);
-		//}
+	while (result_test_2 == 0)
+		{
+			result_test_2 = p_sdl_get_mouse_click(test_data);
+			printf("result is %d\n", result_test_2);
+		}
 
-	//test_wait(test_number);
+	test_wait(test_number);
 
-	//// Test 2.2
-	//result_test_2 = -999;
+	// Test 2.2
+	result_test_2 = 0;
 
-	//// convert here
+	// convert here 
 
-	//while (result_test_2 != 1)
-		//{
-			//result_test_2 = p_sdl_get_mouse_click(test_data);
-		//}
+	while (result_test_2 == 0)
+		{
+			result_test_2 = p_sdl_get_mouse_click(test_data);
+			printf("result is %d\n", result_test_2);
+		}
 
-	//test_wait(test_number);
+	test_wait(test_number);
+	
 	/* 
 	 * Test 3
 	 */
