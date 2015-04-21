@@ -278,7 +278,8 @@ int p_sdl_render_string(p_sdl_data *kiosk, char string[]) {
  */
 int p_sdl_render_char(p_sdl_data *kiosk, char c) {
 	int success = 0;
-	const char * character = &c;
+	char character[2];
+	character[0] = c;
 	SDL_Texture *texture = NULL;
 
 	/* Check if text cursor out of bounds */
