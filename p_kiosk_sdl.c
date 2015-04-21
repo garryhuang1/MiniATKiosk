@@ -189,22 +189,27 @@ int p_sdl_get_event(p_sdl_data *kiosk){
 /*function p_sdl_get_mouse_click
 use to return the last selected value as 32 bits binary, return -1 if nothing is available*/
 uint32_t p_sdl_get_mouse_click(p_sdl_data *kiosk){
-	uint32_t data = 0x00000000;
-	int c, r;
+	
+	if (SDL_PollEvent(&kiosk->mouse_event))
+		{
+			uint32_t data = 0x00000000;
+			int c, r;
 
-	if(kiosk->mouse_event.type == SDL_MOUSEBUTTONDOWN){
-		SDL_GetMouseState(&kiosk->mouse_cursor_x, &kiosk->mouse_cursor_y);
+			if(kiosk->mouse_event.type == SDL_MOUSEBUTTONDOWN){
+				SDL_GetMouseState(&kiosk->mouse_cursor_x, &kiosk->mouse_cursor_y);
 
-		if(kiosk->mouse_cursor_x <=300 && kiosk->mouse_cursor_y<=400){
-		c = (kiosk->mouse_cursor_x/100+1);
-		r = (kiosk->mouse_cursor_y/100+4);
-		data = ((~((~data)<<c)) ^(~((~data)<<c-1))) | ((~((~data)<<r)) ^(~((~data)<<r-1)));
-		return data;
-		}
-		else{
-			return -1;
-		}
-	}
+				if(kiosk->mouse_cursor_x <=300 && kiosk->mouse_cursor_y<=400) {
+					c = (kiosk->mouse_cursor_x/100+1);
+					r = (kiosk->mouse_cursor_y/100+4);
+					data = ((~((~data)<<c)) ^(~((~data)<<c-1))) | ((~((~data)<<r)) ^(~((~data)<<r-1)));
+					return data;
+				} else {
+					return 0;
+				}
+			}
+			
+		} 
+	return 0;
 }
 
 /*  function p_sdl_render_string
