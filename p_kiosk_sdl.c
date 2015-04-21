@@ -285,7 +285,9 @@ int p_sdl_draw_screen(p_sdl_data *kiosk){
 					}
 					else if (kiosk->mouse_event.type == SDL_MOUSEMOTION){
 						SDL_GetMouseState(&kiosk->mouse_cursor_x, &kiosk->mouse_cursor_y);
-						p_sdl_draw_pixel(kiosk, (kiosk->mouse_cursor_x - S_MIN_X), (kiosk->mouse_cursor_y - S_MIN_Y));
+						if((p_sdl_draw_pixel(kiosk, (kiosk->mouse_cursor_x - S_MIN_X), (kiosk->mouse_cursor_y - S_MIN_Y))) ==1){
+							mouse_down = false;
+						}
 					}
 
 				}
