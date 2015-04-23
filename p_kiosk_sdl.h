@@ -62,7 +62,7 @@ struct p_sdl_data {
 	int text_cursor_y;
 	int print_screen_cursor_x;
 	int print_screen_cursor_y;
-	int text_line_size;
+	//int current_line_length;
 	int print_text_line_size;
 	SDL_Color color;
 	SDL_Event mouse_event;
