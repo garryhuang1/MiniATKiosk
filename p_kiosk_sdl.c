@@ -273,28 +273,30 @@ use to draw pixels on the kiosk screen*/
 int p_sdl_draw_screen(p_sdl_data *kiosk){
 	if(SDL_WaitEvent(&kiosk->mouse_event)){
 		bool mouse_down = false;
-		if(kiosk->mouse_event.type == SDL_MOUSEBUTTONDOWN){
-			mouse_down = true;
-			while(mouse_down){
-				if(SDL_WaitEvent(&kiosk->mouse_event) != 0){
-					if(kiosk->mouse_event.type == SDL_MOUSEBUTTONUP){
-						if(kiosk->mouse_event.button.button == SDL_BUTTON_LEFT){
-							mouse_down = false;
-							return 1;
+		SDL_GetMouseState(&kiosk->mouse_cursor_x, &kiosk->mouse_cursor_y);
+		if(kiosk->mouse_event.type == SDL_QUIT){
+			return 0;
+		}
+		else if((kiosk->mouse_cursor_x >S_MIN_X) && (kiosk->mouse_cursor_x < S_MAX_X) && (kiosk->mouse_cursor_y > S_MIN_Y) && (kiosk->mouse_cursor_y < S_MAX_Y)){
+			if(kiosk->mouse_event.type == SDL_MOUSEBUTTONDOWN){
+				mouse_down = true;
+				while(mouse_down){
+					if(SDL_WaitEvent(&kiosk->mouse_event) != 0){
+						if(kiosk->mouse_event.type == SDL_MOUSEBUTTONUP){
+							if(kiosk->mouse_event.button.button == SDL_BUTTON_LEFT){
+								mouse_down = false;
+								return 1;
+							}
+						}
+						else if (kiosk->mouse_event.type == SDL_MOUSEMOTION){
+							SDL_GetMouseState(&kiosk->mouse_cursor_x, &kiosk->mouse_cursor_y);
+							if((p_sdl_draw_pixel(kiosk, (kiosk->mouse_cursor_x - S_MIN_X), (kiosk->mouse_cursor_y - S_MIN_Y))) == 1){
+								mouse_down = false;
+							}
 						}
 					}
-					else if (kiosk->mouse_event.type == SDL_MOUSEMOTION){
-						SDL_GetMouseState(&kiosk->mouse_cursor_x, &kiosk->mouse_cursor_y);
-						if((p_sdl_draw_pixel(kiosk, (kiosk->mouse_cursor_x - S_MIN_X), (kiosk->mouse_cursor_y - S_MIN_Y))) ==1){
-							mouse_down = false;
-						}
-					}
-
 				}
 			}
-		}
-		else if (kiosk->mouse_event.type == SDL_QUIT){
-			return 0;
 		}
 	}
 }
