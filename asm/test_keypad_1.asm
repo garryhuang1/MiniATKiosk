@@ -22,6 +22,6 @@
 !clear
 	MOVI r15, 4
 	STOR r15, [CMDB]
-
+	BRA [!loop]
 
 
