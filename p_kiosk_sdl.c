@@ -326,48 +326,41 @@ int p_sdl_render_string(p_sdl_data *kiosk, char string[]) {
 		success = 1;
 	}
 
-	/* Check if string to render will bypass screen boundry */
-	/* If so, reset x-axis and increment y-axis by font size */
 	if ( (kiosk->text_line_size + str_len * kiosk->font_size) > (S_MAX_X - S_MIN_X) && success == 0) {
-		kiosk->text_cursor_x = S_MIN_X;
-		kiosk->text_line_size = 0;
-		if ( (kiosk->text_cursor_y + kiosk->font_size) >  S_MAX_Y) {
-			success = 1;
-			printf("Text cannot render! Screen is full.\n");
+		/* Length of string greater + than available space on line */
+		/* Change to rendering each char in string array seperately */
+		int i;
+		for (i = 0; i < str_len && success == 0; i++ ) {
+			success = p_sdl_render_char(kiosk, string[i]);
 		}
-		kiosk->text_cursor_y = kiosk->text_cursor_y + kiosk->font_size;
-		kiosk->text_line_size = str_len * kiosk->font_size;
 	}
 	else {
 		kiosk->text_line_size += str_len * kiosk->font_size;
-	}
 
-	/*Create texture from string*/
-	if (success == 0) {
 		texture = TTF_RenderText_Solid(kiosk->text_font, (const char *)string, kiosk->color);
+
 		if (texture == NULL) {
 			printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
 			success = 1;
 		}
+
 		if (success == 0) {	
 			texture = SDL_CreateTextureFromSurface(kiosk->renderer, texture);
+
+			/* Set x,y coordinates and width of text space where string will render */
+			kiosk->text_space.x = kiosk->text_cursor_x;
+			kiosk->text_space.y = kiosk->text_cursor_y;
+			kiosk->text_space.w = str_len * kiosk->font_size;
+
+			SDL_RenderCopyEx(kiosk->renderer, texture, NULL, &kiosk->text_space, 0.0, NULL, SDL_FLIP_NONE);
+			SDL_RenderPresent(kiosk->renderer);
+
+			/*Update text cursor x positions*/
+			kiosk->text_cursor_x = kiosk->text_cursor_x + str_len * kiosk->font_size;
 		}
+
+		return success;
 	}
-
-	/*Render string to screen*/
-	if (success == 0) {
-		kiosk->text_space.x = kiosk->text_cursor_x;
-		kiosk->text_space.y = kiosk->text_cursor_y;
-		kiosk->text_space.w = str_len * kiosk->font_size;
-
-		SDL_RenderCopyEx(kiosk->renderer, texture, NULL, &kiosk->text_space, 0.0, NULL, SDL_FLIP_NONE);
-		SDL_RenderPresent(kiosk->renderer);
-
-		/*Update text cursor x positions*/
-		kiosk->text_cursor_x = kiosk->text_cursor_x + str_len * kiosk->font_size;
-	}
-
-	return success;
 }
 
 /*  function p_sdl_render_char
