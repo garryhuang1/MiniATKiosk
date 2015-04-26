@@ -4,7 +4,7 @@
 
 #define SCREEN_HEIGHT 400
 #define SCREEN_WIDTH 610
-#define CURSOR_MOVE 18
+#define CURSOR_MOVE 14
 
 /*
  * There functions are for asserting test results and managing errors
@@ -199,23 +199,25 @@ int main ()
 	test_data->text_cursor_x = 320;
 	test_data->text_cursor_y = 29;
 
-	int result_test_9_print = p_sdl_render_string(test_data, "Hello World!");
+	int result_test_9_print = p_sdl_render_string(test_data, "1Hello World!");
 	assert_int(test_number, result_test_9_print, 1);
 	
 	test_data->text_cursor_x = 885;
 	test_data->text_cursor_y = 29;
 
-	int result_test_9_print2 = p_sdl_render_string(test_data, "Hello World!");
+	int result_test_9_print2 = p_sdl_render_string(test_data, "2Hello World!");
 	assert_int(test_number, result_test_9_print2, 1);
 
 	int result_test_9_print3 = p_sdl_reset(test_data); 
-	
 	assert_int(test_number, result_test_9_print3, 0);
+	
 	
 	assert_int(test_number, p_sdl_get_color(test_data), 0);
 	assert_int(test_number, p_sdl_get_text_cursor_x(test_data), 0 );
 	assert_int(test_number, p_sdl_get_text_cursor_y(test_data), 0 );
 
+	
+	
 	test_wait(test_number);
 	/* 
 	 * Test 10
@@ -224,10 +226,11 @@ int main ()
 
 	int result_test_10 = p_sdl_set_color(test_data, 99);
 	assert_int(test_number, result_test_10, 1);
-
+	
 	assert_int(test_number, p_sdl_get_color(test_data), 0);
 
 	int result_test_10_print = p_sdl_render_string(test_data, "Hello World!");
+	
 	assert_int(test_number, result_test_10_print, 0);
 
 	test_wait(test_number);
@@ -238,10 +241,12 @@ int main ()
  
 	//test_data->color = 99;
 
-	int result_test_11_print = p_sdl_render_string(test_data, "Hello World!");
+	//int result_test_11_print = p_sdl_render_string(test_data, "Hello World!");
 	//assert_int(test_number, result_test_11_print, 0);
 
 	//assert_int(test_number, p_sdl_get_color(test_data), 0);
+
+	p_sdl_reset(test_data);
 
 	test_wait(test_number);
 	/* 
@@ -383,10 +388,34 @@ int main ()
 
 	test_wait(test_number);
 
-
-
-	// Test 20
 	test_number = 20;
+
+	int result_test_20_print = p_sdl_render_string(test_data, "A Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long String");
+	assert_int(test_number, result_test_20_print, 1); 
+	
+	test_number = 21;
+	
+	int result_test_21_color = p_sdl_set_color(test_data, 3);
+	assert_int(test_number, result_test_21_color, 0);
+	assert_int(test_number, p_sdl_get_color(test_data), 3);
+	
+	int t = 0;
+	int final = 0;
+	
+	for (t = 0; t < 150; t++)
+		{
+			int temp = 0;
+			temp = p_sdl_render_char(test_data, 'a');
+			final = temp | final;
+		}
+	
+	assert_int(test_number, final, 0); 
+	
+
+	test_wait(test_number);
+
+	// Close Test
+	test_number += 1;
 	
 	int result_test_20 = p_sdl_close(test_data);
 

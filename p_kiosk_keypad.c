@@ -53,19 +53,15 @@ void p_kiosk_keypad_clock(p_kiosk_keypad *k) {
 	 * wire is low, get mouse click and record as data
 	 */
 	
-	 
-	
 	if (k->bus->rW == M_LOW && k->bus->req && !k->bus->ack) {
-		int result = p_sdl_get_event(k->sdl_struct);
-		if (result == 0)
+		
+		data = p_sdl_get_mouse_click(k->sdl_struct);
+		if (data > 0)
 			{
-				data = p_sdl_get_mouse_click(k->sdl_struct);
-				if (data > 0)
-					{
-						printf("data is %d\n", data);
-					}
-				
+				printf("data is %d\n", data);
 			}
+				
+			
 		k->bus->data = data;
 		k->bus->ack = M_HIGH;
 	}

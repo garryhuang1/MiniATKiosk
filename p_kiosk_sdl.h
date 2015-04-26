@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-const int WINDOW_WIDTH = 910;
+const int WINDOW_WIDTH = 1100;
 /**
  * Global constant variable for window width.
  */
@@ -28,27 +28,46 @@ const int SCREEN_HEIGHT = 400;
 /**
  * Global constant variable for screen width.
  */
+const int PRINT_SCREEN_WIDTH = 200;
+/**
+ *
+ */
+const int PRINT_SCREEN_HEIGHT = 400;
+/**
+ *
+ */
+
 
 struct p_sdl_data {
 	SDL_Window *window;
 	SDL_Surface *screen_surface;
 	SDL_Surface *keypad_surface;
+	SDL_Surface *print_screen_surface;
 	SDL_Renderer *renderer;
 	SDL_Texture *screen_texture;
 	SDL_Texture *keypad_texture;
+	SDL_Texture *print_screen_texture;
 	SDL_Rect text_space;
+	SDL_Rect print_text_space;
 	SDL_Rect keypad_dest;
 	SDL_Rect screen_dest;
+	SDL_Rect print_screen_dest;
 	TTF_Font *text_font;
+	TTF_Font *receipt_text_font;
 	SDL_Texture *pixel_texture;
 	int mouse_cursor_x;
 	int mouse_cursor_y;
 	int font_size;
+	int print_font_size;
 	int text_cursor_x;
 	int text_cursor_y;
-	int text_line_size;
+	int print_screen_cursor_x;
+	int print_screen_cursor_y;
+	//int current_line_length;
+	int print_text_line_size;
 	SDL_Color color;
 	SDL_Event mouse_event;
+	FILE *receipt_print;
 };
 
 typedef struct p_sdl_data p_sdl_data;
@@ -106,6 +125,15 @@ extern uint32_t p_sdl_get_mouse_click(p_sdl_data * kiosk);
  * @return int 
  * 	The status of the function executed
  */
+
+  extern int p_sdl_draw_screen(p_sdl_data *kiosk);
+ /**
+  * Draw pixel on the kiosk screen.
+  * @param p_s_dal_data *kiosk
+  *  The SDL data struct
+  * @return int
+  *  The status of the function executed
+  */
 
 extern int p_sdl_clear_screen(p_sdl_data * kiosk);
 /**
@@ -269,6 +297,49 @@ extern int p_sdl_reset(p_sdl_data * kiosk);
  * @param p_sdl_data * kiosk
  * 	The SDL data struct
  * 	@return int
+ * 	0 if no error, 1 if error
+ */
+extern int p_sdl_set_receipt_cursor_x(p_sdl_data * kiosk, int x);
+/**
+ * @param p_sdl_data * kiosk
+ * 	The SDL data struct and x value set to cursor
+ * @return int
+ * 	0 if no error, 1 if error
+ */
+extern int p_sdl_set_receipt_cursor_y(p_sdl_data * kiosk, int y);
+/**
+ * @param p_sdl_data * kiosk and y value set to cursor
+ * 	The SDL data struct
+ * @return int
+ * 	0 if no error, 1 if error
+ */
+extern int p_sdl_get_receipt_cursor_x(p_sdl_data *kiosk);
+/**
+ * @param p_sdl_data * kiosk
+ * 	The SDL data struct
+ * @return int
+ * 	x value of text cursor
+ */
+extern int p_sdl_get_receipt_cursor_y(p_sdl_data *kiosk);
+/**
+ * @param p_sdl_data * kiosk
+ * 	The SDL data struct
+ * @return int
+ * 	y value of text cursor
+ */
+extern int p_sdl_receipt_printer_new_line(p_sdl_data *kiosk);
+/**
+ * @param p_sdl_data * kiosk
+ * 	The SDL data struct
+ * @return int
+ * 	0 if no error, 1 if error
+ */
+
+extern int p_sdl_receipt_render_char(p_sdl_data *kiosk, char character);
+/**
+ * @param p_sdl_data * kiosk, char character
+ *  	The SDL data struct and character to be displayed
+ * @return int
  * 	0 if no error, 1 if error
  */
 
