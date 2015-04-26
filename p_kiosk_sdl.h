@@ -53,6 +53,7 @@ struct p_sdl_data {
 	SDL_Rect screen_dest;
 	SDL_Rect print_screen_dest;
 	TTF_Font *text_font;
+	TTF_Font *receipt_text_font;
 	SDL_Texture *pixel_texture;
 	int mouse_cursor_x;
 	int mouse_cursor_y;

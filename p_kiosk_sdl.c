@@ -16,7 +16,10 @@
 #define S_MAX_Y 371
 
 #define SCREEN_LINE_HEIGHT 20
-#define SCREEN_FONT_WIDTH 12
+#define SCREEN_FONT_WIDTH 14
+
+#define PRINTER_LINE_HEIGHT 20
+#define PRINTER_FONT_WIDTH 22
 
 p_sdl_data * p_sdl_new(void);
 int p_sdl_close(p_sdl_data *kiosk);
@@ -45,6 +48,8 @@ int p_sdl_get_receipt_cursor_y(p_sdl_data *kiosk);
 int p_sdl_receipt_printer_new_line(p_sdl_data *kiosk);
 int p_sdl_receipt_render_char(p_sdl_data *kiosk, char character);
 
+int priv_sdl_render(p_sdl_data *kiosk);
+int priv_sdl_font_init(p_sdl_data *kiosk);
 
 /*function p_sdl_new
 use to create all the necessary SDL items*/
@@ -52,159 +57,39 @@ p_sdl_data * p_sdl_new(void){
 	/*create instance of kiosk*/
 	p_sdl_data *kiosk;
 	kiosk = malloc(sizeof(p_sdl_data));
-
-	/*set default font size*/
-	kiosk->font_size = 12;
-	kiosk->print_font_size = 22;
-
-	bool success =true;
-
+	
 	/*create window*/
 	if(SDL_Init(SDL_INIT_VIDEO)<0){
 		printf("SDL could not initialized! SDL_Error: %s\n", SDL_GetError());
-		success = false;	
-	}
-	else{
+		
+		return NULL;
+		
+	} else {
 		kiosk->window = SDL_CreateWindow("Kiosk v2.9.9", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,WINDOW_WIDTH, WINDOW_HEIGHT,SDL_WINDOW_SHOWN);
-		if(kiosk->window ==NULL){
+		if(kiosk->window == NULL){
 			printf("Window could not be created! SDL Error: %s\n", SDL_GetError() );
-			success = false;
-		}
-		else{
-					/*create renderer*/
-			kiosk->renderer = SDL_CreateRenderer(kiosk->window, -1, SDL_RENDERER_ACCELERATED);
-			if(kiosk->renderer ==NULL){
-				printf("renderer could not be created! SDL Error: %s\n", SDL_GetError());
-				success = false;
-			}
-			else{
-				SDL_SetRenderDrawColor(kiosk->renderer, 0x00, 0x00, 0x00, 0xFF);
-
-				int imgFlags = IMG_INIT_PNG;
-				if(!(IMG_Init(imgFlags)& imgFlags)){
-					printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
-					success =false;
-				}
+			
+			return NULL;
+			
+		} else {
+			if (priv_sdl_render(kiosk) == 0) {
+				
+				if (priv_sdl_font_init(kiosk) == 0)
+					{
+						kiosk->receipt_print = fopen("test.txt", "w");
+						return kiosk;	
+					} else {
+						return NULL;
+					}
+			} else {
+				return NULL;
 			}
 		}
 	}
 
-	/*render both screen and keypad to the window */
-	if(success){
-		/*keypad */
-		kiosk->keypad_surface = IMG_Load("resources/images/keypad.png");
-		if(kiosk->keypad_surface ==NULL){
-			printf("Unable to load image %s! SDL_Image Error: %s\n", "resources/images/keypad.png", IMG_GetError());
-		}
-		else{
-			kiosk->keypad_texture = SDL_CreateTextureFromSurface(kiosk->renderer, kiosk->keypad_surface);
-			if (kiosk->keypad_texture ==NULL){
-				printf("Unable to create texture for screen! SDL Error: %s\n", SDL_GetError());
-				success = false;
-			}		
-		}
+	return NULL;
 
-		/*screen */
-		kiosk->screen_surface = IMG_Load("resources/images/screen.png");
-		if(kiosk->screen_surface ==NULL){
-			printf("Unable to load image %s! SDL_Image Error: %s\n", "resources/images/screen.png", IMG_GetError());
-		}
-		else{
-			kiosk->screen_texture = SDL_CreateTextureFromSurface(kiosk->renderer, kiosk->screen_surface);
-			if (kiosk->screen_texture ==NULL){
-				printf("Unable to create texture for screen! SDL Error: %s\n", SDL_GetError());
-				success = false;
-			}
-		}
-		/*printer */
-		kiosk->print_screen_surface = IMG_Load("resources/images/print_screen.png");
-		if(kiosk->print_screen_surface ==NULL){
-			printf("Unable to load image %s! SDL_Image Error: %s\n", "resources/images/screen.png", IMG_GetError());
-		}
-		else{
-			kiosk->print_screen_texture = SDL_CreateTextureFromSurface(kiosk->renderer, kiosk->print_screen_surface);
-			if (kiosk->print_screen_texture ==NULL){
-				printf("Unable to create texture for screen! SDL Error: %s\n", SDL_GetError());
-				success = false;
-			}
-		}
-
-		/*display both keypad and screen*/
-		SDL_FreeSurface(kiosk->keypad_surface);
-		SDL_FreeSurface(kiosk->screen_surface);
-		SDL_FreeSurface(kiosk->print_screen_surface);
-		kiosk->keypad_dest.x = 0;
-		kiosk->keypad_dest.y = 0;
-		kiosk->keypad_dest.w = 300;
-		kiosk->keypad_dest.h = 400;
-		SDL_RenderCopy(kiosk->renderer, kiosk->keypad_texture, NULL, &kiosk->keypad_dest);
-		kiosk->screen_dest.x = 300;
-		kiosk->screen_dest.y = 0;
-		kiosk->screen_dest.w = 610;
-		kiosk->screen_dest.h = 400;
-		SDL_RenderCopy(kiosk->renderer, kiosk->screen_texture, NULL, &kiosk->screen_dest);
-		kiosk->print_screen_dest.x = 900;
-		kiosk->print_screen_dest.y = 0;
-		kiosk->print_screen_dest.w = 200;
-		kiosk->print_screen_dest.h = 400;
-		SDL_RenderCopy(kiosk->renderer, kiosk->print_screen_texture, NULL, &kiosk->print_screen_dest);
-		SDL_RenderPresent(kiosk->renderer);
-	}
-
-	/* initialize SDL_ttf subsystems for kiosk use */
-	if (TTF_Init() == -1) {
-		printf("Error initializing SDL_ttf subsystem! SDL_ttf Error: %s\n", TTF_GetError());
-	}
-	else {
-		kiosk->text_font = NULL;
-		kiosk->text_cursor_x = S_MIN_X;	
-		kiosk->text_cursor_y = S_MIN_Y;	
-
-
-		/* Open font ttf file and load into font variable */
-		kiosk->text_font = TTF_OpenFont("resources/fonts/pt_sans_regular.ttf", SCREEN_FONT_WIDTH);
-
-		if (kiosk->text_font == NULL) {
-			printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
-		}
-	}
-	/* initialize SDL__ttf subsystems for print_screen*/
-	if (TTF_Init() == -1) {
-		printf("Error initializing SDL_ttf subsystem! SDL_ttf Error: %s\n", TTF_GetError());
-	}
-	else {
-		kiosk->text_font = NULL;
-		kiosk->print_screen_cursor_x = S_MIN_X;	
-		kiosk->print_screen_cursor_y = S_MIN_Y;	
-		kiosk->print_text_line_size = 0;
-
-		/* Open font ttf file and load into font variable */
-		kiosk->text_font = TTF_OpenFont("resources/fonts/pt_sans_regular.ttf", kiosk->print_font_size);
-
-		if (kiosk->text_font == NULL) {
-			printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
-		}
-	}
-
-	/* Default color settings to black*/
-	kiosk->color.r = 0;
-	kiosk->color.g = 0;
-	kiosk->color.b = 0;
 	
-	/* Initialize text space variable */
-	kiosk->text_space.x = S_MIN_X;
-	kiosk->text_space.y = S_MIN_Y;
-	kiosk->text_space.w = 0;
-	kiosk->text_space.h = SCREEN_LINE_HEIGHT;
-
-	/* Initialize print screen variable*/
-	kiosk->print_text_space.x = S_MIN_X;
-	kiosk->print_text_space.y = S_MIN_Y;
-	kiosk->print_text_space.w = 0;
-	kiosk->print_text_space.h = kiosk->print_font_size;
-
-	kiosk->receipt_print = fopen("test.txt", "w");
-	return kiosk;	
 }
 
 /*function p_sdl_close
@@ -232,6 +117,152 @@ int p_sdl_close(p_sdl_data *kiosk){
 	return 0;
 
 }
+
+
+/* Private function: renders the kiosk resources */
+int priv_sdl_render(p_sdl_data *kiosk)
+{
+	
+	kiosk->renderer = SDL_CreateRenderer(kiosk->window, -1, SDL_RENDERER_ACCELERATED);
+	
+	if(kiosk->renderer == NULL){
+		printf("renderer could not be created! SDL Error: %s\n", SDL_GetError());
+		return 1;
+	} else {
+
+		int color_set = p_sdl_set_color(kiosk, 0);
+		
+		if (color_set != 0)
+			{
+				return color_set;
+			}
+		
+		int imgFlags = IMG_INIT_PNG;
+		if(!(IMG_Init(imgFlags)& imgFlags)){
+			printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+			return 1;
+		}
+		
+		kiosk->keypad_surface = NULL;
+		kiosk->screen_surface = NULL;
+		kiosk->print_screen_surface = NULL;
+		
+		/* Display keypad */
+		kiosk->keypad_surface = IMG_Load("resources/images/keypad.png");
+		if(kiosk->keypad_surface == NULL){
+			printf("Unable to load image %s! SDL_Image Error: %s\n", "resources/images/keypad.png", IMG_GetError());
+		} else {
+			kiosk->keypad_texture = SDL_CreateTextureFromSurface(kiosk->renderer, kiosk->keypad_surface);
+			if (kiosk->keypad_texture == NULL){
+				printf("Unable to create texture for screen! SDL Error: %s\n", SDL_GetError());
+				return 1;
+			}		
+		}
+
+		/* Display screen */
+		kiosk->screen_surface = IMG_Load("resources/images/screen.png");
+		if(kiosk->screen_surface ==NULL){
+			printf("Unable to load image %s! SDL_Image Error: %s\n", "resources/images/screen.png", IMG_GetError());
+		}
+		else{
+			kiosk->screen_texture = SDL_CreateTextureFromSurface(kiosk->renderer, kiosk->screen_surface);
+			if (kiosk->screen_texture ==NULL){
+				printf("Unable to create texture for screen! SDL Error: %s\n", SDL_GetError());
+				return 1;
+			}
+		}
+		
+		/* Display printer */
+		kiosk->print_screen_surface = IMG_Load("resources/images/print_screen.png");
+		if(kiosk->print_screen_surface ==NULL){
+			printf("Unable to load image %s! SDL_Image Error: %s\n", "resources/images/screen.png", IMG_GetError());
+		}
+		else{
+			kiosk->print_screen_texture = SDL_CreateTextureFromSurface(kiosk->renderer, kiosk->print_screen_surface);
+			if (kiosk->print_screen_texture ==NULL){
+				printf("Unable to create texture for screen! SDL Error: %s\n", SDL_GetError());
+				return 1;
+			}
+		}
+		
+		SDL_FreeSurface(kiosk->keypad_surface);
+		SDL_FreeSurface(kiosk->screen_surface);
+		SDL_FreeSurface(kiosk->print_screen_surface);
+		
+		kiosk->keypad_dest.x = 0;
+		kiosk->keypad_dest.y = 0;
+		kiosk->keypad_dest.w = 300;
+		kiosk->keypad_dest.h = 400;
+		SDL_RenderCopy(kiosk->renderer, kiosk->keypad_texture, NULL, &kiosk->keypad_dest);
+		
+		kiosk->screen_dest.x = 300;
+		kiosk->screen_dest.y = 0;
+		kiosk->screen_dest.w = 610;
+		kiosk->screen_dest.h = 400;
+		SDL_RenderCopy(kiosk->renderer, kiosk->screen_texture, NULL, &kiosk->screen_dest);
+		
+		kiosk->print_screen_dest.x = 900;
+		kiosk->print_screen_dest.y = 0;
+		kiosk->print_screen_dest.w = 200;
+		kiosk->print_screen_dest.h = 400;
+		SDL_RenderCopy(kiosk->renderer, kiosk->print_screen_texture, NULL, &kiosk->print_screen_dest);
+		
+		// Render
+		SDL_RenderPresent(kiosk->renderer);
+		
+		return 0;
+	}
+	
+	
+}
+
+int priv_sdl_font_init(p_sdl_data *kiosk) 
+{
+	/* initialize SDL_ttf subsystems for kiosk use */
+	if (TTF_Init() == -1) {
+		printf("Error initializing SDL_ttf subsystem! SDL_ttf Error: %s\n", TTF_GetError());
+		return 1;
+	}
+	else {
+		kiosk->text_font = NULL;
+		kiosk->text_cursor_x = S_MIN_X;	
+		kiosk->text_cursor_y = S_MIN_Y;	
+
+		kiosk->receipt_text_font = NULL;
+		kiosk->print_screen_cursor_x = S_MIN_X;	
+		kiosk->print_screen_cursor_y = S_MIN_Y;
+		kiosk->print_text_line_size = 0;
+		
+		/* Open font ttf file and load into font variable */
+		kiosk->text_font = TTF_OpenFont("resources/fonts/pt_sans_regular.ttf", SCREEN_FONT_WIDTH);
+
+		kiosk->receipt_text_font = TTF_OpenFont("resources/fonts/pt_sans_regular.ttf", PRINTER_FONT_WIDTH);
+
+		if (kiosk->text_font == NULL || kiosk->receipt_text_font == NULL) {
+			printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
+			return 1;
+		}
+	}
+
+	/* Default color settings to black*/
+	kiosk->color.r = 0;
+	kiosk->color.g = 0;
+	kiosk->color.b = 0;
+	
+	/* Initialize text space variable */
+	kiosk->text_space.x = S_MIN_X;
+	kiosk->text_space.y = S_MIN_Y;
+	kiosk->text_space.w = 0;
+	kiosk->text_space.h = SCREEN_LINE_HEIGHT;
+
+	/* Initialize print screen variable*/
+	kiosk->print_text_space.x = S_MIN_X;
+	kiosk->print_text_space.y = S_MIN_Y;
+	kiosk->print_text_space.w = 0;
+	kiosk->print_text_space.h = PRINTER_FONT_WIDTH;
+	return 0;
+}
+
 
 /*function p_sdl_get_event
 use to stroe the latest event into the sdl struct*/
@@ -269,6 +300,7 @@ uint32_t p_sdl_get_mouse_click(p_sdl_data *kiosk){
 			}
 			
 		} 
+	return 0;
 }
 
 /*function p_sdl_draw_screen
@@ -768,80 +800,23 @@ int p_sdl_reset(p_sdl_data *kiosk) {
 	
 	/* Reset renderer */
 	SDL_DestroyRenderer(kiosk->renderer);
-	kiosk->renderer = SDL_CreateRenderer(kiosk->window, -1, SDL_RENDERER_ACCELERATED);
-	if (kiosk->renderer == NULL) {
-		printf("Renderer could not be reset! SDL Error: %s\n", SDL_GetError());
-		success = 1;
+	
+	if (priv_sdl_render(kiosk) == 0) {
+		if ( priv_sdl_font_init(kiosk) == 0 ) {
+			return 0;
+		}else {
+			return 1;
+		}
+	} else {
+		return 1;
 	}
-	else {
-		SDL_SetRenderDrawColor(kiosk->renderer, 0x00, 0xFF, 0xFF, 0xFF);
-		if (!(IMG_Init(imgFlags)& imgFlags)){
-			printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
-			success = 1;
-		}
-	}
- 
-	/* Render both screen and keypad */
-	if (success == 0) {
-		kiosk->keypad_surface = NULL;
-		kiosk->screen_surface = NULL;
-		kiosk->keypad_surface = IMG_Load("resources/images/keypad.png");
-		if (kiosk->keypad_surface ==NULL) {
-			printf("Unable to load image %s! SDL_Image Error: %s\n", "resources/images/keypad.png", IMG_GetError());
-		}
-		else {
-			kiosk->keypad_texture = SDL_CreateTextureFromSurface(kiosk->renderer, kiosk->keypad_surface);
-			if (kiosk->keypad_texture == NULL) {
-				printf("Unable to create texture for screen! SDL Error: %s\n", SDL_GetError());
-				success = 1;
-			}
-		}
-
-		kiosk->screen_surface = IMG_Load("resources/images/screen.png");
-		if(kiosk->screen_surface ==NULL){
-			printf("Unable to load image %s! SDL_Image Error: %s\n", "resources/images/screen.png", IMG_GetError());
-		}
-		else {
-			kiosk->screen_texture = SDL_CreateTextureFromSurface(kiosk->renderer, kiosk->screen_surface);
-			if (kiosk->screen_texture ==NULL) {
-				printf("Unable to create texture for screen! SDL Error: %s\n", SDL_GetError());
-				success = 1;
-			}
-		}
-
-		SDL_FreeSurface(kiosk->keypad_surface);
-		SDL_FreeSurface(kiosk->screen_surface);
-		SDL_RenderCopy(kiosk->renderer, kiosk->keypad_texture, NULL, &kiosk->keypad_dest);
-		SDL_RenderCopy(kiosk->renderer, kiosk->screen_texture, NULL, &kiosk->screen_dest);
-		SDL_RenderPresent(kiosk->renderer);
-	}
-
-	/* Set default font and text variables */
-	if (success == 0) {
-		kiosk->font_size = 12;
-		TTF_CloseFont(kiosk->text_font);
-		kiosk->text_font = TTF_OpenFont("resources/fonts/pt_sans_regular.ttf", SCREEN_FONT_WIDTH);
-		kiosk->text_cursor_x = S_MIN_X;
-		kiosk->text_cursor_y = S_MIN_Y;
-
-		if (kiosk->text_font == NULL) {
-			printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
-			success = 1;
-		}
-
-		/* Default color setting */
-		kiosk->color.r = 0;
-		kiosk->color.g = 0;
-		kiosk->color.b = 0;
-
-		/* Default text space */
-		kiosk->text_space.x = S_MIN_X;
-		kiosk->text_space.y = S_MIN_Y;
-		kiosk->text_space.w = 0;
-		kiosk->text_space.h = SCREEN_LINE_HEIGHT;
-	}
-	return success;
+	
+	
+	return 1;
 }
+
+
+
 
 int p_sdl_set_receipt_cursor_x(p_sdl_data *kiosk, int x){
 	x = x + S_MIN_X;
@@ -917,7 +892,7 @@ int p_sdl_receipt_render_char(p_sdl_data *kiosk, char c){
 
 	/* Create texture of character */
 	if (success == 0) {
-		surface = TTF_RenderText_Solid(kiosk->text_font, character, kiosk->color);
+		surface = TTF_RenderText_Solid(kiosk->receipt_text_font, character, kiosk->color);
 		if (surface == NULL) {
 			 printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
                         success = 1;
