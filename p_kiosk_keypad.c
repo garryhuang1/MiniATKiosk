@@ -61,7 +61,46 @@ void p_kiosk_keypad_clock(p_kiosk_keypad *k) {
 				printf("data is %d\n", data);
 			}
 				
-			
+		/* Convert matrix mask to ascii */	
+	switch(data){
+		case 9: //1
+			data = data + 40;
+			break;
+		case 10: //2
+			data = data + 40;
+			break;
+		case 12: //3
+			data = data + 39;
+			break;
+		case 17: //4
+			data = data + 35;
+			break;
+		case 18: //5
+			data = data + 35;
+			break;
+		case 20: //6
+			data = data + 34;
+			break;
+		case 33: //7
+			data = data + 22;
+			break;
+		case 34: //8
+			data = data + 22;
+			break;
+		case 36: //9
+			data = data + 21;
+			break;
+		case 65: //*
+			data = data - 23;
+			break;
+		case 66: //0
+			data = data - 18;
+			break;
+		case 68: //#
+			data = data - 33;
+			break;
+	}
+		
 		k->bus->data = data;
 		k->bus->ack = M_HIGH;
 	}
