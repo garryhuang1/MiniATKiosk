@@ -388,11 +388,17 @@ int main ()
 
 	test_wait(test_number);
 
+	/* 
+	 * Test 20
+	 */
 	test_number = 20;
 
 	int result_test_20_print = p_sdl_render_string(test_data, "A Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long Long String");
 	assert_int(test_number, result_test_20_print, 1); 
 	
+	/* 
+	 * Test 21
+	 */
 	test_number = 21;
 	
 	int result_test_21_color = p_sdl_set_color(test_data, 3);
@@ -412,6 +418,112 @@ int main ()
 	assert_int(test_number, final, 0); 
 	
 
+	test_wait(test_number);
+
+	/* 
+	 * Test 22
+	 */
+	test_number = 22;
+	
+	int result_test_22 = p_sdl_get_receipt_cursor_x(test_data);
+	assert_int(test_number, result_test_22, 0); 
+	
+	
+	test_wait(test_number);
+
+	/* 
+	 * Test 23
+	 */
+	test_number = 23;
+	
+	int result_test_23 = p_sdl_get_receipt_cursor_y(test_data);
+	assert_int(test_number, result_test_23, 0); 
+	
+	
+	test_wait(test_number);
+
+	/* 
+	 * Test 24
+	 */
+	test_number = 24;
+	
+	int result_test_24_print = p_sdl_receipt_render_char(test_data, 'a');
+	assert_int(test_number, result_test_24_print, 0); 
+	
+	test_wait(test_number);
+
+	/* 
+	 * Test 25
+	 */
+	test_number = 25;
+	
+	int t_25 = 0;
+	int final_25 = 0;
+	
+	for (t = 0; t < 20; t++)
+		{
+			int temp_25 = 0;
+			temp_25 = p_sdl_receipt_render_char(test_data, 'l');
+			final_25 = temp_25 | final_25;
+		}
+	
+	assert_int(test_number, final_25, 0); 
+	
+	
+	test_wait(test_number);
+	
+	/* 
+	 * Test 26
+	 */
+	test_number = 26;
+	
+	int result_test_26 = p_sdl_receipt_printer_new_line(test_data);
+	assert_int(test_number, result_test_26, 0); 
+	
+	test_wait(test_number); 
+	
+
+	/* 
+	 * Test 27
+	 */
+	test_number = 27;
+	
+	int result_test_27 = p_sdl_set_receipt_cursor_x(test_data, 30);
+	assert_int(test_number, result_test_27, 0);
+	 assert_int(test_number, p_sdl_get_receipt_cursor_x(test_data), 30);
+	
+	test_wait(test_number);
+
+
+	/* 
+	 * Test 28
+	 */
+	test_number = 28;
+	
+	int result_test_28 = p_sdl_set_receipt_cursor_y(test_data, 30);
+	assert_int(test_number, result_test_28, 0);
+	assert_int(test_number, p_sdl_get_receipt_cursor_y(test_data), 30);
+	
+	test_wait(test_number);
+	
+	/* 
+	 * Test 29
+	 */
+	test_number = 29;
+	
+	int result_test_29 = p_sdl_receipt_render_char(test_data, 'b');
+	assert_int(test_number, result_test_29, 0);
+	
+	test_wait(test_number);
+
+	/* 
+	 * Test 30
+	 */
+	test_number = 30;
+	
+	int result_test_30 = p_sdl_receipt_cut(test_data);
+	assert_int(test_number, result_test_30, 0);
+	
 	test_wait(test_number);
 
 	// Close Test

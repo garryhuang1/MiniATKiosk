@@ -7,6 +7,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <time.h>
 
 #include "p_kiosk_sdl.h"
 
@@ -15,11 +16,18 @@
 #define S_MIN_Y 29
 #define S_MAX_Y 371
 
+#define R_MIN_X 920
+#define R_MAX_X 1100
+#define R_MIN_Y 14	
+#define R_MAX_Y 189
+
+#define PRINTER_FILENAME "receipt-current.txt"
+
 #define SCREEN_LINE_HEIGHT 20
 #define SCREEN_FONT_WIDTH 14
 
-#define PRINTER_LINE_HEIGHT 20
-#define PRINTER_FONT_WIDTH 22
+#define PRINTER_LINE_HEIGHT 22
+#define PRINTER_FONT_WIDTH 18
 
 p_sdl_data * p_sdl_new(void);
 int p_sdl_close(p_sdl_data *kiosk);
@@ -40,6 +48,7 @@ int p_sdl_draw_circle(p_sdl_data *kiosk, int x, int y,int radius, int dofill);
 int p_sdl_reset(p_sdl_data *kiosk);
 int p_sdl_get_event(p_sdl_data *kiosk);
 int p_sdl_draw_screen(p_sdl_data *kiosk);
+int p_sdl_receipt_cut(p_sdl_data *kiosk);
 
 int p_sdl_set_receipt_cursor_x(p_sdl_data *kiosk, int x);
 int p_sdl_set_receipt_cursor_y(p_sdl_data * kiosk, int y);
@@ -76,7 +85,7 @@ p_sdl_data * p_sdl_new(void){
 				
 				if (priv_sdl_font_init(kiosk) == 0)
 					{
-						kiosk->receipt_print = fopen("test.txt", "w");
+						kiosk->receipt_print = fopen(PRINTER_FILENAME, "w");
 						return kiosk;	
 					} else {
 						return NULL;
@@ -95,7 +104,7 @@ p_sdl_data * p_sdl_new(void){
 /*function p_sdl_close
 use to close the sdl library*/
 int p_sdl_close(p_sdl_data *kiosk){
-	/*destory texutres*/
+	/*destroy texutres*/
 	SDL_DestroyTexture(kiosk->keypad_texture);
 	SDL_DestroyTexture(kiosk->screen_texture);
 	SDL_DestroyTexture(kiosk->print_screen_texture);
@@ -103,7 +112,7 @@ int p_sdl_close(p_sdl_data *kiosk){
 	kiosk->screen_texture = NULL;
 	kiosk->print_screen_texture = NULL;
 
-	/*destory window and renderer*/
+	/*destroy window and renderer*/
 	SDL_DestroyRenderer(kiosk->renderer);
 	SDL_DestroyWindow(kiosk->window);
 	kiosk->renderer = NULL;
@@ -195,13 +204,13 @@ int priv_sdl_render(p_sdl_data *kiosk)
 		kiosk->keypad_dest.h = 400;
 		SDL_RenderCopy(kiosk->renderer, kiosk->keypad_texture, NULL, &kiosk->keypad_dest);
 		
-		kiosk->screen_dest.x = 300;
+		kiosk->screen_dest.x = kiosk->keypad_dest.x + kiosk->keypad_dest.w;
 		kiosk->screen_dest.y = 0;
 		kiosk->screen_dest.w = 610;
 		kiosk->screen_dest.h = 400;
 		SDL_RenderCopy(kiosk->renderer, kiosk->screen_texture, NULL, &kiosk->screen_dest);
 		
-		kiosk->print_screen_dest.x = 900;
+		kiosk->print_screen_dest.x = kiosk->screen_dest.x + kiosk->screen_dest.w;
 		kiosk->print_screen_dest.y = 0;
 		kiosk->print_screen_dest.w = 200;
 		kiosk->print_screen_dest.h = 400;
@@ -229,9 +238,8 @@ int priv_sdl_font_init(p_sdl_data *kiosk)
 		kiosk->text_cursor_y = S_MIN_Y;	
 
 		kiosk->receipt_text_font = NULL;
-		kiosk->print_screen_cursor_x = S_MIN_X;	
-		kiosk->print_screen_cursor_y = S_MIN_Y;
-		kiosk->print_text_line_size = 0;
+		kiosk->print_screen_cursor_x = R_MIN_X;	
+		kiosk->print_screen_cursor_y = R_MIN_Y;
 		
 		/* Open font ttf file and load into font variable */
 		kiosk->text_font = TTF_OpenFont("resources/fonts/pt_sans_regular.ttf", SCREEN_FONT_WIDTH);
@@ -256,8 +264,8 @@ int priv_sdl_font_init(p_sdl_data *kiosk)
 	kiosk->text_space.h = SCREEN_LINE_HEIGHT;
 
 	/* Initialize print screen variable*/
-	kiosk->print_text_space.x = S_MIN_X;
-	kiosk->print_text_space.y = S_MIN_Y;
+	kiosk->print_text_space.x = R_MIN_X;
+	kiosk->print_text_space.y = R_MIN_Y;
 	kiosk->print_text_space.w = 0;
 	kiosk->print_text_space.h = PRINTER_FONT_WIDTH;
 	return 0;
@@ -415,8 +423,6 @@ int p_sdl_render_string(p_sdl_data *kiosk, char string[]) {
  *  Returns 0 if success, 1 if error
  */
 int p_sdl_render_char(p_sdl_data *kiosk, char c) {
-	int success = 0;
-	
 	char character[2] = {c, '\0'};
 	
 	SDL_Texture *texture = NULL;
@@ -425,11 +431,11 @@ int p_sdl_render_char(p_sdl_data *kiosk, char c) {
 	/* Check if text cursor out of bounds */
 	if (kiosk->text_cursor_x < S_MIN_X || kiosk->text_cursor_x > S_MAX_X) {
 		printf("\nText cursor x value out of bounds, %d", kiosk->text_cursor_x);
-		success = 1;
+		return 1;
 	}
 	if (kiosk->text_cursor_y < S_MIN_Y || kiosk->text_cursor_y > S_MAX_Y) {
 		printf("\nText cursor y value out of bounds, %d", kiosk->text_cursor_y);
-		success = 1;
+		return 1;
 	}
 
 	/* Check if char to render will intersect boundary */
@@ -445,37 +451,36 @@ int p_sdl_render_char(p_sdl_data *kiosk, char c) {
 		kiosk->text_cursor_x = S_MIN_X;
 		
 		if ( (kiosk->text_cursor_y + SCREEN_LINE_HEIGHT) > S_MAX_Y ) {
-				success = 1;
 				printf("Text cannot render! Screen is full.\n");
+				return 1;
 		} else {
 			kiosk->text_cursor_y += SCREEN_LINE_HEIGHT;
 		}
 
 	}
 	
-	if (success == 0) {
-		surface = TTF_RenderText_Solid(kiosk->text_font, character, kiosk->color);
-		
-		if (surface == NULL) {
-			 printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
-             success = 1;
-		} else {
-			texture = SDL_CreateTextureFromSurface(kiosk->renderer, surface);
-			
-			kiosk->text_space.x = kiosk->text_cursor_x;
-			kiosk->text_space.y = kiosk->text_cursor_y;
-			kiosk->text_space.w = SCREEN_FONT_WIDTH;
-
-			SDL_RenderCopyEx(kiosk->renderer, texture, NULL, &kiosk->text_space, 0.0, NULL, SDL_FLIP_NONE);
-			SDL_RenderPresent(kiosk->renderer);
-
-			/*Update text cursor x positions*/
-			kiosk->text_cursor_x = kiosk->text_cursor_x + SCREEN_FONT_WIDTH;
-		}
-
-	}
+	surface = TTF_RenderText_Solid(kiosk->text_font, character, kiosk->color);
 	
-	return success;
+	if (surface == NULL) {
+		 printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
+		 return 1;
+	} else {
+		texture = SDL_CreateTextureFromSurface(kiosk->renderer, surface);
+		
+		kiosk->text_space.x = kiosk->text_cursor_x;
+		kiosk->text_space.y = kiosk->text_cursor_y;
+		kiosk->text_space.w = SCREEN_FONT_WIDTH;
+
+		SDL_RenderCopyEx(kiosk->renderer, texture, NULL, &kiosk->text_space, 0.0, NULL, SDL_FLIP_NONE);
+		SDL_RenderPresent(kiosk->renderer);
+
+		/*Update text cursor x positions*/
+		kiosk->text_cursor_x = kiosk->text_cursor_x + SCREEN_FONT_WIDTH;
+	}
+
+	
+	
+	return 0;
 
 	
 }
@@ -652,6 +657,13 @@ int p_sdl_get_color(p_sdl_data *kiosk) {
 /*function p_sdl_clear_screen
 use to clear the screen*/
 int p_sdl_clear_screen(p_sdl_data *kiosk){
+	
+	kiosk->screen_dest.x = 300;
+	kiosk->screen_dest.y = 0;
+	kiosk->screen_dest.w = 610;
+	kiosk->screen_dest.h = 400;
+	
+	
 	if(SDL_RenderCopy(kiosk->renderer, kiosk->screen_texture, NULL, &kiosk->screen_dest) == 0){
 		SDL_RenderPresent(kiosk->renderer);
 		
@@ -825,8 +837,8 @@ int p_sdl_reset(p_sdl_data *kiosk) {
 
 
 int p_sdl_set_receipt_cursor_x(p_sdl_data *kiosk, int x){
-	x = x + S_MIN_X;
-	if((x > S_MAX_X) || (x < S_MIN_X)){
+	x = x + R_MIN_X;
+	if((x > R_MAX_X) || (x < R_MIN_X)){
 		return 1;
 	}
 	else {
@@ -835,8 +847,8 @@ int p_sdl_set_receipt_cursor_x(p_sdl_data *kiosk, int x){
 	}
 }
 int p_sdl_set_receipt_cursor_y(p_sdl_data *kiosk, int y){
-	y = y + S_MIN_Y;
-	if((y > S_MAX_Y) || (y < S_MIN_Y)){
+	y = y + R_MIN_Y;
+	if((y > R_MAX_Y) || (y < R_MIN_Y)){
 		return 1;
 	}
 	else {
@@ -845,17 +857,16 @@ int p_sdl_set_receipt_cursor_y(p_sdl_data *kiosk, int y){
 	}
 }
 int p_sdl_get_receipt_cursor_x(p_sdl_data *kiosk) {
-	return kiosk->print_screen_cursor_y - S_MIN_X;
+	return kiosk->print_screen_cursor_x - R_MIN_X;
 }
 int p_sdl_get_receipt_cursor_y(p_sdl_data *kiosk) {
-	return kiosk->print_screen_cursor_y - S_MIN_Y;
+	return kiosk->print_screen_cursor_y - R_MIN_Y;
 }
 int p_sdl_receipt_printer_new_line(p_sdl_data *kiosk){
 	if(SDL_RenderCopy(kiosk->renderer, kiosk->print_screen_texture, NULL, &kiosk->print_screen_dest) == 0){
 		SDL_RenderPresent(kiosk->renderer);
-		kiosk->print_screen_cursor_x = S_MIN_X;
-		kiosk->print_screen_cursor_y = S_MIN_Y;
-		kiosk->print_text_line_size = 0;
+		kiosk->print_screen_cursor_x = R_MIN_X;
+		kiosk->print_screen_cursor_y = R_MIN_Y;
 		fputc('\n', kiosk->receipt_print);
 		return 0;
 	}
@@ -865,63 +876,108 @@ int p_sdl_receipt_printer_new_line(p_sdl_data *kiosk){
 }
 int p_sdl_receipt_render_char(p_sdl_data *kiosk, char c){
 	int success = 0;
-	const char * character = &c;
+	char character[2] = {c, '\0'};
 	SDL_Texture *texture = NULL;
 	SDL_Surface *surface = NULL;
 
 	/* Check if text cursor out of bounds */
-	if (kiosk->print_screen_cursor_x < S_MIN_X || kiosk->print_screen_cursor_x > S_MAX_X) {
+	if (kiosk->print_screen_cursor_x < R_MIN_X || kiosk->print_screen_cursor_x > R_MAX_X) {
 		printf("\nText cursor x value out of bounds, %d", kiosk->print_screen_cursor_x);
 		success = 1;
 	}
-	if (kiosk->print_screen_cursor_y < S_MIN_Y || kiosk->print_screen_cursor_y > S_MAX_Y) {
+	if (kiosk->print_screen_cursor_y < R_MIN_Y || kiosk->print_screen_cursor_y > R_MAX_Y) {
 		printf("\nText cursor y value out of bounds, %d", kiosk->print_screen_cursor_y);
 		success = 1;
 	}
 
-	/* Check if char to render will intersect boundry */
-	/* If so, reset x axis and create newline by incrementing y */
-	if ( (kiosk->print_text_line_size + kiosk->print_font_size) > (S_MAX_X - S_MIN_X) && success == 0) {
-		kiosk->print_screen_cursor_x = S_MIN_X;
-		kiosk->print_text_line_size = 0;
-		if ( (kiosk->print_screen_cursor_y + kiosk->print_font_size) > S_MAX_Y) {
-                        success = 1;
-                        printf("Text cannot render! Screen is full.\n");
-
-                }
-                kiosk->print_screen_cursor_y = kiosk->print_screen_cursor_y + kiosk->print_font_size;
-		kiosk->print_text_line_size = kiosk->print_text_line_size + kiosk->print_font_size;
-	}
-	else {
-		kiosk->print_text_line_size += kiosk->print_font_size;
-	}
-
-	/* Create texture of character */
-	if (success == 0) {
-		surface = TTF_RenderText_Solid(kiosk->receipt_text_font, character, kiosk->color);
-		if (surface == NULL) {
-			 printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
-                        success = 1;
-		}
-		if (success == 0) {
-			texture = SDL_CreateTextureFromSurface(kiosk->renderer, surface);
-		}
-	}
+	int line_remaining = R_MAX_X - kiosk->print_screen_cursor_x;
 	
-	/* Render character to screen */
-	if (success == 0) {
+	if ( line_remaining < PRINTER_FONT_WIDTH ) {
+			kiosk->print_screen_cursor_x = R_MIN_X;
+			
+			if ( (kiosk->print_screen_cursor_y + PRINTER_LINE_HEIGHT) > R_MAX_Y )
+				{
+					printf("Text cannot render! Receipt printer screen is full.\n");
+					return 1;
+				} else {
+					kiosk->print_screen_cursor_y += PRINTER_LINE_HEIGHT;
+				}
+			
+	}
+
+	surface = TTF_RenderText_Solid(kiosk->receipt_text_font, character, kiosk->color);
+	
+	if (surface == NULL) {
+		printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
+		return 1;
+	} else {
+		
+		texture = SDL_CreateTextureFromSurface(kiosk->renderer, surface);
+		
 		kiosk->print_text_space.x = kiosk->print_screen_cursor_x;
 		kiosk->print_text_space.y = kiosk->print_screen_cursor_y;
-		kiosk->print_text_space.w = kiosk->print_font_size;
+		kiosk->print_text_space.w = PRINTER_FONT_WIDTH;
 
 		SDL_RenderCopyEx(kiosk->renderer, texture, NULL, &kiosk->print_text_space, 0.0, NULL, SDL_FLIP_NONE);
 		SDL_RenderPresent(kiosk->renderer);
 
-		/*Update text cursor x positions*/
-		kiosk->print_screen_cursor_x = kiosk->print_screen_cursor_x + kiosk->print_font_size;
-
+		// Write the character to the file
 		fputc(c, kiosk->receipt_print);
+		
+		kiosk->print_screen_cursor_x += PRINTER_FONT_WIDTH;
+	}
+	
+
+	return 0;	
+}
+
+
+int p_sdl_receipt_cut(p_sdl_data *kiosk) {
+	char new_name[] = "receipt-";
+	char current_name[] = PRINTER_FILENAME;
+	char ext[] = ".txt";
+	char time_string[18];
+	char final[sizeof(new_name) + sizeof(time_string) + sizeof(ext)];
+	
+	
+	
+	
+	
+	time_t time_item;
+	struct tm *time_struct;
+
+	time_item = time(NULL);
+	time_struct = localtime(&time_item);
+	
+	if (time_struct == NULL) {
+	   printf("Error occured while getting time");
+	   return 1;
 	}
 
-	return success;	
+	if (strftime(time_string, sizeof(time_string), "%F-%H%M%S", time_struct) == 0) {
+		printf("Error occured while getting time string");
+		return 1;
+	}else{
+		strcpy(final, new_name);
+		strcat(final, time_string);
+		strcat(final, ext);
+		
+		printf("Moving file to %s", final);
+		
+		fclose(kiosk->receipt_print);
+		
+		if (rename(current_name, final) == 0) {
+			kiosk->receipt_print = fopen(PRINTER_FILENAME, "w");
+			return 0;
+		} else {
+			printf("Error occured while renaming file");
+			return 1;
+		}
+		
+		
+		
+		
+	}
+
+	
 }
