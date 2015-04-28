@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-const int WINDOW_WIDTH = 1100;
+#define WINDOW_WIDTH 1110
 /**
  * Global constant variable for window width.
  */
@@ -57,14 +57,14 @@ struct p_sdl_data {
 	SDL_Texture *pixel_texture;
 	int mouse_cursor_x;
 	int mouse_cursor_y;
-	int font_size;
-	int print_font_size;
+	//int font_size;
+	//int print_font_size;
 	int text_cursor_x;
 	int text_cursor_y;
 	int print_screen_cursor_x;
 	int print_screen_cursor_y;
 	//int current_line_length;
-	int print_text_line_size;
+	//int print_text_line_size;
 	SDL_Color color;
 	SDL_Event mouse_event;
 	FILE *receipt_print;
