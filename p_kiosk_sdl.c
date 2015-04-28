@@ -436,6 +436,47 @@ int p_sdl_render_char(p_sdl_data *kiosk, char c) {
 	/* If so, reset x axis and create newline by incrementing y */
 	
 	int line_remaining = S_MAX_X - kiosk->text_cursor_x;
+
+/* Convert matrix mask to ascii */	
+	switch(character[0]){
+		case 9: //1
+			character[0] = character[0] + 40;
+			break;
+		case 10: //2
+			character[0] = character[0] + 40;
+			break;
+		case 12: //3
+			character[0] = character[0] + 39;
+			break;
+		case 17: //4
+			character[0] = character[0] + 35;
+			break;
+		case 18: //5
+			character[0] = character[0] + 35;
+			break;
+		case 20: //6
+			character[0] = character[0] + 34;
+			break;
+		case 33: //7
+			character[0] = character[0] + 22;
+			break;
+		case 34: //8
+			character[0] = character[0] + 22;
+			break;
+		case 36: //9
+			character[0] = character[0] + 21;
+			break;
+		case 65: //*
+			character[0] = character[0] - 23;
+			break;
+		case 66: //0
+			character[0] = character[0] - 18;
+			break;
+		case 68: //#
+			character[0] = character[0] - 33;
+			break;
+	}
+		
 	
 	printf("\nchar is %c (%d)\n", character[0], character[0]);
 	
