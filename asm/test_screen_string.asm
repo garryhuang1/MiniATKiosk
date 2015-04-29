@@ -1,5 +1,6 @@
 .constant	CMDB	0x4012
-.constant	CHRB	0x4014
+.constant	RECW	0x4041
+.constant	RECP	0x4042
 .constant	COLB	0x4017
 
 .constant	CHAR	60
@@ -15,7 +16,7 @@ BRA [!main]
 !main
 	
 	MOVR r1, r0
-	MOVI r3, 2
+	MOVI r3, 1
 	STOR r3, [COLB]
 	
 	
@@ -23,7 +24,8 @@ BRA [!main]
 
 	LOAD r2, [r1 + !string1]
 	BRAE {F}	r2, r0 [!done]
-	STOR r2, [CHRB]
+	STOR r2, [RECW]
+	STOT r3, [RECP]
 	ADD r1, r1, (1)
 	BRA [!loop]
 
