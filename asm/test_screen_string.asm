@@ -1,16 +1,16 @@
+; @author Matt Preisendorfer
+
 .constant	CMDB	0x4012
 .constant	RECW	0x4041
 .constant	RECP	0x4042
 .constant	COLB	0x4017
 
-.constant	CHAR	60
-
-.address 0x2000
+.address 			0x2000
 
 BRA [!main]
 
 !string1
-	"urban"	
+	"RIP in peace"	
 
  
 !main
