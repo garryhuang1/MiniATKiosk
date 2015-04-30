@@ -1,3 +1,5 @@
+; @author Matt Preisendorfer
+
 .constant	CMDB	0x4012
 .constant	PRTC	0x4014
 .constant	COLB	0x4017
