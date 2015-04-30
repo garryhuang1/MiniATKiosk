@@ -1,13 +1,12 @@
+; @author Matt Preisendorfer
+
 .constant	CMDB	0x4012
 .constant	PRTC	0x4014
 .constant	COLB	0x4017
 .constant	XLOC	0x4015
 .constant	YLOC	0x4016
 
-.constant	CHAR	60
-
-.address 0x2000
-
+.address 			0x2000
 
 <<<
 	r1: counter
