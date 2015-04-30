@@ -1,4 +1,4 @@
-; @author Matt Preisendorfer
+# @author Matt Preisendorfer
 
 .constant	CMDB	0x4012
 .constant	PRTC	0x4014

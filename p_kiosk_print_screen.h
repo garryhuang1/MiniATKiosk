@@ -5,6 +5,7 @@
 #include "p_kiosk_sdl.h"
 
 #define COMMAND_PRINT_NEW_LINE 0
+#define COMMAND_CUT_RECEIPT 1
 
 struct p_kiosk_print_screen{
 	p_sdl_data* sdl_struct;

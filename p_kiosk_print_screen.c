@@ -50,11 +50,14 @@ void p_kiosk_print_screen_clock(p_kiosk_keypad *k) {
 		 if(p->bus->rw == M_HIGH) {
 			if(p->bus->req && !p->bus->ack) {
 				switch (p->bus->data){
-				  case COMMAND_PRINT_NEW_LINE:
-					  result = p_sdl_receipt_printer_new_line(p->sdl_struct);
-					  break;
-				  default:
-					  result = 1;
+					case COMMAND_PRINT_NEW_LINE:
+						  result = p_sdl_receipt_printer_new_line(p->sdl_struct);
+						  break;
+					case COMMAND_CUT_RECEIPT:
+						  result = p_sdl_receipt_printer_cut(p->sdl_struct);
+						  break;
+					  default:
+						  result = 1;
 				}
 			p->bus->ack = M_HIGH;
 			}

@@ -1,4 +1,4 @@
-; @author Matt Preisendorfer
+# @author Matt Preisendorfer
 
 .constant	CMDB	0x4012
 .constant	RECW	0x4041
@@ -25,7 +25,7 @@ BRA [!main]
 	LOAD r2, [r1 + !string1]
 	BRAE {F}	r2, r0 [!done]
 	STOR r2, [RECW]
-	STOT r3, [RECP]
+	STOR r3, [RECP]
 	ADD r1, r1, (1)
 	BRA [!loop]
 
