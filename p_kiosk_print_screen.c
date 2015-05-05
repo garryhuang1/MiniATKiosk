@@ -5,7 +5,7 @@
 #include "p_kiosk_print_screen.h"
 #include "p_kiosk_sdl.h"
 
-p_kiosk_print_screen* p_kiosk_print_screen_new(p_sdl_data* init_struct, m_uword keypad_start_address) {
+p_kiosk_print_screen* p_kiosk_print_screen_new(p_sdl_data* init_struct, m_uword print_screen_address) {
 	p_kiosk_print_screen *p = malloc(sizeof(p_kiosk_print_screen));
 
 	if (p) {
@@ -15,7 +15,7 @@ p_kiosk_print_screen* p_kiosk_print_screen_new(p_sdl_data* init_struct, m_uword 
 			p = NULL;
 		}
 		else {
-			p->print_screen_start_address;
+			p->print_screen_start_address = print_screen_address;
 			p->sdl_struct = init_struct;
 			p->connected = 0;
 		}
@@ -35,7 +35,7 @@ void p_kiosk_print_screen_free(p_kiosk_print_screen *p) {
 	
 	return;
 }
-void p_kiosk_print_screen_clock(p_kiosk_keypad *k) {
+void p_kiosk_print_screen_clock(p_kiosk_print_screen *p) {
   
 	m_uword command_address = p->print_screen_start_address;
 	m_uword add_char_address = p->print_screen_start_address+1;
@@ -47,14 +47,14 @@ void p_kiosk_print_screen_clock(p_kiosk_keypad *k) {
 	int result = 1;
 	
 	if(p->bus->address == command_address) {
-		 if(p->bus->rw == M_HIGH) {
+		 if(p->bus->rW == M_HIGH) {
 			if(p->bus->req && !p->bus->ack) {
 				switch (p->bus->data){
 					case COMMAND_PRINT_NEW_LINE:
 						  result = p_sdl_receipt_printer_new_line(p->sdl_struct);
 						  break;
 					case COMMAND_CUT_RECEIPT:
-						  result = p_sdl_receipt_printer_cut(p->sdl_struct);
+						  result = p_sdl_receipt_cut(p->sdl_struct);
 						  break;
 					  default:
 						  result = 1;
@@ -65,7 +65,7 @@ void p_kiosk_print_screen_clock(p_kiosk_keypad *k) {
 				p->bus->ack = M_LOW;
 			}
 		 }
-		 else if(p->bus->rw == M_LOW){
+		 else if(p->bus->rW == M_LOW){
 		    if (p->bus->req && !p->bus->ack){
 		    }
 		    else if(p->bus->ack == M_HIGH){
@@ -74,7 +74,7 @@ void p_kiosk_print_screen_clock(p_kiosk_keypad *k) {
 		}
 	}
 	else if(p->bus->address == add_char_address) {
-		if(p->bus->rw == M_HIGH) {
+		if(p->bus->rW == M_HIGH) {
 			if (p->bus->req && !p->bus->ack) {
 				p->character = p->bus->data;
 				
@@ -84,7 +84,7 @@ void p_kiosk_print_screen_clock(p_kiosk_keypad *k) {
 				p->bus->ack = M_LOW;
 			}
 		}
-		else if(p->bus->rw == M_LOW){
+		else if(p->bus->rW == M_LOW){
 		    if (p->bus->req && !p->bus->ack){
 		    }
 		    else if(p->bus->ack == M_HIGH){
@@ -93,7 +93,7 @@ void p_kiosk_print_screen_clock(p_kiosk_keypad *k) {
 		 }
 	}
 	else if (p->bus->address == print_char_address) {
-		if(p->bus->rw == M_HIGH) {
+		if(p->bus->rW == M_HIGH) {
 			if (p->bus->req && !p->bus->ack) {
 			      int result = p_sdl_receipt_render_char(p->sdl_struct, p->bus->data);
 			      
@@ -103,7 +103,7 @@ void p_kiosk_print_screen_clock(p_kiosk_keypad *k) {
 			      p->bus->ack = M_LOW;
 			}
 		}
-		else if(p->bus->rw == M_LOW){
+		else if(p->bus->rW == M_LOW){
 		    if (p->bus->req && !p->bus->ack){
 		    }
 		    else if(p->bus->ack == M_HIGH){
@@ -112,7 +112,7 @@ void p_kiosk_print_screen_clock(p_kiosk_keypad *k) {
 		}
 	}
 	else if (p->bus->address == x_loc_address) {
-		if(p->bus->rw == M_HIGH) {
+		if(p->bus->rW == M_HIGH) {
 			if (p->bus->req && !p->bus->ack) {
 			    int result = p_sdl_set_receipt_cursor_x(p->sdl_struct, p->bus->data);
 			    p->bus->ack = M_HIGH;
@@ -121,7 +121,7 @@ void p_kiosk_print_screen_clock(p_kiosk_keypad *k) {
 			      p->bus->ack = M_LOW;
 			}
 		}
-		if(p->bus->rw == M_LOW) {
+		if(p->bus->rW == M_LOW) {
 		      if (p->bus->req && !p->bus->ack) {
 			   p->bus->data = p_sdl_get_receipt_cursor_x(p->sdl_struct);
 		      }
@@ -131,7 +131,7 @@ void p_kiosk_print_screen_clock(p_kiosk_keypad *k) {
 		}
 	}
 	else if (p->bus->address == y_loc_address) {
-		if(p->bus->rw == M_HIGH) {
+		if(p->bus->rW == M_HIGH) {
 			if (p->bus->req && !p->bus->ack) {
 			    int result = p_sdl_set_receipt_cursor_y(p->sdl_struct, p->bus->data);
 			    p->bus->ack = M_HIGH;
@@ -140,7 +140,7 @@ void p_kiosk_print_screen_clock(p_kiosk_keypad *k) {
 			      p->bus->ack = M_LOW;
 			}
 		}
-		if(p->bus->rw == M_LOW) {
+		if(p->bus->rW == M_LOW) {
 		      if (p->bus->req && !p->bus->ack) {
 			   p->bus->data = p_sdl_get_receipt_cursor_y(p->sdl_struct);
 		      }
@@ -150,7 +150,7 @@ void p_kiosk_print_screen_clock(p_kiosk_keypad *k) {
 		}
 	}
 	else if (p->bus->address == wait_address) {
-	      if(p->bus->rw == M_HIGH) {
+	      if(p->bus->rW == M_HIGH) {
 		    if(p->bus->req && !p->bus->ack) {
 			  int time = p->bus->data;
 			  sleep(time);
@@ -160,7 +160,7 @@ void p_kiosk_print_screen_clock(p_kiosk_keypad *k) {
 			  p->bus->ack == M_LOW;
 		    }
 	      }
-	     else if(p->bus->rw == M_LOW){
+	     else if(p->bus->rW == M_LOW){
 		    if (p->bus->req && !p->bus->ack){
 		    }
 		    else if(p->bus->ack == M_HIGH){

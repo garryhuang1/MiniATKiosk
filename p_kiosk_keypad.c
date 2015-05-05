@@ -41,7 +41,10 @@ void p_kiosk_keypad_free(p_kiosk_keypad *k) {
 
 void p_kiosk_keypad_clock(p_kiosk_keypad *k) {
 
+	m_uword command_address = k->keypad_start_address;
+	m_uword print_screen_address = k->keypad_start_address + 1;
 	uint32_t data = 0;
+	int result;
 
 	/* keypad instance is not initialized */
 	if (!k) {
@@ -53,63 +56,80 @@ void p_kiosk_keypad_clock(p_kiosk_keypad *k) {
 	 * wire is low, get mouse click and record as data
 	 */
 	
-	if (k->bus->rW == M_LOW && k->bus->req && !k->bus->ack) {
+	if(k->bus->address ==command_address){
+		if (k->bus->rW == M_LOW ){
+			if(k->bus->req && !k->bus->ack) {	
+				data = p_sdl_get_mouse_click(k->sdl_struct);
+				if (data > 0)
+				{
+					switch(data){
+					case 9: //1
+						data = data + 40;
+						break;
+					case 10: //2
+						data = data + 40;
+						break;
+					case 12: //3
+						data = data + 39;
+						break;
+					case 17: //4
+						data = data + 35;
+						break;
+					case 18: //5
+						data = data + 35;
+						break;
+					case 20: //6
+						data = data + 34;
+						break;
+					case 33: //7
+						data = data + 22;
+						break;
+					case 34: //8
+						data = data + 22;
+						break;
+					case 36: //9
+						data = data + 21;
+						break;
+					case 65: //*
+						data = data - 23;
+						break;
+					case 66: //0
+						data = data - 18;
+						break;
+					case 68: //#
+						data = data - 33;
+						break;
+					}
+	
+					}	
+					else if (data == 0){
+						//printf("it hits quit\n");
+						data = 0;
+				}		
 		
-		data = p_sdl_get_mouse_click(k->sdl_struct);
-		if (data > 0)
-			{
-				printf("data is %d\n", data);
+				k->bus->data = data;
+				k->bus->ack = M_HIGH;
 			}
-				
-		/* Convert matrix mask to ascii */	
-	switch(data){
-		case 9: //1
-			data = data + 40;
-			break;
-		case 10: //2
-			data = data + 40;
-			break;
-		case 12: //3
-			data = data + 39;
-			break;
-		case 17: //4
-			data = data + 35;
-			break;
-		case 18: //5
-			data = data + 35;
-			break;
-		case 20: //6
-			data = data + 34;
-			break;
-		case 33: //7
-			data = data + 22;
-			break;
-		case 34: //8
-			data = data + 22;
-			break;
-		case 36: //9
-			data = data + 21;
-			break;
-		case 65: //*
-			data = data - 23;
-			break;
-		case 66: //0
-			data = data - 18;
-			break;
-		case 68: //#
-			data = data - 33;
-			break;
+		/* Data hasn't been read yet */
+			else if (k->bus->ack) {
+				k->bus->ack = M_LOW;
+			}
+		}
 	}
-		
-		k->bus->data = data;
-		k->bus->ack = M_HIGH;
+	else if(k->bus->address == print_screen_address){
+		if(k->bus->rW == M_LOW){
+			if(k->bus->req && !k->bus->ack){
+				result = p_sdl_draw_screen(k->sdl_struct);
+				k->bus->data = result;
+				k->bus->ack = M_HIGH;
+			}
+			else if(k->bus->ack){
+				k->bus->ack = M_LOW;
+			}
+		}
 	}
-	/* Data hasn't been read yet */
-	else if (k->bus->ack) {
-		k->bus->ack = M_LOW;
-	}
-	return;
 }
+
 
 m_bus p_kiosk_keypad_get_bus(p_kiosk_keypad *k) {
 	m_bus empty_bus = { 0 };

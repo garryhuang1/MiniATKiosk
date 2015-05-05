@@ -4,18 +4,21 @@
 #include <miniat/miniat.h>
 #include "p_kiosk_sdl.h"
 
-#define COMMAND_PRINT_NEW_LINE 0
-#define COMMAND_CUT_RECEIPT 1
 
-struct p_kiosk_print_screen{
-	p_sdl_data* sdl_struct;
-	m_uword print_screen_start_address;
-	m_bus *bus;
-	int connected
-	char character;
-};
-
+ 
+ #define COMMAND_PRINT_NEW_LINE 0
+ #define COMMAND_CUT_RECEIPT 1
+ 
+ struct p_kiosk_print_screen{
+ 	p_sdl_data* sdl_struct;
+ 	m_uword print_screen_start_address;
+ 	m_bus *bus;
+ 	int connected;
+ 	char character;
+ };
+ 
 typedef struct p_kiosk_print_screen p_kiosk_print_screen;
+
 /**
  * Create a kiosk keypad
  *
