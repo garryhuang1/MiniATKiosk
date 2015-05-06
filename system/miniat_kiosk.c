@@ -8,7 +8,7 @@
 #include "p_kiosk_print_screen.h"
 
 #define M_SCREEN_COMMAND   0x4012
-#define M_SCREEN_DRAW_5 0x401D
+#define M_SCREEN_WAIT 0x401E
 #define M_KEYPAD 0x4030
 #define M_KEYPAD_DRAW 0x4031
 #define M_PRINT_SCREEN 0x4040
@@ -80,7 +80,7 @@ static void miniat_start(int argc, char *argv[]) {
 	
 			peripheral_bus_state = p_kiosk_screen_get_bus(s);
 	
-			if(peripheral_bus_state.address >= M_SCREEN_COMMAND && peripheral_bus_state.address <= M_SCREEN_DRAW_5) {
+			if(peripheral_bus_state.address >= M_SCREEN_COMMAND && peripheral_bus_state.address <= M_SCREEN_WAIT) {
 				miniat_pins_bus_set(m, peripheral_bus_state);
 				continue;
 			}
