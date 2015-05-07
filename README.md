@@ -34,7 +34,6 @@ To run an assembly program, run like so:
 Or you can update your runtime path and library first by using the following two commands:
 
 	export PATH=$PATH:~/miniat/out/exe
-
 	export LD_LIBRARY_PATH=~/miniat/out/lib
 
 Then you can simply run the program in the following way:
