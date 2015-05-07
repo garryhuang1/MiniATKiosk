@@ -29,7 +29,14 @@ The MiniAT system program is available at `out/exe/miniat_kiosk`.
 
 To run an assembly program, run like so:
 
-` ./out/exe/miniat_kiosk ./out/bin/`./out/exe/miniat_kiosk ./out/bin/BIN_FILE`
+` ./out/exe/miniat_kiosk ./out/bin/(bin file name)`
+
+Or you can update your runtime path and library first by using the following two commands:
+	`export PATH=$PATH:~/miniat/out/exe`
+	`export LD_LIBRARY_PATH=~/miniat/out/lib`
+
+Then you can simply run the program in the following way:
+	`miniat_kiosk out/bin/(bin file name)`
 
 There are a number of assembly programs available to pass to the system program:
 
