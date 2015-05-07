@@ -1,5 +1,7 @@
 .constant	CMD		0x4012
 .constant	ADDBUF	0x4013
+.constant	XLOC	0x4015
+.constant	YLOC	0x4016
 .constant	COLOR	0x4017
 
 .constant	CHAR	65
@@ -40,6 +42,12 @@
 	NOP
 	ADD r12, r12, (1)
 	BRALE r12, r11 [!wait]
+	
+	MOVI r13, 0
+	STOR r13, [XLOC]
+
+	
+	
 	
 	BRALE r20, r21, [!color]
 	
