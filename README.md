@@ -11,9 +11,9 @@ MiniAT Kiosk provides the following peripherals:
 
 Installation to an installation of MiniAT is simple. 
 
-1. Install dependencies: sdl2-ttf, sdl2-image and sdl2-gfx
+1. Install dependencies: sdl2, sdl2-ttf, sdl2-image and sdl2-gfx
 
-For Ubuntu, run `apt-get install libsdl2-ttf-dev libsdl2-image-dev libsdl2-gfx-dev`
+For Ubuntu, run `apt-get install libsdl2-dev libsdl2-ttf-dev libsdl2-image-dev libsdl2-gfx-dev`
 2. Clone this repository to the `system` directory of MiniAT
 
 `git clone https://bitbucket.org/miniat_amos/kiosk.git`
