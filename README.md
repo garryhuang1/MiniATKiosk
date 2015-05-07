@@ -33,9 +33,9 @@ To run an assembly program, run like so:
 
 Or you can update your runtime path and library first by using the following two commands:
 
-	`export PATH=$PATH:~/miniat/out/exe`
+	export PATH=$PATH:~/miniat/out/exe
 
-	`export LD_LIBRARY_PATH=~/miniat/out/lib`
+	export LD_LIBRARY_PATH=~/miniat/out/lib
 
 Then you can simply run the program in the following way:
 	
@@ -60,5 +60,3 @@ There are a number of assembly programs available to pass to the system program:
 * `test_screen_string.bin`: Demos writing to the screen
 * `test_screen_string_wait.bin`: Demos writing to the screen after waiting
 * `keypad_test.bin`: Demos keypad
-
-
