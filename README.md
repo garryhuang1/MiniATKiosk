@@ -38,7 +38,7 @@ Or you can update your runtime path and library first by using the following two
 
 Then you can simply run the program in the following way:
 	
-	`miniat_kiosk ./out/bin/(bin file name)`
+	miniat_kiosk ./out/bin/(bin file name)
 
 There are a number of assembly programs available to pass to the system program:
 
