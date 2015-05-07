@@ -1,0 +1,7 @@
+William "Amos" Confer: original project supervisor, developer, tester
+
+Aarong Hung: project developer, tester
+Garry Huang: project developer, tester
+Jacob Hartman: project developer, tester
+Matthew Preisendorfer: project developer, tester
+Wenjun Qu: project developer, tester
