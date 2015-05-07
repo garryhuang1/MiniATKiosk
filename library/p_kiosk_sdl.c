@@ -85,7 +85,7 @@ p_sdl_data * p_sdl_new(void){
 				
 				if (priv_sdl_font_init(kiosk) == 0)
 					{
-						kiosk->receipt_print = fopen("system/kiosk/receipt.txt", "w");
+						kiosk->receipt_print = fopen(PRINTER_FILENAME, "w");
 						if(!kiosk->receipt_print){
 							printf("fail to create file\n");
 						}
@@ -373,7 +373,8 @@ int p_sdl_render_string(p_sdl_data *kiosk, char string[]) {
 		printf("\nText cursor x value out of bounds, %d", kiosk->text_cursor_x);
 		success = 1;
 	}
-	if (kiosk->text_cursor_y < S_MIN_Y || kiosk->text_cursor_y > S_MAX_Y) {
+	
+	if (kiosk->text_cursor_y < S_MIN_Y || kiosk->text_cursor_y > S_MAX_Y ) {
 		printf("\nText cursor y value out of bounds, %d", kiosk->text_cursor_y);
 		success = 1;
 	}
@@ -504,7 +505,7 @@ int p_sdl_get_text_cursor_x(p_sdl_data *kiosk) {
 use to set the sdl cursor y value to user define value*/
 int p_sdl_set_text_cursor_y(p_sdl_data *kiosk, int y){
 	y = y + S_MIN_Y;
-	if((y > S_MAX_Y) || (y< S_MIN_Y)) {
+	if((y >= S_MAX_Y) || (y <= S_MIN_Y || y + SCREEN_LINE_HEIGHT > S_MAX_Y)) {
 		return 1;
 	}
 	else {
